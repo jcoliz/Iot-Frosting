@@ -13,15 +13,13 @@ This project has ambition to provide a C# library for this HAT usable on Windows
 * Guides and tutorials  
 https://learn.pimoroni.com/automation-hat  
 https://learn.pimoroni.com/automation-phat  
-* Function reference  
-https://github.com/pimoroni/automation-hat/tree/master/documentation
 * GPIO Pinout  
 https://pinout.xyz/pinout/automation_hat  
 https://pinout.xyz/pinout/automation_phat  
-* Get help  
+* Get help with the HAT
 http://forums.pimoroni.com/c/support
 
-## Automation HAT / pHAT Function Reference
+## Function Reference
 
 ```c#
 using Pimoroni.MsIot
