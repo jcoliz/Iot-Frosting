@@ -6,28 +6,26 @@ using System.Threading.Tasks;
 
 namespace Pimoroni.MsIot
 {
-    public class Relay: IDigitalOutput
+    public class Relay: RawOutput, IRelay
     {
-        public Relay(int pin, Light light_no, Light light_nc)
+        public Relay(int pin, ILight light_no, ILight light_nc): base(pin)
         {
-            Light = light_no;
             LightNO = light_no;
             LightNC = light_nc;
         }
 
-        public bool AutoLight { get; set; }
+        public bool AutoLight { get; set; } = true;
+        public ILight Light => LightNO;
+        public ILight LightNO { get; private set; }
+        public ILight LightNC { get; private set; }
 
-        public IRawDigitalOutput Light { get; private set; }
-        public IRawDigitalOutput LightNO { get; private set; }
-        public IRawDigitalOutput LightNC { get; private set; }
-
-        public bool State { get; set; }
-
-        public void Toggle()
+        protected override void Update(bool v)
         {
-            State = !State;
+            if (AutoLight)
+            {
+                LightNO.State = v;
+                LightNC.State = !v;
+            }
         }
-
-        private int pin;
     }
 }
