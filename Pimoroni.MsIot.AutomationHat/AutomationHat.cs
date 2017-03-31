@@ -97,7 +97,11 @@ namespace Pimoroni.MsIot
         };
         public static Lights Light = new Lights();
 
-        public static void DoAutoLights()
+        /// <summary>
+        /// Call this regularly from a timer thread to update the state of
+        /// everything
+        /// </summary>
+        public static void Update()
         {
             Input.ForEach(MsIot.Input.DoAutoLight);
         }
