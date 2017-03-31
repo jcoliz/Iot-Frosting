@@ -99,12 +99,12 @@ AutomationHat.Light.Comms.State = true;
 AutomationHat.Light.Comms.State = false;
 ```
 
-Note: lights use the same methods as relays and outputs: `on`, `off`, `toggle` and `write`.
+Note: lights use the same properties and methods as relays and outputs: State and Toggle().
 
 Lights associated with Inputs, Outputs, Relays and Analog are automatic by default, but you can switch them to manual if you want. First turn off the automation:
 
 ```c#
-AutomationHat.Analog.One.IsAutoLight = false;
+AutomationHat.Analog.One.AutoLight = false;
 ```
 
 Then toggle the light:
