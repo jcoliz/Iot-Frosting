@@ -33,7 +33,7 @@ Three of the four analog inputs on Automation HAT are 24V tolerant, with a forth
 You can read an analog input like so:
 
 ```c#
-int value = AutomationHat.Analog.One.Value;
+int value = AutomationHat.Analog[0].Value;
 ```
 
 ### Inputs
@@ -43,7 +43,7 @@ The three inputs on Automation HAT are 24V tolerant, switching on at 3V and off 
 You can read an input like so:
 
 ```c#
-bool state = AutomationHat.Analog.One.State;
+bool state = AutomationHat.Input[0].State;
 ```
 
 ### Outputs
@@ -53,7 +53,7 @@ The three outputs on Automation HAT are 24V tolerant, sinking outputs. That mean
 You can turn an output on like so:
 
 ```c#
-AutomationHat.Analog.One.State = true;
+AutomationHat.Analog[0].State = true;
 ```
 
 ### Relays
@@ -63,26 +63,26 @@ The three relays on Automation HAT supply both NO (Normally Open) and NC (Normal
 You can turn a relay on like so:
 
 ```c#
-AutomationHat.Relay.One.State = true;
+AutomationHat.Relay[0].State = true;
 ```
 
 Or off:
 
 ```c#
-AutomationHat.Relay.One.State = false;
+AutomationHat.Relay[0].State = false;
 ```
 
 Toggle it from its previous state:
 
 ```c#
-AutomationHat.Relay.One.Toggle()
+AutomationHat.Relay[0].Toggle()
 ```
 
 Or write a specific value:
 
 ```c#
-AutomationHat.Relay.One.State = true;
-AutomationHat.Relay.One.State = false;
+AutomationHat.Relay[0].State = true;
+AutomationHat.Relay[0].State = false;
 ```
 
 ### Lights
