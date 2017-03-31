@@ -20,9 +20,8 @@ namespace Pimoroni.MsIot
         /// <summary>
         /// Access to the light related this component, so you can set it on or off yourself
         /// </summary>
-        IDigitalOutput Light { get; }
+        IRawDigitalOutput Light { get; }
     }
-
     /// <summary>
     /// Interface for a digital input line
     /// </summary>
@@ -33,10 +32,13 @@ namespace Pimoroni.MsIot
         /// </summary>
         bool State { get; }
     }
-    public interface IDigitalOutput: IAutoLight
+    public interface IRawDigitalOutput 
     {
         bool State { get; set; }
         void Toggle();
+    }
+    public interface IDigitalOutput: IAutoLight, IRawDigitalOutput
+    {
     }
     public interface IAnalogInput: IAutoLight
     {
@@ -48,20 +50,21 @@ namespace Pimoroni.MsIot
     }
     public class Lights
     {
-        IDigitalOutput Power;
-        IDigitalOutput Comms;
-        IDigitalOutput Warn;
+        IRawDigitalOutput Power = new Light(17);
+        IRawDigitalOutput Comms = new Light(16);
+        IRawDigitalOutput Warn = new Light(15);
     }
     public static class AutomationHat
     {
         public static List<IAnalogInput> Analog;
-
         public static List<IDigitalInput> Input;
-
         public static List<IDigitalOutput> Output;
-
-        public static List<IDigitalOutput> Relay;
-
+        public static IList<IDigitalOutput> Relay = new List<IDigitalOutput>()
+        {
+            new Relay(13, new Light(6), new Light(7) ),
+            new Relay(19, new Light(8), new Light(9) ),
+            new Relay(16, new Light(10), new Light(11) )
+        };
         public static Lights Light;
     };
 }
