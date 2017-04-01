@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace Pimoroni.MsIot
 {
+    public interface IInputPin
+    {
+        /// <summary>
+        /// Whether the line is currently HIGH
+        /// </summary>
+        bool State { get; }
+    }
     /// <summary>
     /// Interface for a single digital pin
     /// </summary>
-    public interface IPin
+    public interface IOutputPin
     {
         bool State { get; set; }
         void Toggle();
@@ -17,7 +24,7 @@ namespace Pimoroni.MsIot
     /// <summary>
     /// Interface for a light with PWM control
     /// </summary>
-    public interface ILight : IPin
+    public interface ILight : IOutputPin
     {
         double Value { get; set; }
     }
@@ -40,26 +47,22 @@ namespace Pimoroni.MsIot
     /// <summary>
     /// Interface for a digital input line with an autolight
     /// </summary>
-    public interface IDigitalInput: IAutoLight
+    public interface IDigitalInput: IAutoLight, IInputPin
     {
-        /// <summary>
-        /// Whether the line is currently HIGH
-        /// </summary>
-        bool State { get; }
     }
     /// <summary>
     /// Interface for a digital output line with an autolight
     /// </summary>
-    public interface IDigitalOutput: IAutoLight, IPin
+    public interface IDigitalOutput: IAutoLight, IOutputPin
     {
     }
     /// <summary>
     /// Interface for a relay with two autolights
     /// </summary>
-    public interface IRelay: IDigitalOutput
+    public interface IRelay: IOutputPin
     {
-        ILight LightNO { get; }
-        ILight LightNC { get; }
+        IAutoLight NO { get; }
+        IAutoLight NC { get; }
     }
     public interface IAnalogInput: IAutoLight
     {
