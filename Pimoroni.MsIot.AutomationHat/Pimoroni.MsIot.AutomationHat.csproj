@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutomationHat.cs" />
+    <Compile Include="DS3231.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Light.cs" />
     <Compile Include="Output.cs" />

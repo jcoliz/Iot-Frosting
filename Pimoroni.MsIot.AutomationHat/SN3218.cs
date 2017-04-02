@@ -19,7 +19,6 @@ namespace Pimoroni.MsIot
 
     public class SN3218: IDisposable
     {
-        // use these constants for controlling how the I2C bus is setup
         private const byte I2C_ADDRESS = 0x54;
         private const byte CMD_ENABLE_OUTPUT = 0x00;
         private const byte CMD_SET_PWM_VALUES = 0x01;
