@@ -22,10 +22,10 @@ namespace Pimoroni.MsIot
 
         public bool State => Pin.Read() == GpioPinValue.High;
 
-        public static void DoAutoLight(IDigitalInput v)
+        public void Tick()
         {
-            if (v.AutoLight)
-                v.Light.State = v.State;
+            if (AutoLight)
+                Light.State = State;
         }
 
         private GpioPin Pin;

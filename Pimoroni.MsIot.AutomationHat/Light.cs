@@ -43,6 +43,8 @@ namespace Pimoroni.MsIot
             {
                 Values[Pin] = value;
                 Brightness = value;
+
+                Updated?.Invoke(this, new EventArgs());
             }
         }
 
@@ -51,6 +53,8 @@ namespace Pimoroni.MsIot
             Pin = pin;
             State = false;
         }
+
+        public event EventHandler<EventArgs> Updated;
 
         public void Toggle()
         {
@@ -61,5 +65,51 @@ namespace Pimoroni.MsIot
 
         private int Pin;
         private double Brightness = 1.0;
+    }
+
+    /// <summary>
+    /// A directly connected light (like an LED)
+    /// </summary>
+    /// <remarks>
+    /// Wire the LED between the pin and VCC. pin to ground should turn light on.
+    /// </remarks>
+    public class DirectLight : OutputPin, ILight
+    {
+        public DirectLight(int pin): base(pin)
+        {
+        }
+
+        public double Value
+        {
+            get
+            {
+                return State ? 1.0 : 0.0;
+            }
+
+            set
+            {
+                if (value == 0.0)
+                    State = false;
+                else
+                    State = true;
+            }
+        }
+
+        /// <summary>
+        /// DirectLight is wired such that a 'true' state (lit) has to be a 'false'
+        /// state (to ground) on the pin itself.
+        /// </summary>
+        public override bool State
+        {
+            get
+            {
+                return ! base.State;
+            }
+
+            set
+            {
+                base.State = ! value;
+            }
+        }
     }
 }

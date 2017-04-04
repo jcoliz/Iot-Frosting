@@ -12,16 +12,15 @@ namespace Pimoroni.MsIot
         public Output(int pin, ILight autolight): base(pin)
         {
             Light = autolight;
+            base.Updated += (s, e) =>
+            {
+                if (AutoLight)
+                    Light.State = base.State;
+            };
         }
 
         public bool AutoLight { get; set; } = true;
 
         public ILight Light { get; private set; }
-
-        protected override void Update(bool v)
-        {
-            if (AutoLight)
-                Light.State = v;
-        }
     }
 }

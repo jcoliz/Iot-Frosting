@@ -10,8 +10,8 @@ namespace Pimoroni.MsIot
     {
         public Relay(int pin, ILight light_no, ILight light_nc): base(pin)
         {
-            _NO = new SingleAutoLight(light_no);
-            _NC = new SingleAutoLight(light_nc);
+            _NO = new SingleAutoLight(this,false,light_no);
+            _NC = new SingleAutoLight(this,true,light_nc);
         }
 
         public IAutoLight NO => _NO;
@@ -20,27 +20,22 @@ namespace Pimoroni.MsIot
         private SingleAutoLight _NO;
         private SingleAutoLight _NC;
 
-        protected override void Update(bool v)
-        {
-            _NO.Update(v);
-            _NC.Update(!v);
-        }
         private class SingleAutoLight : IAutoLight
         {
-            public SingleAutoLight(ILight light)
+            public SingleAutoLight(IOutputPin source, bool inverted, ILight light)
             {
                 Light = light;
+
+                source.Updated += (s, e) =>
+                {
+                    if (AutoLight)
+                        Light.State = source.State ^ inverted;
+                };
             }
 
             public ILight Light { get; private set; }
 
             public bool AutoLight { get; set; }
-
-            public void Update(bool v)
-            {
-                if (AutoLight)
-                    Light.State = v;
-            }
         }
     }
 

@@ -13,8 +13,9 @@ namespace Pimoroni.MsIot
         {
             Pin = GpioController.GetDefault().OpenPin(pin);
             Pin.SetDriveMode(GpioPinDriveMode.Output);
-            State = false;
         }
+
+        public event EventHandler<EventArgs> Updated;
 
         public virtual bool State
         {
@@ -23,7 +24,7 @@ namespace Pimoroni.MsIot
             {
                 _Value = value ? GpioPinValue.High : GpioPinValue.Low;
                 Pin.Write(_Value);
-                Update(value);
+                Updated?.Invoke(this, new EventArgs());
             }
         }
 
@@ -32,12 +33,9 @@ namespace Pimoroni.MsIot
             State = !State;
         }
 
-        private GpioPin Pin;
-        private GpioPinValue _Value = GpioPinValue.High;
+        public GpioPin Pin;
 
-        protected virtual void Update(bool v)
-        {
-        }
+        private GpioPinValue _Value = GpioPinValue.High;
     }
 
     public class InputPin : IInputPin
@@ -46,10 +44,17 @@ namespace Pimoroni.MsIot
         {
             Pin = GpioController.GetDefault().OpenPin(pin);
             Pin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            Pin.DebounceTimeout = TimeSpan.FromMilliseconds(20);
+            Pin.ValueChanged += (s, e) =>
+            {
+                Updated?.Invoke(this, new EventArgs());
+            };
         }
+
+        public event EventHandler<EventArgs> Updated;
 
         public bool State => Pin.Read() == GpioPinValue.High;
 
-        private GpioPin Pin;
+        public GpioPin Pin;
     }
 }

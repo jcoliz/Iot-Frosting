@@ -20,6 +20,8 @@ namespace Pimoroni.MsIot
     {
         bool State { get; set; }
         void Toggle();
+
+        event EventHandler<EventArgs> Updated;
     }
     /// <summary>
     /// Interface for a light with PWM control
@@ -29,8 +31,11 @@ namespace Pimoroni.MsIot
         double Value { get; set; }
     }
     /// <summary>
-    /// Interface for something with an automatic light
+    /// Interface for something with an automatic light.
     /// </summary>
+    /// <remarks>
+    /// If you implement this interface, YOU are responsible for setting the light state
+    /// </remarks>
     public interface IAutoLight
     {
         /// <summary>
@@ -49,6 +54,7 @@ namespace Pimoroni.MsIot
     /// </summary>
     public interface IDigitalInput: IAutoLight, IInputPin
     {
+        void Tick();
     }
     /// <summary>
     /// Interface for a digital output line with an autolight
@@ -104,9 +110,9 @@ namespace Pimoroni.MsIot
         /// Call this regularly from a timer thread to update the state of
         /// everything
         /// </summary>
-        public static void Update()
+        public static void Tick()
         {
-            Input.ForEach(MsIot.Input.DoAutoLight);
+            Input.ForEach(x=>x.Tick());
         }
     };
 }
