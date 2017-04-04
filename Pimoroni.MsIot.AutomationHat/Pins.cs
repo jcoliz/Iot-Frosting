@@ -12,7 +12,7 @@ namespace Pimoroni.MsIot
         public OutputPin(int pin)
         {
             Pin = GpioController.GetDefault().OpenPin(pin);
-            Pin.SetDriveMode(GpioPinDriveMode.OutputOpenSourcePullDown);
+            Pin.SetDriveMode(GpioPinDriveMode.Output);
             State = false;
         }
 

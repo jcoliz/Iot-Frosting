@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pimoroni.MsIot.AutomationHat", "Pimoroni.MsIot.AutomationHat.csproj", "{0BAB3BD0-A6FD-4FB8-9F70-248435139630}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pimoroni.MsIot.Sample", "..\Pimoroni.MsIot.Sample\Pimoroni.MsIot.Sample.csproj", "{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,26 @@ Global
 		{0BAB3BD0-A6FD-4FB8-9F70-248435139630}.Release|x64.Build.0 = Release|x64
 		{0BAB3BD0-A6FD-4FB8-9F70-248435139630}.Release|x86.ActiveCfg = Release|x86
 		{0BAB3BD0-A6FD-4FB8-9F70-248435139630}.Release|x86.Build.0 = Release|x86
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Debug|ARM.ActiveCfg = Debug|ARM
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Debug|ARM.Build.0 = Debug|ARM
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Debug|ARM.Deploy.0 = Debug|ARM
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Debug|x64.ActiveCfg = Debug|x64
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Debug|x64.Build.0 = Debug|x64
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Debug|x64.Deploy.0 = Debug|x64
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Debug|x86.ActiveCfg = Debug|x86
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Debug|x86.Build.0 = Debug|x86
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Debug|x86.Deploy.0 = Debug|x86
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|Any CPU.ActiveCfg = Release|x86
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|ARM.ActiveCfg = Release|ARM
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|ARM.Build.0 = Release|ARM
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|ARM.Deploy.0 = Release|ARM
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|x64.ActiveCfg = Release|x64
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|x64.Build.0 = Release|x64
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|x64.Deploy.0 = Release|x64
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|x86.ActiveCfg = Release|x86
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|x86.Build.0 = Release|x86
+		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
