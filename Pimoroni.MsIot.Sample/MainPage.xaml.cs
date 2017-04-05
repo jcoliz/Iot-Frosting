@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.Foundation;
@@ -144,6 +145,37 @@ namespace Pimoroni.MsIot.Sample
             }
         }
 
+        async Task Scenario7()
+        {
+            using (var Hat = await AutomationHat.Open())
+            {
+                Hat.Light.Power.Value = 1.0;
+                Hat.Relay.ForEach(x => { x.State = false; x.NC.AutoLight = false; x.NC.Light.State = false; });
+
+                // Here we just sit here until input 0 has been high for 3 seconds, then released
+                var semaphore = new SemaphoreSlim(1);
+                await semaphore.WaitAsync();
+                DateTime? pressed_at = null;
+                Hat.Input[0].Updated += (s, e) =>
+                {
+                    if (pressed_at.HasValue)
+                    {
+                        if (DateTime.Now - pressed_at.Value > TimeSpan.FromSeconds(3))
+                            semaphore.Release();
+                        else
+                            pressed_at = null;
+                    }
+                    else
+                    {
+                        if (Hat.Input[0].State == true)
+                            pressed_at = DateTime.Now;
+                    }
+                };
+
+                await semaphore.WaitAsync();
+            }
+        }
+
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             var Button = sender as Button;
@@ -163,6 +195,8 @@ namespace Pimoroni.MsIot.Sample
                     await Scenario5();
                 if (R6.IsChecked == true)
                     await Scenario6();
+                if (R7.IsChecked == true)
+                    await Scenario7();
             }
             catch (Exception ex)
             {

@@ -13,6 +13,8 @@ namespace Pimoroni.MsIot
         /// Whether the line is currently HIGH
         /// </summary>
         bool State { get; }
+
+        event EventHandler<EventArgs> Updated;
     }
     /// <summary>
     /// Interface for a single digital pin
@@ -53,7 +55,7 @@ namespace Pimoroni.MsIot
     /// <summary>
     /// Interface for a digital input line with an autolight
     /// </summary>
-    public interface IDigitalInput: IAutoLight, IInputPin
+    public interface IDigitalInput: IAutoLight, IInputPin, IDisposable
     {
         void Tick();
     }
@@ -109,12 +111,6 @@ namespace Pimoroni.MsIot
         {
             get { throw new NotImplementedException(); }
         }
-        public List<IDigitalInput> Input = new List<IDigitalInput>()
-        {
-            new Input(26, new Light(14)),
-            new Input(20, new Light(13)),
-            new Input(21, new Light(12)),
-        };
         public List<IDigitalOutput> Output = new List<IDigitalOutput>()
         {
             new Output(5, new Light(3)),
@@ -122,6 +118,12 @@ namespace Pimoroni.MsIot
             new Output(6, new Light(5))
         };
         };*/
+        public List<IDigitalInput> Input = new List<IDigitalInput>()
+        {
+            new Input(26, new Light(14)),
+            new Input(20, new Light(13)),
+            new Input(21, new Light(12)),
+        };
         public List<IRelay> Relay = new List<IRelay>()
         {
             new Relay(13, new Light(6), new Light(7) ),
@@ -138,7 +140,7 @@ namespace Pimoroni.MsIot
         {
             if (!disposing)
             {
-                //Input.ForEach(x=>x.Tick());
+                Input.ForEach(x=>x.Tick());
                 LedController.Output(MsIot.Light.Values);
             }
         }
@@ -149,6 +151,7 @@ namespace Pimoroni.MsIot
             disposing = true;
             Timer.Cancel();
             Relay.ForEach(x => x.Dispose());
+            Input.ForEach(x => x.Dispose());
             ((IDisposable)LedController).Dispose();
         }
     };
