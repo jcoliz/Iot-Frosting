@@ -15,6 +15,7 @@
             <RadioButton x:Name="R3" GroupName="Scenario" Content="Scenario 3"/>
             <RadioButton x:Name="R4" GroupName="Scenario" Content="Scenario 4"/>
             <RadioButton x:Name="R5" GroupName="Scenario" Content="Scenario 5"/>
+            <RadioButton x:Name="R6" GroupName="Scenario" Content="Scenario 6"/>
             <Button Content="Run" Click="Button_Click"/>
         </StackPanel>
 

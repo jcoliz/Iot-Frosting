@@ -123,6 +123,26 @@ namespace Pimoroni.MsIot.Sample
             }
         }
 
+        async Task Scenario6()
+        {
+            using (var Hat = await AutomationHat.Open())
+            {
+                Hat.Relay.ForEach(x => { x.State = false; x.NC.AutoLight = false; x.NC.Light.State = false; } );
+                await Task.Delay(500);
+
+                for (int i = 0;i< 3;i++)
+                {
+                    Hat.Relay[i].State = true;
+                    await Task.Delay(500);
+                }
+                for (int i = 0; i < 3; i++)
+                {
+                    Hat.Relay[i].State = false;
+                    await Task.Delay(500);
+                }
+            }
+        }
+
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             var Button = sender as Button;
@@ -140,6 +160,8 @@ namespace Pimoroni.MsIot.Sample
                     await Scenario4();
                 if (R5.IsChecked == true)
                     await Scenario5();
+                if (R6.IsChecked == true)
+                    await Scenario6();
             }
             catch (Exception ex)
             {

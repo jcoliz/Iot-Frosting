@@ -30,13 +30,13 @@ namespace Pimoroni.MsIot
                 source.Updated += (s, e) =>
                 {
                     if (AutoLight)
-                        Light.State = source.State ^ inverted;
+                        Light.State = source.State != inverted;
                 };
             }
 
             public ILight Light { get; private set; }
 
-            public bool AutoLight { get; set; }
+            public bool AutoLight { get; set; } = true;
         }
     }
 
