@@ -42,7 +42,7 @@ namespace Pimoroni.MsIot.Sample
                 Timer.Start();
 
                 Controller = GpioController.GetDefault();
-                Scenario2_Setup();
+                Scenario4_Setup();
             }
             catch (Exception ex)
             {
@@ -95,6 +95,15 @@ namespace Pimoroni.MsIot.Sample
             {
                 Switch3.Tick();
             };
+        }
+
+        /// <summary>
+        /// Cycle through automation hat LED's
+        /// </summary>
+        async void Scenario4_Setup()
+        {
+            var device = new SN3218();
+            await device.Test();
         }
 
         #region IDisposable Support

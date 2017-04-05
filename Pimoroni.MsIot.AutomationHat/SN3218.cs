@@ -62,7 +62,7 @@ namespace Pimoroni.MsIot
             output_buffer[0] = CMD_SET_PWM_VALUES;
             int i = 1;
             foreach (var value in values)
-                output_buffer[i++] = (byte)(value * 256.0);
+                output_buffer[i++] = (byte)(value * 255.0);
             Device.Write( output_buffer );
             Device.Write(new byte[] { CMD_UPDATE, 0xff });
         }
@@ -73,16 +73,34 @@ namespace Pimoroni.MsIot
             Enable();
             EnableLeds();
 
-            int i = 18;
-            var values = new double[i];
-            while(i-- > 0)
+            const int num_leds = 18;
+            var values = new double[num_leds];
+
+            // All on
+            int i = num_leds;
+            while(i-->0)
+                values[i] = 1.0;
+            Output(values);
+            await Task.Delay(500);
+
+            // All off
+            Array.Clear(values,0,num_leds);
+
+            // Cycle through
+            i = num_leds;
+            while (i-- > 0)
             {
                 values[i] = 1.0;
                 Output(values);
                 await Task.Delay(500);
-                values[i] = 0.0;
+                values[i] = 0.25;
                 Output(values);
             }
+
+            // All off
+            Array.Clear(values, 0, num_leds);
+            Output(values);
+
         }
 
         #region IDisposable Support
