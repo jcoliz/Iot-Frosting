@@ -61,8 +61,9 @@ namespace Pimoroni.MsIot
             var output_buffer = new byte[19];
             output_buffer[0] = CMD_SET_PWM_VALUES;
             int i = 1;
+            // Write gamma-corrected values
             foreach (var value in values)
-                output_buffer[i++] = (byte)(value * 255.0);
+                output_buffer[i++] = (byte)(Math.Round(Math.Pow(256,value))-1);
             Device?.Write( output_buffer );
             Device?.Write(new byte[] { CMD_UPDATE, 0xff });
         }
