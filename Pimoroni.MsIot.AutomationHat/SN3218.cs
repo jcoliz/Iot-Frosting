@@ -112,6 +112,8 @@ namespace Pimoroni.MsIot
             {
                 if (disposing)
                 {
+                    EnableLeds(0);
+                    Disable();
                     Device.Dispose();
                     Device = null;
                 }

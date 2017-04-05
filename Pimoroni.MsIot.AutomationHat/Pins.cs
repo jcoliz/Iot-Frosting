@@ -13,6 +13,7 @@ namespace Pimoroni.MsIot
         {
             Pin = GpioController.GetDefault().OpenPin(pin);
             Pin.SetDriveMode(GpioPinDriveMode.Output);
+            Pin.Write(_Value);
         }
 
         public event EventHandler<EventArgs> Updated;
@@ -40,7 +41,7 @@ namespace Pimoroni.MsIot
 
         public GpioPin Pin;
 
-        private GpioPinValue _Value = GpioPinValue.High;
+        private GpioPinValue _Value = GpioPinValue.Low;
     }
 
     public class InputPin : IInputPin, IDisposable

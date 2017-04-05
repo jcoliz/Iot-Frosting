@@ -66,7 +66,7 @@ namespace Pimoroni.MsIot
     /// <summary>
     /// Interface for a relay with two autolights
     /// </summary>
-    public interface IRelay: IOutputPin
+    public interface IRelay: IOutputPin, IDisposable
     {
         IAutoLight NO { get; }
         IAutoLight NC { get; }
@@ -121,12 +121,13 @@ namespace Pimoroni.MsIot
             new Output(12, new Light(4)),
             new Output(6, new Light(5))
         };
-        public IList<IRelay> Relay = new List<IRelay>()
+        };*/
+        public List<IRelay> Relay = new List<IRelay>()
         {
             new Relay(13, new Light(6), new Light(7) ),
             new Relay(19, new Light(8), new Light(9) ),
             new Relay(16, new Light(10), new Light(11) )
-        };*/
+        };
         public Lights Light = new Lights();
 
         /// <summary>
@@ -147,6 +148,7 @@ namespace Pimoroni.MsIot
         {
             disposing = true;
             Timer.Cancel();
+            Relay.ForEach(x => x.Dispose());
             ((IDisposable)LedController).Dispose();
         }
     };

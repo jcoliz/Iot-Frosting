@@ -42,7 +42,8 @@ namespace Pimoroni.MsIot
             set
             {
                 Values[Pin] = value;
-                Brightness = value;
+                if (value > 0.0)
+                    Brightness = value;
 
                 Updated?.Invoke(this, new EventArgs());
             }

@@ -25,6 +25,7 @@ namespace Pimoroni.MsIot
             public SingleAutoLight(IOutputPin source, bool inverted, ILight light)
             {
                 Light = light;
+                Light.State = source.State != inverted;
 
                 source.Updated += (s, e) =>
                 {
