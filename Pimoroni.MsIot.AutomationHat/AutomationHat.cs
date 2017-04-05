@@ -80,39 +80,55 @@ namespace Pimoroni.MsIot
         public ILight Comms = new Light(16);
         public ILight Warn = new Light(15);
     }
-    public static class AutomationHat
+    public class AutomationHat: IDisposable
     {
-        public static List<IAnalogInput> Analog
+        private SN3218 LedController = new SN3218();
+
+        /*
+        public List<IAnalogInput> Analog
         {
             get { throw new NotImplementedException(); }
         }
-        public static List<IDigitalInput> Input = new List<IDigitalInput>()
+        public List<IDigitalInput> Input = new List<IDigitalInput>()
         {
             new Input(26, new Light(14)),
             new Input(20, new Light(13)),
             new Input(21, new Light(12)),
         };
-        public static List<IDigitalOutput> Output = new List<IDigitalOutput>()
+        public List<IDigitalOutput> Output = new List<IDigitalOutput>()
         {
             new Output(5, new Light(3)),
             new Output(12, new Light(4)),
             new Output(6, new Light(5))
         };
-        public static IList<IRelay> Relay = new List<IRelay>()
+        public IList<IRelay> Relay = new List<IRelay>()
         {
             new Relay(13, new Light(6), new Light(7) ),
             new Relay(19, new Light(8), new Light(9) ),
             new Relay(16, new Light(10), new Light(11) )
-        };
-        public static Lights Light = new Lights();
+        };*/
+        public Lights Light = new Lights();
+
+        public async Task Initialize()
+        {
+            await LedController.Initialize();
+            LedController.Enable();
+            LedController.EnableLeds();
+        }
 
         /// <summary>
         /// Call this regularly from a timer thread to update the state of
         /// everything
         /// </summary>
-        public static void Tick()
+        public void Tick()
         {
-            Input.ForEach(x=>x.Tick());
+            //Input.ForEach(x=>x.Tick());
+            LedController.Output(MsIot.Light.Values);
+        }
+
+        public void Dispose()
+        {
+            ((IDisposable)LedController).Dispose();
         }
     };
 }

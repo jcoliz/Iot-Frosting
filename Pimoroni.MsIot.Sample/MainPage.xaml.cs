@@ -106,30 +106,28 @@ namespace Pimoroni.MsIot.Sample
 
         async Task Scenario5()
         {
-            using (var ledcontroller = new SN3218())
+            using (var Hat = new AutomationHat())
             {
-                await ledcontroller.Initialize();
-                ledcontroller.Enable();
-                ledcontroller.EnableLeds();
+                await Hat.Initialize();
 
                 DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(20) };
                 Timer.Start();
                 Timer.Tick += (s, e) =>
                 {
-                    ledcontroller.Output(Light.Values);
+                    Hat.Tick();
                 };
 
-                AutomationHat.Light.Power.Value = 1.0;
+                Hat.Light.Power.Value = 1.0;
                 await Task.Delay(500);
-                AutomationHat.Light.Comms.Value = 1.0;
+                Hat.Light.Comms.Value = 1.0;
                 await Task.Delay(500);
-                AutomationHat.Light.Warn.Value = 1.0;
+                Hat.Light.Warn.Value = 1.0;
                 await Task.Delay(500);
-                AutomationHat.Light.Power.Value = 0.0;
+                Hat.Light.Power.Value = 0.0;
                 await Task.Delay(500);
-                AutomationHat.Light.Comms.Value = 0.0;
+                Hat.Light.Comms.Value = 0.0;
                 await Task.Delay(500);
-                AutomationHat.Light.Warn.Value = 0.0;
+                Hat.Light.Warn.Value = 0.0;
                 await Task.Delay(500);
                 Timer.Stop();
             }
