@@ -42,7 +42,7 @@ namespace Pimoroni.MsIot.Sample
                 Timer.Start();
 
                 Controller = GpioController.GetDefault();
-                Scenario4_Setup();
+                Scenario5_Setup();
             }
             catch (Exception ex)
             {
@@ -104,6 +104,32 @@ namespace Pimoroni.MsIot.Sample
         {
             var device = new SN3218();
             await device.Test();
+        }
+
+        async void Scenario5_Setup()
+        {
+            var ledcontroller = new SN3218();
+            await ledcontroller.Initialize();
+            ledcontroller.Enable();
+            ledcontroller.EnableLeds();
+
+            Timer.Tick += (s, e) =>
+            {
+                ledcontroller.Output(Light.Values);
+            };
+
+            AutomationHat.Light.Power.Value = 1.0;
+            await Task.Delay(500);
+            AutomationHat.Light.Comms.Value = 1.0;
+            await Task.Delay(500);
+            AutomationHat.Light.Warn.Value = 1.0;
+            await Task.Delay(500);
+            AutomationHat.Light.Power.Value = 0.0;
+            await Task.Delay(500);
+            AutomationHat.Light.Comms.Value = 0.0;
+            await Task.Delay(500);
+            AutomationHat.Light.Warn.Value = 0.0;
+            await Task.Delay(500);
         }
 
         #region IDisposable Support

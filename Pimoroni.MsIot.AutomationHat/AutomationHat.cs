@@ -76,9 +76,9 @@ namespace Pimoroni.MsIot
     }
     public class Lights
     {
-        ILight Power = new Light(17);
-        ILight Comms = new Light(16);
-        ILight Warn = new Light(15);
+        public ILight Power = new Light(17);
+        public ILight Comms = new Light(16);
+        public ILight Warn = new Light(15);
     }
     public static class AutomationHat
     {
