@@ -133,7 +133,7 @@ You can take control of these lights independently, and turn them on and off at 
 
 ```c#
 Hat.Relay[0].NO.AutoLight = false;
-Hat.Input[0].NO.Light.State = true;
+Hat.Relay[0].NO.Light.State = true;
 ```
 
 By default the NC lights are not enabled, because NC is the default position, so you can infer NC from the NO light being off.
