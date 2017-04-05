@@ -62,7 +62,7 @@ namespace Pimoroni.MsIot
     /// <summary>
     /// Interface for a digital output line with an autolight
     /// </summary>
-    public interface IDigitalOutput: IAutoLight, IOutputPin
+    public interface IDigitalOutput: IAutoLight, IOutputPin, IDisposable
     {
     }
     /// <summary>
@@ -111,18 +111,18 @@ namespace Pimoroni.MsIot
         {
             get { throw new NotImplementedException(); }
         }
-        public List<IDigitalOutput> Output = new List<IDigitalOutput>()
-        {
-            new Output(5, new Light(3)),
-            new Output(12, new Light(4)),
-            new Output(6, new Light(5))
-        };
         };*/
         public List<IDigitalInput> Input = new List<IDigitalInput>()
         {
             new Input(26, new Light(14)),
             new Input(20, new Light(13)),
             new Input(21, new Light(12)),
+        };
+        public List<IDigitalOutput> Output = new List<IDigitalOutput>()
+        {
+            new Output(5, new Light(3)),
+            new Output(12, new Light(4)),
+            new Output(6, new Light(5))
         };
         public List<IRelay> Relay = new List<IRelay>()
         {
@@ -152,6 +152,7 @@ namespace Pimoroni.MsIot
             Timer.Cancel();
             Relay.ForEach(x => x.Dispose());
             Input.ForEach(x => x.Dispose());
+            Output.ForEach(x => x.Dispose());
             ((IDisposable)LedController).Dispose();
         }
     };
