@@ -41,59 +41,20 @@ namespace Pimoroni.MsIot.Sample
         /// <summary>
         /// Each time you close this switch, it toggles the light
         /// </summary>
-        async Task Scenario1()
-        {
-            var Controller = GpioController.GetDefault();
-            using (var LED1 = Controller.OpenPin(17))
-            using (var Switch1 = Controller.OpenPin(27))
-            {
-                LED1.SetDriveMode(GpioPinDriveMode.Output);
-                Switch1.SetDriveMode(GpioPinDriveMode.InputPullUp);
-                Switch1.DebounceTimeout = TimeSpan.FromMilliseconds(20);
-
-                Switch1.ValueChanged += (s, a) =>
-                {
-                    if (a.Edge == GpioPinEdge.FallingEdge)
-                        LED1.Write((LED1.Read() == GpioPinValue.High) ? GpioPinValue.Low : GpioPinValue.High);
-                };
-                await Task.Delay(TimeSpan.FromSeconds(5));
-            }
-        }
-
-        /// <summary>
-        /// Each time you close this switch, it toggles the light
-        /// </summary>
         /// <remarks>
         /// Same as scenario 1, but uses toolkit classes
         /// </remarks>
         async Task Scenario2()
         {
-            using(var LED2 = new OutputPin(17))
-            using (var Switch2 = new InputPin(27))
+            using (var Hat = await AutomationHat.Open())
             {
-                LED2.State = false;
-                Switch2.Updated += (s, a) =>
+                Hat.Input[0].Updated += (s, a) =>
                 {
-                    if (!Switch2.State)
-                        LED2.Toggle();
+                    if (Hat.Input[0].State)
+                        Hat.Output[0].Toggle();
                 };
                 await Task.Delay(TimeSpan.FromSeconds(10));
             }
-        }
-
-        /// <summary>
-        /// LED acts as an autolight for the switch
-        /// </summary>
-        async Task Scenario3()
-        {
-            var Switch3 = new Input(27, new DirectLight(17));
-            DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(20) };
-            Timer.Start();
-            Timer.Tick += (s, e) =>
-            {
-                Switch3.Tick();
-            };
-            await Task.Delay(TimeSpan.FromSeconds(5));
         }
 
         /// <summary>
@@ -194,12 +155,8 @@ namespace Pimoroni.MsIot.Sample
 
             try
             {
-                if (R1.IsChecked == true)
-                    await Scenario1();
                 if (R2.IsChecked == true)
                     await Scenario2();
-                if (R3.IsChecked == true)
-                    await Scenario3();
                 if (R4.IsChecked == true)
                     await Scenario4();
                 if (R5.IsChecked == true)
