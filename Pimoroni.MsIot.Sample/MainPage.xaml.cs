@@ -127,6 +127,7 @@ namespace Pimoroni.MsIot.Sample
         {
             using (var Hat = await AutomationHat.Open())
             {
+                Hat.Light.Power.Value = 1.0;
                 Hat.Relay.ForEach(x => { x.State = false; x.NC.AutoLight = false; x.NC.Light.State = false; } );
                 await Task.Delay(500);
 
