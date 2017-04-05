@@ -106,10 +106,8 @@ namespace Pimoroni.MsIot.Sample
 
         async Task Scenario5()
         {
-            using (var Hat = new AutomationHat())
+            using (var Hat = await AutomationHat.Open())
             {
-                await Hat.Initialize();
-
                 Hat.Light.Power.Value = 1.0;
                 await Task.Delay(500);
                 Hat.Light.Comms.Value = 1.0;

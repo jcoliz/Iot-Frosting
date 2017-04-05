@@ -63,8 +63,8 @@ namespace Pimoroni.MsIot
             int i = 1;
             foreach (var value in values)
                 output_buffer[i++] = (byte)(value * 255.0);
-            Device.Write( output_buffer );
-            Device.Write(new byte[] { CMD_UPDATE, 0xff });
+            Device?.Write( output_buffer );
+            Device?.Write(new byte[] { CMD_UPDATE, 0xff });
         }
 
         public async Task Test()
@@ -113,6 +113,7 @@ namespace Pimoroni.MsIot
                 if (disposing)
                 {
                     Device.Dispose();
+                    Device = null;
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

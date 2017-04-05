@@ -84,6 +84,25 @@ namespace Pimoroni.MsIot
     public class AutomationHat: IDisposable
     {
         private SN3218 LedController = new SN3218();
+        private ThreadPoolTimer Timer;
+
+        /// <summary>
+        /// Constructor. Do not call directly. Use AutomationHat.Open()
+        /// </summary>
+        protected AutomationHat()
+        {
+        }
+
+        public static async Task<AutomationHat> Open()
+        {
+            var result = new AutomationHat();
+            await result.LedController.Initialize();
+            result.LedController.Enable();
+            result.LedController.EnableLeds();
+
+            result.Timer = ThreadPoolTimer.CreatePeriodicTimer(x => result.Tick(), TimeSpan.FromMilliseconds(20));
+            return result;
+        }
 
         /*
         public List<IAnalogInput> Analog
@@ -110,31 +129,25 @@ namespace Pimoroni.MsIot
         };*/
         public Lights Light = new Lights();
 
-        private ThreadPoolTimer Timer;
-
-        public async Task Initialize()
-        {
-            await LedController.Initialize();
-            LedController.Enable();
-            LedController.EnableLeds();
-
-            Timer = ThreadPoolTimer.CreatePeriodicTimer(x=>Tick(), TimeSpan.FromMilliseconds(20));
-        }
-
         /// <summary>
         /// Call this regularly from a timer thread to update the state of
         /// everything
         /// </summary>
         public void Tick()
         {
-            //Input.ForEach(x=>x.Tick());
-            LedController.Output(MsIot.Light.Values);
+            if (!disposing)
+            {
+                //Input.ForEach(x=>x.Tick());
+                LedController.Output(MsIot.Light.Values);
+            }
         }
 
+        private bool disposing = false;
         public void Dispose()
         {
-            ((IDisposable)LedController).Dispose();
+            disposing = true;
             Timer.Cancel();
+            ((IDisposable)LedController).Dispose();
         }
     };
 }
