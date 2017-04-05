@@ -32,6 +32,7 @@ namespace Pimoroni.MsIot
     public interface ILight : IOutputPin
     {
         double Value { get; set; }
+        double Brightness { get; set; }
     }
     /// <summary>
     /// Interface for something with an automatic light.

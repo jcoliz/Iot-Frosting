@@ -49,6 +49,11 @@ namespace Pimoroni.MsIot
             }
         }
 
+        /// <summary>
+        /// How bright the light is when it's on
+        /// </summary>
+        public double Brightness { get; set; } = 1.0;
+
         public Light(int pin)
         {
             Pin = pin;
@@ -65,7 +70,6 @@ namespace Pimoroni.MsIot
         public static double[] Values = new double[18];
 
         private int Pin;
-        private double Brightness = 1.0;
     }
 
     /// <summary>
@@ -112,5 +116,10 @@ namespace Pimoroni.MsIot
                 base.State = ! value;
             }
         }
+
+        /// <summary>
+        /// Implemented for the interface. Ignored for a digital light.
+        /// </summary>
+        public double Brightness { get; set; }
     }
 }
