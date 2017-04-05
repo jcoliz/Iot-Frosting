@@ -7,27 +7,21 @@ using Windows.Devices.Gpio;
 
 namespace Pimoroni.MsIot
 {
-    public class Input: IDigitalInput
+    public class Input: InputPin, IDigitalInput
     {
-        public Input(int pin, ILight light)
+        public Input(int pin, ILight light): base(pin)
         {
             Light = light;
-            Pin = GpioController.GetDefault().OpenPin(pin);
-            Pin.SetDriveMode(GpioPinDriveMode.InputPullDown);
         }
 
         public bool AutoLight { get; set; } = true;
 
         public ILight Light { get; private set; }
 
-        public bool State => Pin.Read() == GpioPinValue.High;
-
         public void Tick()
         {
             if (AutoLight)
                 Light.State = State;
         }
-
-        private GpioPin Pin;
     }
 }

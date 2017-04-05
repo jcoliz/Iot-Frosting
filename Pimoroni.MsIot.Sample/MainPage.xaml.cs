@@ -38,11 +38,11 @@ namespace Pimoroni.MsIot.Sample
             {
                 this.InitializeComponent();
 
-                Timer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(10) };
+                Timer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(20) };
                 Timer.Start();
 
                 Controller = GpioController.GetDefault();
-                Scenario1_Setup();
+                Scenario2_Setup();
             }
             catch (Exception ex)
             {
@@ -91,7 +91,10 @@ namespace Pimoroni.MsIot.Sample
         void Scenario3_Setup()
         {
             Switch3 = new Input(27, new DirectLight(17));
-            Timer.Tick += (s, e) => Switch3.Tick();
+            Timer.Tick += (s, e) =>
+            {
+                Switch3.Tick();
+            };
         }
 
         #region IDisposable Support
