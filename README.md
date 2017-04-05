@@ -6,7 +6,7 @@ Automation HAT is a home monitoring and automation controller featuring relays, 
 
 ## Goal
 
-This project has ambition to provide a C# library for this HAT usable on Windows 10 IoT Core
+This project provides a C# library for this HAT usable on Windows 10 IoT Core
 
 ## Documentation & Support
 
@@ -21,10 +21,23 @@ http://forums.pimoroni.com/c/support
 
 ## Function Reference
 
+### Namespace
+
+At the top of your C# file, reference the namespace for the library, like so:
+
 ```c#
 using Pimoroni.MsIot
 ```
 
+### Open the device
+
+Before using the device, you'll need to open a connection to it, and wrap your code in a 'using', like so:
+
+```c#
+using (var Hat = await AutomationHat.Open())
+{
+}
+```
 
 ### Analog
 
