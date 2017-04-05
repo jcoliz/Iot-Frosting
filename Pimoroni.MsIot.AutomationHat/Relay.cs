@@ -10,8 +10,9 @@ namespace Pimoroni.MsIot
     {
         public Relay(int pin, ILight light_no, ILight light_nc): base(pin)
         {
-            _NO = new SingleAutoLight(this,false,light_no);
-            _NC = new SingleAutoLight(this,true,light_nc);
+            // By default the (annoying) NC light is off. You can turn the autolight on if you like
+            _NO = new SingleAutoLight(this, false, light_no) { AutoLight = true };
+            _NC = new SingleAutoLight(this, true, light_nc);
         }
 
         public IAutoLight NO => _NO;
@@ -25,18 +26,36 @@ namespace Pimoroni.MsIot
             public SingleAutoLight(IOutputPin source, bool inverted, ILight light)
             {
                 Light = light;
-                Light.State = source.State != inverted;
+                Inverted = inverted;
+                Source = source;
+                Light.State = false;
 
                 source.Updated += (s, e) =>
                 {
                     if (AutoLight)
-                        Light.State = source.State != inverted;
+                        Light.State = source.State != Inverted;
                 };
             }
 
             public ILight Light { get; private set; }
 
-            public bool AutoLight { get; set; } = true;
+            public bool AutoLight
+            {
+                get { return _AutoLight; }
+                set
+                {
+                    _AutoLight = value;
+                    if (_AutoLight)
+                        Light.State = Source.State != Inverted;
+                    else
+                        Light.State = false;
+                }
+            } 
+            private bool _AutoLight;
+
+            private bool Inverted;
+
+            private IOutputPin Source;
         }
     }
 

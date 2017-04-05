@@ -101,6 +101,7 @@ namespace Pimoroni.MsIot
             await result.LedController.Initialize();
             result.LedController.Enable();
             result.LedController.EnableLeds();
+            result.Light.Power.State = true;
 
             result.Timer = ThreadPoolTimer.CreatePeriodicTimer(x => result.Tick(), TimeSpan.FromMilliseconds(20));
             return result;

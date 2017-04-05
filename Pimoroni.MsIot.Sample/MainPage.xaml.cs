@@ -109,13 +109,10 @@ namespace Pimoroni.MsIot.Sample
         {
             using (var Hat = await AutomationHat.Open())
             {
-                Hat.Light.Power.Value = 1.0;
                 await Task.Delay(500);
                 Hat.Light.Comms.Value = 1.0;
                 await Task.Delay(500);
                 Hat.Light.Warn.Value = 1.0;
-                await Task.Delay(500);
-                Hat.Light.Power.Value = 0.0;
                 await Task.Delay(500);
                 Hat.Light.Comms.Value = 0.0;
                 await Task.Delay(500);
@@ -128,8 +125,6 @@ namespace Pimoroni.MsIot.Sample
         {
             using (var Hat = await AutomationHat.Open())
             {
-                Hat.Light.Power.Value = 1.0;
-                Hat.Relay.ForEach(x => { x.State = false; x.NC.AutoLight = false; x.NC.Light.State = false; } );
                 await Task.Delay(500);
 
                 for (int i = 0;i< 3;i++)
@@ -149,9 +144,6 @@ namespace Pimoroni.MsIot.Sample
         {
             using (var Hat = await AutomationHat.Open())
             {
-                Hat.Light.Power.Value = 1.0;
-                Hat.Relay.ForEach(x => { x.State = false; x.NC.AutoLight = false; x.NC.Light.State = false; });
-
                 // Here we just sit here until input 0 has been high for 3 seconds, then released
                 var semaphore = new SemaphoreSlim(1);
                 await semaphore.WaitAsync();
@@ -180,8 +172,6 @@ namespace Pimoroni.MsIot.Sample
         {
             using (var Hat = await AutomationHat.Open())
             {
-                Hat.Light.Power.Value = 1.0;
-                Hat.Relay.ForEach(x => { x.State = false; x.NC.AutoLight = false; x.NC.Light.State = false; });
                 await Task.Delay(500);
 
                 for (int i = 0; i < 3; i++)
