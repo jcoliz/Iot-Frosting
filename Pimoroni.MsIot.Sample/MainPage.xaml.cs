@@ -22,27 +22,14 @@ namespace Pimoroni.MsIot.Sample
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainPage : Page, IDisposable
+    public sealed partial class MainPage : Page
     {
-        GpioPin LED1;
-        GpioPin Switch1;
-        OutputPin LED2;
-        InputPin Switch2;
-        Input Switch3;
-        GpioController Controller;
-        DispatcherTimer Timer;
 
         public MainPage()
         {
             try
             {
                 this.InitializeComponent();
-
-                Timer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(20) };
-                Timer.Start();
-
-                Controller = GpioController.GetDefault();
-                Scenario5_Setup();
             }
             catch (Exception ex)
             {
@@ -53,19 +40,23 @@ namespace Pimoroni.MsIot.Sample
         /// <summary>
         /// Each time you close this switch, it toggles the light
         /// </summary>
-        void Scenario1_Setup()
+        async Task Scenario1()
         {
-            LED1 = Controller.OpenPin(17);
-            LED1.SetDriveMode(GpioPinDriveMode.Output);
-            Switch1 = Controller.OpenPin(27);
-            Switch1.SetDriveMode(GpioPinDriveMode.InputPullUp);
-            Switch1.DebounceTimeout = TimeSpan.FromMilliseconds(20);
-
-            Switch1.ValueChanged += (s, a) =>
+            var Controller = GpioController.GetDefault();
+            using (var LED1 = Controller.OpenPin(17))
+            using (var Switch1 = Controller.OpenPin(27))
             {
-                if (a.Edge == GpioPinEdge.FallingEdge)
-                    LED1.Write((LED1.Read() == GpioPinValue.High) ? GpioPinValue.Low : GpioPinValue.High);
-            };
+                LED1.SetDriveMode(GpioPinDriveMode.Output);
+                Switch1.SetDriveMode(GpioPinDriveMode.InputPullUp);
+                Switch1.DebounceTimeout = TimeSpan.FromMilliseconds(20);
+
+                Switch1.ValueChanged += (s, a) =>
+                {
+                    if (a.Edge == GpioPinEdge.FallingEdge)
+                        LED1.Write((LED1.Read() == GpioPinValue.High) ? GpioPinValue.Low : GpioPinValue.High);
+                };
+                await Task.Delay(TimeSpan.FromSeconds(5));
+            }
         }
 
         /// <summary>
@@ -74,99 +65,100 @@ namespace Pimoroni.MsIot.Sample
         /// <remarks>
         /// Same as scenario 1, but uses toolkit classes
         /// </remarks>
-        void Scenario2_Setup()
+        async Task Scenario2()
         {
-            LED2 = new OutputPin(17);
-            Switch2 = new InputPin(27);
-            Switch2.Updated += (s, a) =>
+            using(var LED2 = new OutputPin(17))
+            using (var Switch2 = new InputPin(27))
             {
-                if (!Switch2.State)
-                    LED2.Toggle();
-            };
+                LED2.State = false;
+                Switch2.Updated += (s, a) =>
+                {
+                    if (!Switch2.State)
+                        LED2.Toggle();
+                };
+                await Task.Delay(TimeSpan.FromSeconds(10));
+            }
         }
 
         /// <summary>
         /// LED acts as an autolight for the switch
         /// </summary>
-        void Scenario3_Setup()
+        async Task Scenario3()
         {
-            Switch3 = new Input(27, new DirectLight(17));
+            var Switch3 = new Input(27, new DirectLight(17));
+            DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(20) };
+            Timer.Start();
             Timer.Tick += (s, e) =>
             {
                 Switch3.Tick();
             };
+            await Task.Delay(TimeSpan.FromSeconds(5));
         }
 
         /// <summary>
         /// Cycle through automation hat LED's
         /// </summary>
-        async void Scenario4_Setup()
+        async Task Scenario4()
         {
-            var device = new SN3218();
-            await device.Test();
+            using (var device = new SN3218())
+                await device.Test();
         }
 
-        async void Scenario5_Setup()
+        async Task Scenario5()
         {
-            var ledcontroller = new SN3218();
-            await ledcontroller.Initialize();
-            ledcontroller.Enable();
-            ledcontroller.EnableLeds();
-
-            Timer.Tick += (s, e) =>
+            using (var ledcontroller = new SN3218())
             {
-                ledcontroller.Output(Light.Values);
-            };
+                await ledcontroller.Initialize();
+                ledcontroller.Enable();
+                ledcontroller.EnableLeds();
 
-            AutomationHat.Light.Power.Value = 1.0;
-            await Task.Delay(500);
-            AutomationHat.Light.Comms.Value = 1.0;
-            await Task.Delay(500);
-            AutomationHat.Light.Warn.Value = 1.0;
-            await Task.Delay(500);
-            AutomationHat.Light.Power.Value = 0.0;
-            await Task.Delay(500);
-            AutomationHat.Light.Comms.Value = 0.0;
-            await Task.Delay(500);
-            AutomationHat.Light.Warn.Value = 0.0;
-            await Task.Delay(500);
-        }
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
+                DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(20) };
+                Timer.Start();
+                Timer.Tick += (s, e) =>
                 {
-                    // TODO: dispose managed state (managed objects).
-                    LED1?.Dispose();
-                    Switch1?.Dispose();
-                }
+                    ledcontroller.Output(Light.Values);
+                };
 
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
+                AutomationHat.Light.Power.Value = 1.0;
+                await Task.Delay(500);
+                AutomationHat.Light.Comms.Value = 1.0;
+                await Task.Delay(500);
+                AutomationHat.Light.Warn.Value = 1.0;
+                await Task.Delay(500);
+                AutomationHat.Light.Power.Value = 0.0;
+                await Task.Delay(500);
+                AutomationHat.Light.Comms.Value = 0.0;
+                await Task.Delay(500);
+                AutomationHat.Light.Warn.Value = 0.0;
+                await Task.Delay(500);
+                Timer.Stop();
             }
         }
 
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~MainPage() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
+            var Button = sender as Button;
+            Button.IsEnabled = false;
+
+            try
+            {
+                if (R1.IsChecked == true)
+                    await Scenario1();
+                if (R2.IsChecked == true)
+                    await Scenario2();
+                if (R3.IsChecked == true)
+                    await Scenario3();
+                if (R4.IsChecked == true)
+                    await Scenario4();
+                if (R5.IsChecked == true)
+                    await Scenario5();
+            }
+            catch (Exception ex)
+            {
+                TB.Text = ex.Message;
+            }
+
+            Button.IsEnabled = true;
         }
-        #endregion
     }
 }

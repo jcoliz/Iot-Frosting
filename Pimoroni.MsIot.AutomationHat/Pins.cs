@@ -7,7 +7,7 @@ using Windows.Devices.Gpio;
 
 namespace Pimoroni.MsIot
 {
-    public class OutputPin : IOutputPin
+    public class OutputPin : IOutputPin, IDisposable
     {
         public OutputPin(int pin)
         {
@@ -33,12 +33,17 @@ namespace Pimoroni.MsIot
             State = !State;
         }
 
+        public void Dispose()
+        {
+            Pin.Dispose();
+        }
+
         public GpioPin Pin;
 
         private GpioPinValue _Value = GpioPinValue.High;
     }
 
-    public class InputPin : IInputPin
+    public class InputPin : IInputPin, IDisposable
     {
         public InputPin(int pin)
         {
@@ -56,5 +61,10 @@ namespace Pimoroni.MsIot
         public bool State => Pin.Read() == GpioPinValue.High;
 
         public GpioPin Pin;
+
+        public void Dispose()
+        {
+            Pin.Dispose();
+        }
     }
 }

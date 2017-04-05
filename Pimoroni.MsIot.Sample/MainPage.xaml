@@ -9,7 +9,14 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock x:Name="TB" FontSize="20" TextWrapping="WrapWholeWords">Scenario 1: Write a button between pin 2 and ground. Wire a 330 resistor and an LED between pin 1 and ground. Pressing the button will turn the light on and off.</TextBlock>
+            <TextBlock x:Name="TB"/>
+            <RadioButton x:Name="R1" GroupName="Scenario" Content="Scenario 1" IsChecked="True"/>
+            <RadioButton x:Name="R2" GroupName="Scenario" Content="Scenario 2"/>
+            <RadioButton x:Name="R3" GroupName="Scenario" Content="Scenario 3"/>
+            <RadioButton x:Name="R4" GroupName="Scenario" Content="Scenario 4"/>
+            <RadioButton x:Name="R5" GroupName="Scenario" Content="Scenario 5"/>
+            <Button Content="Run" Click="Button_Click"/>
         </StackPanel>
+
     </Grid>
 </Page>
