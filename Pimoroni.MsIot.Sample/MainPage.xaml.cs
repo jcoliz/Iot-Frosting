@@ -110,13 +110,6 @@ namespace Pimoroni.MsIot.Sample
             {
                 await Hat.Initialize();
 
-                DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromMilliseconds(20) };
-                Timer.Start();
-                Timer.Tick += (s, e) =>
-                {
-                    Hat.Tick();
-                };
-
                 Hat.Light.Power.Value = 1.0;
                 await Task.Delay(500);
                 Hat.Light.Comms.Value = 1.0;
@@ -129,7 +122,6 @@ namespace Pimoroni.MsIot.Sample
                 await Task.Delay(500);
                 Hat.Light.Warn.Value = 0.0;
                 await Task.Delay(500);
-                Timer.Stop();
             }
         }
 

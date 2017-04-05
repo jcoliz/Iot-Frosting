@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.System.Threading;
 
 namespace Pimoroni.MsIot
 {
@@ -109,11 +110,15 @@ namespace Pimoroni.MsIot
         };*/
         public Lights Light = new Lights();
 
+        private ThreadPoolTimer Timer;
+
         public async Task Initialize()
         {
             await LedController.Initialize();
             LedController.Enable();
             LedController.EnableLeds();
+
+            Timer = ThreadPoolTimer.CreatePeriodicTimer(x=>Tick(), TimeSpan.FromMilliseconds(20));
         }
 
         /// <summary>
@@ -129,6 +134,7 @@ namespace Pimoroni.MsIot
         public void Dispose()
         {
             ((IDisposable)LedController).Dispose();
+            Timer.Cancel();
         }
     };
 }
