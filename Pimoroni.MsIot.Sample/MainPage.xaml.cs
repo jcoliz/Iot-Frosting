@@ -25,6 +25,8 @@ namespace Pimoroni.MsIot.Sample
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        DS3231 Clock;
+        DispatcherTimer Timer;
 
         public MainPage()
         {
@@ -36,6 +38,45 @@ namespace Pimoroni.MsIot.Sample
             {
                 TB.Text = ex.Message;
             }
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs ea)
+        {
+            base.OnNavigatedTo(ea);
+
+            try
+            {
+                Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+                Timer.Tick += (s, e) =>
+                {
+                    Clock.Update();
+                    var x = Clock.Now.ToString();
+                    TheTime.Text = x;
+                };
+                Clock = new DS3231();
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await Clock.Initialize();
+                        await Dispatcher.RunAsync( Windows.UI.Core.CoreDispatcherPriority.Normal,() =>
+                        {
+                            Clock.Update();
+                            var x = Clock.Now.ToString();
+                            TheTime.Text = x;
+                            Timer.Start();
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                TB.Text = ex.Message;
+            }
+
         }
 
         /// <summary>
@@ -174,6 +215,20 @@ namespace Pimoroni.MsIot.Sample
             }
 
             Button.IsEnabled = true;
+        }
+
+        private void Button_Set_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var newtime = DateTime.Parse(NewTime.Text);
+                Clock.Now = newtime;
+            }
+            catch (Exception ex)
+            {
+                TB.Text = ex.Message;
+            }
+
         }
     }
 }

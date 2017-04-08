@@ -37,7 +37,10 @@ namespace Pimoroni.MsIot
         public void Update()
         {
             if (_UserSetTime.HasValue)
+            {
                 SetTime(_UserSetTime.Value);
+                _UserSetTime = null;
+            }
 
             _InternalTime = ReadTime();
         }
@@ -60,6 +63,7 @@ namespace Pimoroni.MsIot
             int month = bcdToDec(readBuf[5]);
             int year = bcdToDec(readBuf[6]);
 
+            year += 2000;
             return new DateTime(year, month, dayOfMonth, hour, minute, second);
         }
 
@@ -71,7 +75,7 @@ namespace Pimoroni.MsIot
             byte write_dayofweek = decToBcd((int)value.DayOfWeek);
             byte write_day = decToBcd(value.Day);
             byte write_month = decToBcd(value.Month);
-            byte write_year = decToBcd(value.Year);
+            byte write_year = decToBcd(value.Year % 100);
 
             byte[] write_time = { 0x00, write_seconds, write_minutes, write_hours, write_dayofweek, write_day, write_month, write_year };
 
