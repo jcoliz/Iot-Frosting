@@ -9,9 +9,12 @@ namespace Pimoroni.MsIot
 {
     public class Input: InputPin, IDigitalInput
     {
-        public Input(int pin, ILight light): base(pin)
+        bool pressedhigh;
+
+        public Input(int pin, ILight light, bool pulldown=true): base(pin,pulldown)
         {
             Light = light;
+            pressedhigh = pulldown;
         }
 
         public bool AutoLight { get; set; } = true;
@@ -21,7 +24,7 @@ namespace Pimoroni.MsIot
         public void Tick()
         {
             if (AutoLight)
-                Light.State = State;
+                Light.State = (State == pressedhigh);
         }
     }
 }

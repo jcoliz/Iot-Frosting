@@ -46,10 +46,14 @@ namespace Pimoroni.MsIot
 
     public class InputPin : IInputPin, IDisposable
     {
-        public InputPin(int pin)
+        public InputPin(int pin, bool pulldown=true)
         {
             Pin = GpioController.GetDefault().OpenPin(pin);
-            Pin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            if (pulldown)
+                Pin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            else
+                Pin.SetDriveMode(GpioPinDriveMode.InputPullUp);
+
             Pin.DebounceTimeout = TimeSpan.FromMilliseconds(20);
             Pin.ValueChanged += (s, e) =>
             {
