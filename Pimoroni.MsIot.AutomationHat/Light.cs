@@ -80,8 +80,9 @@ namespace Pimoroni.MsIot
     /// </remarks>
     public class DirectLight : OutputPin, ILight
     {
-        public DirectLight(int pin): base(pin)
+        public DirectLight(int pin,bool activelow = true): base(pin)
         {
+            ActiveLow = activelow;
         }
 
         public double Value
@@ -101,19 +102,19 @@ namespace Pimoroni.MsIot
         }
 
         /// <summary>
-        /// DirectLight is wired such that a 'true' state (lit) has to be a 'false'
+        /// Active Low lights are wired such that a 'true' state (lit) has to be a 'false'
         /// state (to ground) on the pin itself.
         /// </summary>
         public override bool State
         {
             get
             {
-                return ! base.State;
+                return base.State != ActiveLow;
             }
 
             set
             {
-                base.State = ! value;
+                base.State = value != ActiveLow;
             }
         }
 
@@ -121,5 +122,7 @@ namespace Pimoroni.MsIot
         /// Implemented for the interface. Ignored for a digital light.
         /// </summary>
         public double Brightness { get; set; }
+
+        private bool ActiveLow;
     }
 }
