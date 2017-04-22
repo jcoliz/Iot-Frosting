@@ -172,7 +172,7 @@ using (var Clock = await DS3231.Open())
 
 ### Update the time
 
-Update the time as frequently as you need. I recommend doing this in your timer tick, or you could do it just before you call it.
+Update the time as frequently as you need. I recommend doing this in your timer tick, or you could do it just before you check the time.
 
 ```c#
 Clock.Tick();
