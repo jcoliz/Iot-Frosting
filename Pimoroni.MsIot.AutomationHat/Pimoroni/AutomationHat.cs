@@ -5,27 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.System.Threading;
 
-namespace Pimoroni.MsIot
+namespace IotFrosting.Pimoroni
 {
-    public interface IInputPin
-    {
-        /// <summary>
-        /// Whether the line is currently HIGH
-        /// </summary>
-        bool State { get; }
-
-        event EventHandler<EventArgs> Updated;
-    }
-    /// <summary>
-    /// Interface for a single digital pin
-    /// </summary>
-    public interface IOutputPin
-    {
-        bool State { get; set; }
-        void Toggle();
-
-        event EventHandler<EventArgs> Updated;
-    }
     /// <summary>
     /// Interface for a light with PWM control
     /// </summary>
@@ -86,20 +67,10 @@ namespace Pimoroni.MsIot
     }
     public class AutomationHat: IDisposable
     {
-        private SN3218 LedController = new SN3218();
-        private ThreadPoolTimer Timer;
-
-        /// <summary>
-        /// Constructor. Do not call directly. Use AutomationHat.Open()
-        /// </summary>
-        protected AutomationHat()
-        {
-        }
-
         public static async Task<AutomationHat> Open()
         {
             var result = new AutomationHat();
-            await result.LedController.Initialize();
+            result.LedController = await SN3218.Open();;
             result.LedController.Enable();
             result.LedController.EnableLeds();
             result.Light.Power.State = true;
@@ -108,12 +79,11 @@ namespace Pimoroni.MsIot
             return result;
         }
 
-        /*
         public List<IAnalogInput> Analog
         {
             get { throw new NotImplementedException(); }
         }
-        };*/
+
         public List<IDigitalInput> Input = new List<IDigitalInput>()
         {
             new Input(26, new Light(14)),
@@ -143,8 +113,18 @@ namespace Pimoroni.MsIot
             if (!disposing)
             {
                 Input.ForEach(x=>x.Tick());
-                LedController.Output(MsIot.Light.Values);
+                LedController.Output(Pimoroni.Light.Values);
             }
+        }
+
+        private SN3218 LedController;
+        private ThreadPoolTimer Timer;
+
+        /// <summary>
+        /// Constructor. Do not call directly. Use AutomationHat.Open()
+        /// </summary>
+        protected AutomationHat()
+        {
         }
 
         private bool disposing = false;

@@ -5,22 +5,34 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.I2c;
 
-namespace Pimoroni.MsIot
+namespace IotFrosting
 {
+    /// <summary>
+    /// Control for the DS3231 real-time clock
+    /// </summary>
     public class DS3231: IDisposable
     {
-        private const byte I2C_ADDRESS = 0x68;
-
-        private I2cDevice Device;
-
-        public async Task Initialize()
+        #region Public interface
+        /// <summary>
+        /// Open a connection to the DS3231 chip
+        /// </summary>
+        /// <returns></returns>
+        public static async Task<DS3231> Open()
         {
-
+            var result = new DS3231();
             var i2cSettings = new I2cConnectionSettings(I2C_ADDRESS);
             var controller = await I2cController.GetDefaultAsync();
-            Device = controller.GetDevice(i2cSettings);
+            result.Device = controller.GetDevice(i2cSettings);
+
+            return result;
         }
 
+        /// <summary>
+        /// The current time
+        /// </summary>
+        /// <remarks>
+        /// Be sure to call Tick() first to ensure the time is set
+        /// </remarks>
         public DateTime Now
         {
             get
@@ -34,7 +46,10 @@ namespace Pimoroni.MsIot
             }
         }
 
-        public void Update()
+        /// <summary>
+        /// Call regularly to update the time
+        /// </summary>
+        public void Tick()
         {
             if (_UserSetTime.HasValue)
             {
@@ -43,6 +58,15 @@ namespace Pimoroni.MsIot
             }
 
             _InternalTime = ReadTime();
+        }
+        #endregion
+
+        #region Internals
+        /// <summary>
+        /// Do not call direcrtly, use Open()
+        /// </summary>
+        protected DS3231()
+        {
         }
 
         private DateTime _InternalTime;
@@ -82,7 +106,12 @@ namespace Pimoroni.MsIot
             Device.Write(write_time);
         }
 
-        // Convert normal decimal numbers to binary coded decimal
+        /// <summary>
+        /// Convert normal decimal numbers to binary coded decimal
+        /// </summary>
+        /// <param name="val"></param>
+        /// <returns></returns>
+
         private static byte decToBcd(int val)
         {
             return (byte)((val / 10 * 16) + (val % 10));
@@ -92,6 +121,10 @@ namespace Pimoroni.MsIot
         {
             return ((val / 16 * 10) + (val % 16));
         }
+
+        private const byte I2C_ADDRESS = 0x68;
+        private I2cDevice Device;
+        #endregion
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

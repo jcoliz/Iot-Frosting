@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pimoroni.MsIot
+namespace IotFrosting.Pimoroni
 {
     /// <summary>
     /// A light with PWM control, which is part of a bank of 18 lights.

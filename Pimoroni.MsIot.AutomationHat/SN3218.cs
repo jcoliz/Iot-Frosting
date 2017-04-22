@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.I2c;
 
-namespace Pimoroni.MsIot
+namespace IotFrosting
 {
     /// <summary>
     /// Control an SN3218 18-port LED driver
@@ -19,21 +19,14 @@ namespace Pimoroni.MsIot
 
     public class SN3218: IDisposable
     {
-        private const byte I2C_ADDRESS = 0x54;
-        private const byte CMD_ENABLE_OUTPUT = 0x00;
-        private const byte CMD_SET_PWM_VALUES = 0x01;
-        private const byte CMD_ENABLE_LEDS = 0x13;
-        private const byte CMD_UPDATE = 0x16;
-        private const byte CMD_RESET = 0x17;
-
-        private I2cDevice Device;
-
-        public async Task Initialize()
+        public static async Task<SN3218> Open()
         {
-
+            var result = new SN3218();
             var i2cSettings = new I2cConnectionSettings(I2C_ADDRESS);
             var controller = await I2cController.GetDefaultAsync();
-            Device = controller.GetDevice(i2cSettings);
+            result.Device = controller.GetDevice(i2cSettings);
+
+            return result;
         }
 
         public void Enable()
@@ -70,7 +63,6 @@ namespace Pimoroni.MsIot
 
         public async Task Test()
         {
-            await Initialize();
             Enable();
             EnableLeds();
 
@@ -103,6 +95,24 @@ namespace Pimoroni.MsIot
             Output(values);
 
         }
+
+        /// <summary>
+        /// Do not construct directly. Use Open()
+        /// </summary>
+        protected SN3218()
+        {
+        }
+
+        private const byte I2C_ADDRESS = 0x54;
+        private const byte CMD_ENABLE_OUTPUT = 0x00;
+        private const byte CMD_SET_PWM_VALUES = 0x01;
+        private const byte CMD_ENABLE_LEDS = 0x13;
+        private const byte CMD_UPDATE = 0x16;
+        private const byte CMD_RESET = 0x17;
+
+        private I2cDevice Device;
+
+
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 
-namespace Pimoroni.MsIot
+namespace IotFrosting.Pimoroni
 {
     public class Input: InputPin, IDigitalInput
     {

@@ -5,8 +5,28 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 
-namespace Pimoroni.MsIot
+namespace IotFrosting
 {
+    public interface IInputPin
+    {
+        /// <summary>
+        /// Whether the line is currently HIGH
+        /// </summary>
+        bool State { get; }
+
+        event EventHandler<EventArgs> Updated;
+    }
+    /// <summary>
+    /// Interface for a single digital pin
+    /// </summary>
+    public interface IOutputPin
+    {
+        bool State { get; set; }
+        void Toggle();
+
+        event EventHandler<EventArgs> Updated;
+    }
+
     public class OutputPin : IOutputPin, IDisposable
     {
         public OutputPin(int pin)
