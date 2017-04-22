@@ -7,8 +7,8 @@
     <ProjectGuid>{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Pimoroni.MsIot.Sample</RootNamespace>
-    <AssemblyName>Pimoroni.MsIot.Sample</AssemblyName>
+    <RootNamespace>IotFrosting.Sample</RootNamespace>
+    <AssemblyName>IotFrosting.Sample</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
