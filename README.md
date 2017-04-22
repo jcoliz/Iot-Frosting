@@ -6,9 +6,9 @@ Control libraries for a collection of hardware pieces on Windows IoT Core.
 * SN3218 ([DataSheet](http://www.si-en.com/uploadpdf/s2011517171720.pdf))
 * [DS3231 Real Time Clock](https://www.adafruit.com/product/3013)
 
-Automation HAT is a home monitoring and automation controller featuring relays, analog channels, powered outputs, and buffered inputs (all 24V tolerant).
-
 ## Automation HAT
+
+Automation HAT is a home monitoring and automation controller featuring relays, analog channels, powered outputs, and buffered inputs (all 24V tolerant).
 
 ### Documentation & Support
 
