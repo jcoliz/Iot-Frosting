@@ -12,14 +12,9 @@ Automation HAT is a home monitoring and automation controller featuring relays, 
 
 ### Documentation & Support
 
-* Guides and tutorials  
-https://learn.pimoroni.com/automation-hat  
-https://learn.pimoroni.com/automation-phat  
-* GPIO Pinout  
-https://pinout.xyz/pinout/automation_hat  
-https://pinout.xyz/pinout/automation_phat  
-* Get help with the HAT
-http://forums.pimoroni.com/c/support
+* [Guides and tutorials](https://learn.pimoroni.com/automation-hat)
+* [GPIO Pinout](https://pinout.xyz/pinout/automation_hat)  
+* [Get help with the HAT](http://forums.pimoroni.com/c/support)
 
 ### Namespace
 
