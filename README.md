@@ -67,14 +67,14 @@ Hat.Output[0].State = true;
 
 ### Lights
 
-Automation HAT includes three user-controllable lights: Power, Comms and Warn. You can take control of these lights to turn them on/off or write a brightness value:
+Automation HAT includes three user-controllable lights: Power, Comms and Warn. You can take control of these lights to turn them on/off or write a brightness value (0.0-1.0):
 
 ```c#
 Hat.Light.Comms.State = true;
 ```
 
 ```c#
-Hat.Light.Comms.State = false;
+Hat.Light.Comms.Value = 0.8;
 ```
 
 Note: lights use the same properties and methods as relays and outputs: State and Toggle().
