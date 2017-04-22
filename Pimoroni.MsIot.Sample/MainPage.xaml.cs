@@ -16,13 +16,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
-namespace Pimoroni.MsIot.Sample
+namespace IotFrosting.Sample
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
         DS3231 Clock;
@@ -49,19 +44,21 @@ namespace Pimoroni.MsIot.Sample
                 Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
                 Timer.Tick += (s, e) =>
                 {
-                    Clock.Update();
-                    var x = Clock.Now.ToString();
-                    TheTime.Text = x;
+                    if (Clock != null)
+                    {
+                        Clock.Tick();
+                        var x = Clock.Now.ToString();
+                        TheTime.Text = x;
+                    }
                 };
-                Clock = new DS3231();
                 Task.Run(async () =>
                 {
                     try
                     {
-                        await Clock.Initialize();
+                        Clock = await DS3231.Open();
                         await Dispatcher.RunAsync( Windows.UI.Core.CoreDispatcherPriority.Normal,() =>
                         {
-                            Clock.Update();
+                            Clock.Tick();
                             var x = Clock.Now.ToString();
                             TheTime.Text = x;
                             Timer.Start();
@@ -87,7 +84,7 @@ namespace Pimoroni.MsIot.Sample
         /// </remarks>
         async Task Scenario2()
         {
-            using (var Hat = await AutomationHat.Open())
+            using (var Hat = await Pimoroni.AutomationHat.Open())
             {
                 Hat.Input[0].Updated += (s, a) =>
                 {
@@ -103,13 +100,13 @@ namespace Pimoroni.MsIot.Sample
         /// </summary>
         async Task Scenario4()
         {
-            using (var device = new SN3218())
+            using (var device = await SN3218.Open())
                 await device.Test();
         }
 
         async Task Scenario5()
         {
-            using (var Hat = await AutomationHat.Open())
+            using (var Hat = await Pimoroni.AutomationHat.Open())
             {
                 await Task.Delay(500);
                 Hat.Light.Comms.Value = 1.0;
@@ -125,7 +122,7 @@ namespace Pimoroni.MsIot.Sample
 
         async Task Scenario6()
         {
-            using (var Hat = await AutomationHat.Open())
+            using (var Hat = await Pimoroni.AutomationHat.Open())
             {
                 await Task.Delay(500);
 
@@ -144,7 +141,7 @@ namespace Pimoroni.MsIot.Sample
 
         async Task Scenario7()
         {
-            using (var Hat = await AutomationHat.Open())
+            using (var Hat = await Pimoroni.AutomationHat.Open())
             {
                 // Here we just sit here until input 0 has been high for 3 seconds, then released
                 var semaphore = new SemaphoreSlim(1);
@@ -172,7 +169,7 @@ namespace Pimoroni.MsIot.Sample
 
         async Task Scenario8()
         {
-            using (var Hat = await AutomationHat.Open())
+            using (var Hat = await Pimoroni.AutomationHat.Open())
             {
                 await Task.Delay(500);
 
