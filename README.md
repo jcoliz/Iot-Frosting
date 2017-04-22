@@ -1,6 +1,6 @@
  ## Iot Frosting
 
-Control libraries for a collection of hardware pieces on Windows IoT Core.
+C# library and examples for selected hardware components on Windows 10 IoT Core, including the Pimoroni Automation HAT.
 
 * [Pimoroni Automation Hat](https://shop.pimoroni.com/products/automation-hat) (Also at [Adafruit](https://www.adafruit.com/product/3289))
 * SN3218 ([DataSheet](http://www.si-en.com/uploadpdf/s2011517171720.pdf))
