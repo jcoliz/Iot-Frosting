@@ -1,14 +1,16 @@
-## Automation HAT
+## Iot Frosting
 
-https://shop.pimoroni.com/products/automation-hat  
+Control libraries for a collection of hardware pieces on Windows IoT Core.
+
+* [Pimoroni Automation Hat](https://shop.pimoroni.com/products/automation-hat)
+* SN3218 ([DataSheet](http://www.si-en.com/uploadpdf/s2011517171720.pdf))
+* [DS3231 Real Time Clock](https://www.adafruit.com/product/3013)
 
 Automation HAT is a home monitoring and automation controller featuring relays, analog channels, powered outputs, and buffered inputs (all 24V tolerant).
 
-## Goal
+## Automation HAT
 
-This project provides a C# library for this HAT usable on Windows 10 IoT Core
-
-## Documentation & Support
+### Documentation & Support
 
 * Guides and tutorials  
 https://learn.pimoroni.com/automation-hat  
@@ -19,14 +21,12 @@ https://pinout.xyz/pinout/automation_phat
 * Get help with the HAT
 http://forums.pimoroni.com/c/support
 
-## Function Reference
-
 ### Namespace
 
 At the top of your C# file, reference the namespace for the library, like so:
 
 ```c#
-using Pimoroni.MsIot
+using IotFrosting
 ```
 
 ### Open the device
@@ -34,7 +34,7 @@ using Pimoroni.MsIot
 Before using the device, you'll need to open a connection to it, and wrap your code in a 'using', like so:
 
 ```c#
-using (var Hat = await AutomationHat.Open())
+using (var Hat = await Pimoroni.AutomationHat.Open())
 {
 }
 ```
@@ -154,3 +154,46 @@ int value = Hat.Analog[0].Value;
 ```
 
 NOTE: Analog inputs are not yet implemented.
+
+## DS3231 Real Time Clock
+
+### Namespace
+
+At the top of your C# file, reference the namespace for the library, like so:
+
+```c#
+using IotFrosting
+```
+
+### Open the device
+
+Before using the device, you'll need to open a connection to it, and wrap your code in a 'using', like so:
+
+```c#
+using (var Clock = await DS3231.Open())
+{
+}
+```
+
+### Update the time
+
+Update the time as frequently as you need. I recommend doing this in your timer tick, or you could do it just before you call it.
+
+```c#
+Clock.Tick();
+```
+
+### Get the time
+
+```c#
+DateTime whattimeisit = Clock.Now;
+```
+
+### Change the time
+
+You can change the time, just by setting the Now property. This doesn't take effect until you call Tick() next.
+
+```C#
+Clock.Now = DateTime.Parse("12/31/2017 9:30 PM");
+Clock.Tick();
+```
