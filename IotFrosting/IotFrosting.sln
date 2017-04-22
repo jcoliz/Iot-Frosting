@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IotFrosting", "IotFrosting.csproj", "{0BAB3BD0-A6FD-4FB8-9F70-248435139630}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IotFrosting.Sample", "..\Pimoroni.MsIot.Sample\IotFrosting.Sample.csproj", "{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IotFrosting.Sample", "..\IotFrosting.Sample\IotFrosting.Sample.csproj", "{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
