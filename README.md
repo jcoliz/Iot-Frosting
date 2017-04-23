@@ -21,7 +21,7 @@ Automation HAT is a home monitoring and automation controller featuring relays, 
 At the top of your C# file, reference the namespace for the library, like so:
 
 ```c#
-using IotFrosting
+using IotFrosting.Pimoroni
 ```
 
 ### Open the device
@@ -29,7 +29,7 @@ using IotFrosting
 Before using the device, you'll need to open a connection to it, and wrap your code in a 'using', like so:
 
 ```c#
-using (var Hat = await Pimoroni.AutomationHat.Open())
+using (var Hat = await AutomationHat.Open())
 {
 }
 ```
