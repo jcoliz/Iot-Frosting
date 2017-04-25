@@ -67,12 +67,20 @@ Hat.Output[0].State = true;
 
 ### Lights
 
-Automation HAT includes three user-controllable lights: Power, Comms and Warn. You can take control of these lights to turn them on/off or write a brightness value (0.0-1.0):
+Automation HAT includes three user-controllable lights: Power, Comms and Warn. You can take control of these lights to turn them on/off:
 
 ```c#
 Hat.Light.Comms.State = true;
 ```
 
+By default, 'true' sets a light to 1.0 brightness, and 'false' sets a light to 0.0. The lights are very bright. To adjust the default brightness level for 'true', you can set the Brightness property. This does not have any immediate impact on the light. Instead, it controls what happens next time you set the State to 'true'
+
+```c#
+Hat.Light.Comms.Brightness = 0.2;
+```
+
+You can directly set a brightness value (0.0-1.0). The lights are automatically gamma-corrected.
+ 
 ```c#
 Hat.Light.Comms.Value = 0.8;
 ```
