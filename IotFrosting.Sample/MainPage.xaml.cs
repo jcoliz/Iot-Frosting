@@ -64,7 +64,7 @@ namespace IotFrosting.Sample
                             Timer.Start();
                         });
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                     }
                 });

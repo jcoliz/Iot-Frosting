@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.I2c;
 
@@ -16,7 +13,7 @@ namespace IotFrosting
         /// <summary>
         /// Open a connection to the DS3231 chip
         /// </summary>
-        /// <returns></returns>
+        /// <returns>DS3231 object to control the clock</returns>
         public static async Task<DS3231> Open()
         {
             var result = new DS3231();
@@ -111,7 +108,6 @@ namespace IotFrosting
         /// </summary>
         /// <param name="val"></param>
         /// <returns></returns>
-
         private static byte decToBcd(int val)
         {
             return (byte)((val / 10 * 16) + (val % 10));
