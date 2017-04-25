@@ -85,9 +85,9 @@ You can directly set a brightness value (0.0-1.0). The lights are automatically 
 Hat.Light.Comms.Value = 0.8;
 ```
 
-Note: lights use the same properties and methods as relays and outputs: State and Toggle().
+Lights also have the same properties and methods as relays and outputs: State and Toggle().
 
-The Power light is automatically turned on when you open a connection to the Hat, and turned off when the connection is closed. You can turn it off immediately if you don't like that.
+The Power light is automatically turned on when you open a connection to the Hat, and turned off when the connection is closed. This is useful so that you know your app is running, especially becuase Windows 10 IoT Core can take a full minute to boot and start the default app. You can turn it off immediately if you don't like that.
 
 Lights associated with Inputs, Outputs, Relays and Analog are automatic by default, but you can switch them to manual if you want. First turn off the automation:
 
@@ -132,6 +132,7 @@ Hat.Relay[0].State = false;
 ```
 
 Relays have two lights associated with them, one showing the relay is connecting the NC circuit, and another showing it's connecting the NO circuit.
+
 You can take control of these lights independently, and turn them on and off at will.
 
 ```c#
@@ -156,7 +157,7 @@ You can read an analog input like so:
 int value = Hat.Analog[0].Value;
 ```
 
-NOTE: Analog inputs are not yet implemented.
+WARNING: Analog inputs are not yet implemented.
 
 ## DS3231 Real Time Clock
 
