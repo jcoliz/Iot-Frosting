@@ -1,6 +1,7 @@
 ﻿{
   "dependencies": {
-    "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0"
+    "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0",
+    "PxtlCa.XmlCommentMarkDownGenerator": "0.2.6270.2853"
   },
   "frameworks": {
     "uap10.0": {}
