@@ -109,12 +109,14 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CAP1XXX.cs" />
     <Compile Include="Pimoroni\Analog.cs" />
     <Compile Include="Pimoroni\AutomationHat.cs" />
     <Compile Include="DS3231.cs" />
     <Compile Include="Pimoroni\Input.cs" />
     <Compile Include="Pimoroni\Light.cs" />
     <Compile Include="Pimoroni\Output.cs" />
+    <Compile Include="Pimoroni\Pad.cs" />
     <Compile Include="Pins.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pimoroni\Relay.cs" />

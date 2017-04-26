@@ -5,6 +5,9 @@
     /// </summary>
     public interface IDigitalInput : IPin, IAutoLight
     {
+        /// <summary>
+        /// Call regularly to update the autolight
+        /// </summary>
         void Tick();
     }
 

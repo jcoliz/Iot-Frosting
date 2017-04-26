@@ -94,6 +94,13 @@
 
 
 ---
+#### Method Pimoroni.IDigitalInput.Tick
+
+ Call regularly to update the autolight 
+
+
+
+---
 ## Type Pimoroni.Input
 
  A digital input with an automatic light showing its state 
@@ -411,6 +418,67 @@
 #### Property Pimoroni.Output.Light
 
  The light which shows our state automatically 
+
+
+
+---
+## Type Pimoroni.Pad
+
+ A drum pad, driven by a Cap1xxx 
+
+
+
+> This is just a straight Input (including autolight), adding a 'Hit' event, raised only when the input goes high 
+
+
+
+---
+#### Method Pimoroni.Pad.#ctor(System.Int32,IotFrosting.Pimoroni.ILight)
+
+ Constructor 
+
+|Name | Description |
+|-----|------|
+|number: |Which input are we on the Cap1xxx bank?|
+|light: |Automatic light|
+
+
+---
+#### Event Pimoroni.Pad.Hit
+
+ Raised when we are first touched 
+
+
+
+---
+#### Property Pimoroni.Pad.AutoLight
+
+ Whether the autolight should in fact be updated with our state 
+
+
+
+---
+#### Property Pimoroni.Pad.Light
+
+ The light which shows our state automatically 
+
+
+
+---
+#### Method Pimoroni.Pad.Tick
+
+ Call regularly to update the status of the auto light 
+
+
+
+> Recommend calling on your timer tick 
+
+
+
+---
+#### Field Pimoroni.Pad.Number
+
+ Which input ## are we on the Cap1xxx bank? 
 
 
 
