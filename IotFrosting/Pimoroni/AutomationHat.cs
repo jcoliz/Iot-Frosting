@@ -33,10 +33,10 @@ namespace IotFrosting.Pimoroni
         /// </summary>
         public List<IAnalogInput> Analog = new List<IAnalogInput>()
         {
-            new AnalogInput(0,new Light(100)),
-            new AnalogInput(1,new Light(101)),
-            new AnalogInput(2,new Light(102)),
-            new AnalogInput(3,new Light(103))
+            new AnalogInput(0, 25.85, new Light(0)),
+            new AnalogInput(1, 25.85, new Light(1)),
+            new AnalogInput(2, 25.85, new Light(2)),
+            new AnalogInput(3, 3.3, null)
         };
 
         /// <summary>
