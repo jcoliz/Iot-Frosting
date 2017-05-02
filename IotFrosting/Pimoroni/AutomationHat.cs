@@ -17,10 +17,12 @@ namespace IotFrosting.Pimoroni
         public static async Task<AutomationHat> Open()
         {
             var result = new AutomationHat();
-            result.LedController = await SN3218.Open();;
+            result.LedController = await SN3218.Open();
             result.LedController.Enable();
             result.LedController.EnableLeds();
             result.Light.Power.State = true;
+
+            result.AnalogController = await ADS1015.Open();
 
             result.Timer = ThreadPoolTimer.CreatePeriodicTimer(x => result.Tick(), TimeSpan.FromMilliseconds(20));
             return result;
@@ -29,10 +31,13 @@ namespace IotFrosting.Pimoroni
         /// <summary>
         /// The analog inputs
         /// </summary>
-        public List<IAnalogInput> Analog
+        public List<IAnalogInput> Analog = new List<IAnalogInput>()
         {
-            get { throw new NotImplementedException(); }
-        }
+            new AnalogInput(0,new Light(100)),
+            new AnalogInput(1,new Light(101)),
+            new AnalogInput(2,new Light(102)),
+            new AnalogInput(3,new Light(103))
+        };
 
         /// <summary>
         /// The digital inputs
@@ -77,12 +82,15 @@ namespace IotFrosting.Pimoroni
         {
             if (!disposing)
             {
-                Input.ForEach(x=>x.Tick());
+                Pimoroni.AnalogInput.Values = AnalogController.ReadAll();
+                Analog.ForEach(x => x.Tick());
+                Input.ForEach(x => x.Tick());
                 LedController.Output(Pimoroni.Light.Values);
             }
         }
 
         private SN3218 LedController;
+        private ADS1015 AnalogController;
         private ThreadPoolTimer Timer;
 
         /// <summary>
@@ -101,6 +109,7 @@ namespace IotFrosting.Pimoroni
             Input.ForEach(x => x.Dispose());
             Output.ForEach(x => x.Dispose());
             ((IDisposable)LedController).Dispose();
+            ((IDisposable)AnalogController).Dispose();
         }
 
         /// <summary>

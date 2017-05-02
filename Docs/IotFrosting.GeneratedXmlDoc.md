@@ -11,6 +11,38 @@
 
 
 ---
+#### Method Pimoroni.IAnalogInput.Tick
+
+ Call regularly to update the autolight 
+
+
+
+---
+#### Method Pimoroni.AnalogInput.Tick
+
+ Call regularly to update the status of the auto light 
+
+
+
+> Recommend calling on your timer tick 
+
+
+
+---
+#### Field Pimoroni.AnalogInput.Values
+
+ All of the analog input values 
+
+
+
+---
+#### Field Pimoroni.AnalogInput.NumberOfAnalogInputs
+
+ How many total lights are there in an SN3218 bank 
+
+
+
+---
 ## Type Pimoroni.AutomationHat
 
  The master control class for a single Automation Hat 
@@ -27,7 +59,7 @@
 
 
 ---
-#### Property Pimoroni.AutomationHat.Analog
+#### Field Pimoroni.AutomationHat.Analog
 
  The analog inputs 
 

@@ -132,7 +132,7 @@ namespace IotFrosting.Pimoroni
         /// <summary>
         /// How many total lights are there in an SN3218 bank
         /// </summary>
-        private static int NumberOfLights = 18;
+        private const int NumberOfLights = 18;
     }
 
     /// <summary>
