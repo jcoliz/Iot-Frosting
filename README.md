@@ -157,7 +157,7 @@ You can read the voltage currently applied to an analog input like so:
 double voltage = Hat.Analog[0].Voltage;
 ```
 
-Analog inputs also have lights which automatically illumiate to a level of brightness corresponding to the voltage level on the input. For example, if there is 12V on one of the 24V inputs, the light will show half brightness. Just as with any other automatic lights, you can take control of the light independently:
+The 12V analog inputs have lights which automatically illuminate to a level of brightness corresponding to the voltage level on the input. For example, if there is 12V on an input, its light will show half brightness. Just as with any other automatic lights, you can take control of the light independently:
 
 ```c#
 Hat.Analog[0].AutoLight = false;
