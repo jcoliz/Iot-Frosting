@@ -1,12 +1,36 @@
 # IotFrosting #
 
+## Type ADS1015
+
+ https://cdn-shop.adafruit.com/datasheets/ads1015.pdf 
+
+
+
+---
+#### Method ADS1015.Read(System.Int32,System.Int32,System.Int32)
+
+ Read the analog value on a given channel 
+
+|Name | Description |
+|-----|------|
+|channel: ||
+|programmable_gain: ||
+|samples_per_second: ||
+**Returns**: Value of input from 0.0 to 1.0
+
+
+
+---
 ## Type Pimoroni.IAnalogInput
 
  Interface for an analog input with an auto light 
 
 
 
-> Incomplete. Analog inputs are not yet implemented. 
+---
+#### Property Pimoroni.IAnalogInput.Voltage
+
+ Current voltage on the input 
 
 
 
@@ -18,13 +42,60 @@
 
 
 ---
+#### Property Pimoroni.AnalogInput.Voltage
+
+ Current voltage on the input 
+
+
+
+---
+#### Property Pimoroni.AnalogInput.AutoLight
+
+ Whether the autolight should in fact be updated with our state 
+
+
+
+---
+#### Property Pimoroni.AnalogInput.Light
+
+ The light which shows our state automatically 
+
+
+
+---
 #### Method Pimoroni.AnalogInput.Tick
 
- Call regularly to update the status of the auto light 
+ Call regularly to update the status of the auto light. The auto light will be set to PWM brightness corresponding to the analog input level. 
 
 
 
 > Recommend calling on your timer tick 
+
+
+
+---
+#### Method Pimoroni.AnalogInput.#ctor(System.Int32,System.Double,IotFrosting.Pimoroni.ILight)
+
+ Constructor 
+
+|Name | Description |
+|-----|------|
+|channel: |Which ADC channel (0-4) is the input connected to |
+|maxvoltage: |The voltage which would drive a 1.0 reading on the underlying ADC|
+|light: |The light which will show status|
+
+
+---
+#### Field Pimoroni.AnalogInput.Channel
+
+ Which ADC channel (0-4) is the input connected to 
+
+
+
+---
+#### Field Pimoroni.AnalogInput.MaxVoltage
+
+ The voltage which would drive a 1.0 reading on the underlying ADC 
 
 
 
@@ -38,7 +109,7 @@
 ---
 #### Field Pimoroni.AnalogInput.NumberOfAnalogInputs
 
- How many total lights are there in an SN3218 bank 
+ How many total lights are there in an ADS1015 bank 
 
 
 

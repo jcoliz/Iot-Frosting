@@ -42,8 +42,12 @@ namespace IotFrosting
             // set "single shot" mode
             config |= 0x8000;
 
-            byte[] writeBuf = { REG_CFG, (byte)((byte)config >> 8), (byte)((byte)config & 0xff) };
+            byte[] writeBuf = { REG_CFG, (byte)(config >> 8), (byte)(config & 0xff) };
             Device.Write(writeBuf);
+
+            byte[] config_read = new byte[2];
+            Device.Write(new byte[] { REG_CFG });
+            Device.Read(config_read);
 
             Device.Write(new byte[] { REG_CONV });
 
@@ -54,7 +58,7 @@ namespace IotFrosting
             if ((value & 0x800) != 0)
                 value -= 1 << 12;
 
-            result = value / 2048.0; //  Divide down to percentage of FS (???)
+            result = value / 2047.0; //  Divide down to percentage of FS
             result *= programmable_gain;
 
             result /= 3300.0; // Divide by VCC

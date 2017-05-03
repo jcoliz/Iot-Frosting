@@ -22,6 +22,12 @@
             <TextBlock Text="Enter new time:"/>
             <TextBox x:Name="NewTime"/>
             <Button Content="Set" Click="Button_Set_Click"  Margin="0,20"/>
+            <TextBlock Text="Analog Inputs"/>
+            <TextBlock x:Name="A0"/>
+            <TextBlock x:Name="A1"/>
+            <TextBlock x:Name="A2"/>
+            <TextBlock x:Name="A3"/>
+            <Button Content="Update Analog Values" Click="Update_Analog_Click"  Margin="0,20"/>
         </StackPanel>
 
     </Grid>

@@ -24,6 +24,7 @@ namespace IotFrosting.Pimoroni
 
             result.AnalogController = await ADS1015.Open();
 
+            // Debugging, so no timer rightnow.
             result.Timer = ThreadPoolTimer.CreatePeriodicTimer(x => result.Tick(), TimeSpan.FromMilliseconds(20));
             return result;
         }
@@ -87,6 +88,11 @@ namespace IotFrosting.Pimoroni
                 Input.ForEach(x => x.Tick());
                 LedController.Output(Pimoroni.Light.Values);
             }
+        }
+
+        public void UpdateAnalog()
+        {
+            Tick();
         }
 
         private SN3218 LedController;

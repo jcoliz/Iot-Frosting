@@ -22,6 +22,7 @@ namespace IotFrosting.Sample
     {
         DS3231 Clock;
         DispatcherTimer Timer;
+        Pimoroni.AutomationHat Hat;
 
         public MainPage()
         {
@@ -50,11 +51,20 @@ namespace IotFrosting.Sample
                         var x = Clock.Now.ToString();
                         TheTime.Text = x;
                     }
+                    if (Hat != null)
+                    {
+                        A0.Text = Hat.Analog[0].Voltage.ToString("0.0") + "V";
+                        A1.Text = Hat.Analog[1].Voltage.ToString("0.0") + "V";
+                        A2.Text = Hat.Analog[2].Voltage.ToString("0.0") + "V";
+                        A3.Text = Hat.Analog[3].Voltage.ToString("0.0") + "V";
+                    }
                 };
                 Task.Run(async () =>
                 {
                     try
                     {
+                        Hat = await Pimoroni.AutomationHat.Open();
+                        Hat.Light.Power.Value = 0.2; // That light is way too bright!!
                         Clock = await DS3231.Open();
                         await Dispatcher.RunAsync( Windows.UI.Core.CoreDispatcherPriority.Normal,() =>
                         {
@@ -84,15 +94,12 @@ namespace IotFrosting.Sample
         /// </remarks>
         async Task Scenario2()
         {
-            using (var Hat = await Pimoroni.AutomationHat.Open())
-            {
                 Hat.Input[0].Updated += (s, a) =>
                 {
                     if (Hat.Input[0].State)
                         Hat.Output[0].Toggle();
                 };
                 await Task.Delay(TimeSpan.FromSeconds(10));
-            }
         }
 
         /// <summary>
@@ -106,8 +113,6 @@ namespace IotFrosting.Sample
 
         async Task Scenario5()
         {
-            using (var Hat = await Pimoroni.AutomationHat.Open())
-            {
                 await Task.Delay(500);
                 Hat.Light.Comms.Value = 1.0;
                 await Task.Delay(500);
@@ -117,13 +122,10 @@ namespace IotFrosting.Sample
                 await Task.Delay(500);
                 Hat.Light.Warn.Value = 0.0;
                 await Task.Delay(500);
-            }
         }
 
         async Task Scenario6()
         {
-            using (var Hat = await Pimoroni.AutomationHat.Open())
-            {
                 await Task.Delay(500);
 
                 for (int i = 0;i< 3;i++)
@@ -136,13 +138,10 @@ namespace IotFrosting.Sample
                     Hat.Relay[i].State = false;
                     await Task.Delay(500);
                 }
-            }
         }
 
         async Task Scenario7()
         {
-            using (var Hat = await Pimoroni.AutomationHat.Open())
-            {
                 // Here we just sit here until input 0 has been high for 3 seconds, then released
                 var semaphore = new SemaphoreSlim(1);
                 await semaphore.WaitAsync();
@@ -164,13 +163,10 @@ namespace IotFrosting.Sample
                 };
 
                 await semaphore.WaitAsync();
-            }
         }
 
         async Task Scenario8()
         {
-            using (var Hat = await Pimoroni.AutomationHat.Open())
-            {
                 await Task.Delay(500);
 
                 for (int i = 0; i < 3; i++)
@@ -183,7 +179,6 @@ namespace IotFrosting.Sample
                     Hat.Output[i].State = false;
                     await Task.Delay(500);
                 }
-            }
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e)
@@ -220,6 +215,18 @@ namespace IotFrosting.Sample
             {
                 var newtime = DateTime.Parse(NewTime.Text);
                 Clock.Now = newtime;
+            }
+            catch (Exception ex)
+            {
+                TB.Text = ex.Message;
+            }
+
+        }
+        private void Update_Analog_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Hat.UpdateAnalog();
             }
             catch (Exception ex)
             {

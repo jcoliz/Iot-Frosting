@@ -65,6 +65,7 @@ namespace IotFrosting.Pimoroni
 
             Light = light;
             Channel = channel;
+            MaxVoltage = maxvoltage;
         }
 
         /// <summary>
