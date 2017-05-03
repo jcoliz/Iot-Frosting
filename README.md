@@ -151,13 +151,18 @@ Hat.Relay[0].NC.AutoLight = true;
 
 Three of the four analog inputs on Automation HAT are 24V tolerant, with a forth 3.3V input in the breakout header.
 
-You can read an analog input like so:
+You can read the voltage currently applied to an analog input like so:
 
 ```c#
-int value = Hat.Analog[0].Value;
+double voltage = Hat.Analog[0].Voltage;
 ```
 
-WARNING: Analog inputs are not yet implemented.
+Analog inputs also have lights which automatically illumiate to a level of brightness corresponding to the voltage level on the input. For example, if there is 12V on one of the 24V inputs, the light will show half brightness. Just as with any other automatic lights, you can take control of the light independently:
+
+```c#
+Hat.Analog[0].AutoLight = false;
+Hat.Analog[0].Light.State = true;
+```
 
 ## DS3231 Real Time Clock
 
