@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.I2c;
 
@@ -29,10 +30,11 @@ namespace IotFrosting
         /// <param name="programmable_gain"></param>
         /// <param name="samples_per_second"></param>
         /// <returns>Value of input from 0.0 to 1.0</returns>
-        public double Read(int channel = 0, int programmable_gain = PGA_4_096V, int samples_per_second = 1600)
+        public async Task<double> Read(int channel = 0, int programmable_gain = PGA_4_096V, int samples_per_second = 1600)
         {
             double result = 0.0;
 
+            // TODO: Optimize this by moving PGA and samples per second into constructor
             // sane defaults
             UInt16 config = 0x0003 | 0x0100;
             config |= SAMPLES_PER_SECOND_MAP[samples_per_second];
@@ -46,8 +48,21 @@ namespace IotFrosting
             Device.Write(writeBuf);
 
             byte[] config_read = new byte[2];
-            Device.Write(new byte[] { REG_CFG });
-            Device.Read(config_read);
+            int timeout = 10;
+            do
+            {
+                // Make sure we don't get stuck here foreever
+                if (--timeout <= 0)
+                    return 0.0;
+
+                // Wait for the sample to become available
+                await Task.Delay(TimeSpan.FromSeconds(1 / samples_per_second));
+
+                // Check the status of the device to see if the sample is ready
+                Device.Read(config_read);
+            }
+            // Continue this until the sampe is ready
+            while ((config_read[1] & 0x80) != 0x80);
 
             Device.Write(new byte[] { REG_CONV });
 
@@ -63,16 +78,26 @@ namespace IotFrosting
 
             result /= 3300.0; // Divide by VCC
 
+            if (result > 1.0)
+                result = 0.0;
+
             return result;
         }
 
-        public double[] ReadAll(int programmable_gain = PGA_4_096V, int samples_per_second = 1600)
+        SemaphoreSlim sem = new SemaphoreSlim(1);
+
+        public async Task<double[]> ReadAll(int programmable_gain = PGA_4_096V, int samples_per_second = 1600)
         {
             const int num_inputs = 4;
             var result = new double[num_inputs];
-            for (int i = 0; i < num_inputs; i++)
-                result[i] = Read(i, programmable_gain, samples_per_second);
+            if (sem.CurrentCount >= 0)
+            {
+                await sem.WaitAsync();
+                for (int i = 0; i < num_inputs; i++)
+                    result[i] = await Read(i, programmable_gain, samples_per_second);
 
+                sem.Release();
+            }
             return result;
         }
 

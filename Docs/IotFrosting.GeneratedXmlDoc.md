@@ -165,9 +165,20 @@
 
 
 ---
-#### Method Pimoroni.AutomationHat.Tick
+#### Method Pimoroni.AutomationHat.FastTick
 
  Called regularly from our own internal timer thread to update the state of everything 
+
+
+
+---
+#### Method Pimoroni.AutomationHat.SlowTick
+
+ Called regularly from our own internal timer, less frequently 
+
+
+
+> This is used for the ADC which takes some time, so we don't want the next interval coming along while we're still workign on the current one 
 
 
 

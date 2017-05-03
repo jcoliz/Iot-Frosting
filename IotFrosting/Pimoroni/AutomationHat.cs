@@ -25,7 +25,8 @@ namespace IotFrosting.Pimoroni
             result.AnalogController = await ADS1015.Open();
 
             // Debugging, so no timer rightnow.
-            result.Timer = ThreadPoolTimer.CreatePeriodicTimer(x => result.Tick(), TimeSpan.FromMilliseconds(20));
+            result.FastTimer = ThreadPoolTimer.CreatePeriodicTimer(x => result.FastTick(), TimeSpan.FromMilliseconds(20));
+            result.SlowTimer = ThreadPoolTimer.CreatePeriodicTimer(x => result.SlowTick(), TimeSpan.FromMilliseconds(100));
             return result;
         }
 
@@ -79,25 +80,39 @@ namespace IotFrosting.Pimoroni
         /// Called regularly from our own internal timer thread to update the state of
         /// everything
         /// </summary>
-        private void Tick()
+        private void FastTick()
         {
             if (!disposing)
-            {
-                Pimoroni.AnalogInput.Values = AnalogController.ReadAll();
+            {                
                 Analog.ForEach(x => x.Tick());
                 Input.ForEach(x => x.Tick());
                 LedController.Output(Pimoroni.Light.Values);
             }
         }
+        /// <summary>
+        /// Called regularly from our own internal timer, less frequently
+        /// </summary>
+        /// <remarks>
+        /// This is used for the ADC which takes some time, so we don't want the next
+        /// interval coming along while we're still workign on the current one
+        /// </remarks>
+        private async void SlowTick()
+        {
+            if (!disposing)
+            {
+                Pimoroni.AnalogInput.Values = await AnalogController.ReadAll();
+            }
+        }
 
         public void UpdateAnalog()
         {
-            Tick();
+            FastTick();
         }
 
         private SN3218 LedController;
         private ADS1015 AnalogController;
-        private ThreadPoolTimer Timer;
+        private ThreadPoolTimer FastTimer;
+        private ThreadPoolTimer SlowTimer;
 
         /// <summary>
         /// Constructor. Do not call directly. Use AutomationHat.Open()
@@ -110,7 +125,7 @@ namespace IotFrosting.Pimoroni
         public void Dispose()
         {
             disposing = true;
-            Timer.Cancel();
+            FastTimer.Cancel();
             Relay.ForEach(x => x.Dispose());
             Input.ForEach(x => x.Dispose());
             Output.ForEach(x => x.Dispose());
