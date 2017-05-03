@@ -62,9 +62,14 @@ namespace IotFrosting
         public double[] ReadAll()
         {
             var result = new double[NumberOfChannels];
+            ReadInto(result);
+            return result;
+        }
+
+        public void ReadInto(double[] result)
+        {
             for (int i = 0; i < NumberOfChannels; i++)
                 result[i] = Read(i);
-            return result;
         }
 
         /// <summary>
