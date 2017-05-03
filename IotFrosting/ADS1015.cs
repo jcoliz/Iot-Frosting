@@ -7,6 +7,9 @@ using Windows.Devices.I2c;
 
 namespace IotFrosting
 {
+    /// <summary>
+    /// https://cdn-shop.adafruit.com/datasheets/ads1015.pdf
+    /// </summary>
     class ADS1015 : IDisposable
     {
         public static async Task<ADS1015> Open()
