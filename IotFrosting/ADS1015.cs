@@ -22,6 +22,13 @@ namespace IotFrosting
             return result;
         }
 
+        /// <summary>
+        /// Read the analog value on a given channel
+        /// </summary>
+        /// <param name="channel"></param>
+        /// <param name="programmable_gain"></param>
+        /// <param name="samples_per_second"></param>
+        /// <returns>Value of input from 0.0 to 1.0</returns>
         public double Read(int channel = 0, int programmable_gain = PGA_4_096V, int samples_per_second = 1600)
         {
             double result = 0.0;
@@ -47,8 +54,7 @@ namespace IotFrosting
             if ((value & 0x800) != 0)
                 value -= 1 << 12;
 
-            result = value / 2047.0; //  Divide down to percentage of FS (???)
-
+            result = value / 2048.0; //  Divide down to percentage of FS (???)
             result *= programmable_gain;
 
             result /= 3300.0; // Divide by VCC
@@ -89,7 +95,7 @@ namespace IotFrosting
             { {0, 0x4000 }, { 1, 0x5000 }, { 2, 0x6000 }, { 3, 0x7000 } };
 
         static readonly Dictionary<int, UInt16> PROGRAMMABLE_GAIN_MAP = new Dictionary<int, ushort>()
-            { { 6144, 0x0000 }, { 4096, 0x0200 }, { 2048, 0x0400 }, { 1024, 0x0600 }, { 512, 0x0800 }, { 256, 0x0A00} };
+            { { PGA_6_144V, 0x0000 }, { PGA_4_096V, 0x0200 }, { PGA_2_048V, 0x0400 }, { PGA_1_024V, 0x0600 }, { PGA_0_512V, 0x0800 }, { PGA_0_256V, 0x0A00} };
 
         I2cDevice Device;
 
