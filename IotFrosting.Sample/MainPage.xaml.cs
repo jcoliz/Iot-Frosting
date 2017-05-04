@@ -222,17 +222,5 @@ namespace IotFrosting.Sample
             }
 
         }
-        private void Update_Analog_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Hat.UpdateAnalog();
-            }
-            catch (Exception ex)
-            {
-                TB.Text = ex.Message;
-            }
-
-        }
     }
 }

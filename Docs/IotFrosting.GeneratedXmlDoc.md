@@ -7,7 +7,7 @@
 
 
 ---
-#### Method ADS1015.Read(System.Int32,System.Int32,System.Int32)
+#### Method ADS1015.Read(System.Int32)
 
  Read the analog value on a given channel 
 
@@ -17,6 +17,62 @@
 |programmable_gain: ||
 |samples_per_second: ||
 **Returns**: Value of input from 0.0 to 1.0
+
+
+
+---
+## Type ADS1015.PGAValues
+
+ Acceptable voltage range values for the PGA 
+
+
+
+> In units of 1/1000V. E.g. "4096" is 4.096V 
+
+
+
+---
+#### Property ADS1015.PGA
+
+ Current voltage range value for the PGA 
+
+
+
+---
+## Type ADS1015.SPSValues
+
+ Acceptable values for samples per second 
+
+
+
+---
+#### Property ADS1015.SamplesPerSecond
+
+ Current value for how many samples per secound do we want 
+
+
+
+---
+#### Method ADS1015.#ctor(Windows.Devices.I2c.I2cDevice)
+
+ Constructor 
+
+|Name | Description |
+|-----|------|
+|device: |I2C device we attach to|
+
+
+---
+#### Method ADS1015.CalculateConfigValues
+
+ Pre-calculate the correct CFG register values for each channel 
+
+
+
+---
+## Type CAP1XXX
+
+ https://github.com/pimoroni/cap1xxx 
 
 
 

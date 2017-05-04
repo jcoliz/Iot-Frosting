@@ -7,6 +7,9 @@ using Windows.Devices.I2c;
 
 namespace IotFrosting
 {
+    /// <summary>
+    /// https://github.com/pimoroni/cap1xxx
+    /// </summary>
     public class CAP1XXX: IDisposable
     {
         public static async Task<CAP1XXX> Open(int alert_pin)
@@ -71,7 +74,7 @@ namespace IotFrosting
 
             Device.Write(new byte[] { R_INPUT_1_DELTA });
             byte[] delta = new byte[8];
-            Device.Read(threshold);
+            Device.Read(delta);
 
             for (int i=0;i<8;i++)
             {
@@ -126,29 +129,57 @@ namespace IotFrosting
         }
         #endregion
 
-        public class Input : IPin
+        public class Input
         {
-            public bool State
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-            }
+            public bool State { get; private set; } = false;
 
-            public void Check_Input(byte delta, byte threshold)
+            public void Check_Input(byte delta_2c, byte threshold)
             {
+                var oldstate = State;
+
+                int delta = ~delta_2c;
+                if (delta > threshold)
+                    State = true;
+                else
+                    State = false;
+
+                if (State != oldstate)
+                    Updated?.Invoke(this, new EventArgs());
+
                 // Set state
                 // Trigger updated if needed
-            }
 
+                /*
+                _delta = self._get_twos_comp(delta[x]) 
+                #threshold = self._read_byte(R_INPUT_1_THRESH + x)
+                # We only ever want to detect PRESS events
+                # If repeat is disabled, and release detect is enabled
+                if _delta >= threshold[x]: # self._delta:
+                    self.input_delta[x] = _delta
+                    #  Touch down event
+                    if self.input_status[x] in ['press','held']:
+                        if self.repeat_enabled & (1 << x):
+                            status = 'held'
+                    if self.input_status[x] in ['none','release']:
+                        if self.input_pressed[x]:
+                            status = 'none'
+                        else:
+                            status = 'press'
+                else:
+                    # Touch release event
+                    if self.release_enabled & (1 << x) and not self.input_status[x] == 'release':
+                        status = 'release'
+                    else:
+                        status = 'none'
+
+                self.input_status[x] = status
+                self.input_pressed[x] = status in ['press','held','none']
+            else:
+                self.input_status[x] = 'none'
+                self.input_pressed[x] = False
+                 */
+            }
             public event EventHandler<EventArgs> Updated;
-
-            public void Dispose()
-            {
-                throw new NotImplementedException();
-            }
         }
-
     }
 }

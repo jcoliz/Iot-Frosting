@@ -27,7 +27,6 @@
             <TextBlock x:Name="A1"/>
             <TextBlock x:Name="A2"/>
             <TextBlock x:Name="A3"/>
-            <Button Content="Update Analog Values" Click="Update_Analog_Click"  Margin="0,20"/>
         </StackPanel>
 
     </Grid>

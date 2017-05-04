@@ -1,10 +1,11 @@
- ## Iot Frosting
+## Iot Frosting
 
 C# library and examples for selected hardware components on Windows 10 IoT Core, including the Pimoroni Automation HAT.
 
 * [Pimoroni Automation Hat](https://shop.pimoroni.com/products/automation-hat) (Also at [Adafruit](https://www.adafruit.com/product/3289))
-* SN3218 ([DataSheet](http://www.si-en.com/uploadpdf/s2011517171720.pdf))
 * [DS3231 Real Time Clock](https://www.adafruit.com/product/3013)
+* SN3218 18-channel LED Driver ([DataSheet](http://www.si-en.com/uploadpdf/s2011517171720.pdf))
+* [ADS1015 12-bit 4-channel ADC](https://www.adafruit.com/product/1083) ([DataSheet](https://cdn-shop.adafruit.com/datasheets/ads1015.pdf))
 
 ## Automation HAT
 
@@ -151,13 +152,18 @@ Hat.Relay[0].NC.AutoLight = true;
 
 Three of the four analog inputs on Automation HAT are 24V tolerant, with a forth 3.3V input in the breakout header.
 
-You can read an analog input like so:
+You can read the voltage currently applied to an analog input like so:
 
 ```c#
-int value = Hat.Analog[0].Value;
+double voltage = Hat.Analog[0].Voltage;
 ```
 
-WARNING: Analog inputs are not yet implemented.
+The 12V analog inputs have lights which automatically illuminate to a level of brightness corresponding to the voltage level on the input. For example, if there is 12V on an input, its light will show half brightness. Just as with any other automatic lights, you can take control of the light independently:
+
+```c#
+Hat.Analog[0].AutoLight = false;
+Hat.Analog[0].Light.State = true;
+```
 
 ## DS3231 Real Time Clock
 

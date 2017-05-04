@@ -100,13 +100,8 @@ namespace IotFrosting.Pimoroni
         {
             if (!disposing)
             {
-                Pimoroni.AnalogInput.Values = await AnalogController.ReadAll();
+                await AnalogController.ReadInto(Pimoroni.AnalogInput.Values);
             }
-        }
-
-        public void UpdateAnalog()
-        {
-            FastTick();
         }
 
         private SN3218 LedController;
