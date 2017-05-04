@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -20,6 +21,8 @@ namespace IotFrosting.PianoHat.Sample
         CAP1XXX Cap1;
         CAP1XXX Cap2;
 
+        public ObservableCollection<string> Messages { get; } = new ObservableCollection<string>();
+
         public MainPage()
         {
             this.InitializeComponent();
@@ -32,7 +35,9 @@ namespace IotFrosting.PianoHat.Sample
             try
             {
                 Cap1 = await CAP1XXX.Open(0x28, 4);
+                Cap1.Inputs.ForEach(x => x.Updated += Pad_Updated);
                 Cap2 = await CAP1XXX.Open(0x2B, 27);
+                Cap2.Inputs.ForEach(x => x.Updated += Pad_Updated);
             }
             catch (Exception ex)
             {
@@ -41,6 +46,14 @@ namespace IotFrosting.PianoHat.Sample
                 Cap1?.Dispose();
                 Cap2?.Dispose();
             }
+        }
+
+        private void Pad_Updated(IInput sender, EventArgs args)
+        {
+            var background = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, ()=> 
+            {
+                Messages.Insert(0, $"State:{sender.State} From:{sender}");
+            });
         }
     }
 }

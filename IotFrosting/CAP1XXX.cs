@@ -52,7 +52,7 @@ namespace IotFrosting
             Inputs = new List<IInput>();
             for(int i = 0;i<8;i++)
             {
-                Inputs.Add(new Input());
+                Inputs.Add(new Input() { Id = $"#{i} @{device.ConnectionSettings.SlaveAddress}" });
             }
 
             var Alert = new InputPin(alert_pin,pulldown:false);
@@ -68,8 +68,16 @@ namespace IotFrosting
                         self._trigger_handler(x, inputs[x])
                     self.clear_interrupt()
             */
-            Check_Inputs();
-            Clear_Interrupt();
+            try
+            {
+                Check_Inputs();
+                Clear_Interrupt();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void Clear_Interrupt()
@@ -206,6 +214,8 @@ namespace IotFrosting
 
         public class Input: IInput
         {
+            public string Id { get; set; }
+
             public bool State { get; private set; } = false;
 
             public void Check_Input(byte delta_2c, byte threshold)
@@ -258,6 +268,12 @@ namespace IotFrosting
                  */
             }
             public event InputUpdateEventHandler Updated;
+
+            public override string ToString()
+            {
+                return Id;
+            }
         }
+
     }
 }
