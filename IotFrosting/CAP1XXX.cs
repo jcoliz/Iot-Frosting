@@ -12,34 +12,55 @@ namespace IotFrosting
     /// </summary>
     public class CAP1XXX: IDisposable
     {
-        public static async Task<CAP1XXX> Open(int alert_pin)
+        public static async Task<CAP1XXX> Open(int i2c_address,int alert_pin)
         {
-            var result = new CAP1XXX(alert_pin);
-            var i2cSettings = new I2cConnectionSettings(I2C_ADDRESS);
+            var i2cSettings = new I2cConnectionSettings(i2c_address);
             var controller = await I2cController.GetDefaultAsync();
-            result.Device = controller.GetDevice(i2cSettings);
+            var device = controller.GetDevice(i2cSettings);
+            var result = new CAP1XXX(device,alert_pin);
 
             return result;
         }
 
-        public List<Input> Inputs;
+        public List<IInput> Inputs;
 
-        protected CAP1XXX(int alert_pin)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="alert_pin">Which pin is the interrupt tied to</param>
+        protected CAP1XXX(I2cDevice device, int alert_pin)
         {
-            Inputs = new List<Input>();
-            for(int i = 0;i<18;i++)
+            Device = device;
+
+            // Device setup
+
+            for (int i=0;i<8;i++)
+                Device.Write(new byte[] { (byte)(R_INPUT_1_THRESH + i), b2 | b1 });
+
+            Device.Write(new byte[] { R_LED_BEHAVIOUR_1, 0 });
+            Device.Write(new byte[] { R_LED_BEHAVIOUR_2, 0 });
+            Device.Write(new byte[] { R_LED_LINKING, 0xff });
+            Device.Write(new byte[] { R_SAMPLING_CONFIG, 0 });
+            Device.Write(new byte[] { R_SENSITIVITY, b6 | b5 });
+            Device.Write(new byte[] { R_GENERAL_CONFIG, b5 | b4 | b3 });
+            Device.Write(new byte[] { R_CONFIGURATION2, b6 | b5 });
+
+            Clear_Interrupt();
+
+            // Property setup
+
+            Inputs = new List<IInput>();
+            for(int i = 0;i<8;i++)
             {
                 Inputs.Add(new Input());
             }
 
-            var Alert = new InputPin(alert_pin);
+            var Alert = new InputPin(alert_pin,pulldown:false);
             Alert.Updated += Alert_Updated;
         }
 
         private void Alert_Updated(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
-
             /*
                 def _handle_alert(self, pin=-1):
                     inputs = self.get_input_status()
@@ -47,6 +68,16 @@ namespace IotFrosting
                         self._trigger_handler(x, inputs[x])
                     self.clear_interrupt()
             */
+            Check_Inputs();
+            Clear_Interrupt();
+        }
+
+        private void Clear_Interrupt()
+        {
+            var main = new byte[1];
+            Device.WriteRead(new byte[] { R_MAIN_CONTROL }, main);
+            main[0] &= 0xfe;
+            Device.Write(new byte[] { R_MAIN_CONTROL, main[0] });
         }
         private void Check_Inputs()
         {
@@ -80,15 +111,59 @@ namespace IotFrosting
             {
                 if (((touched[0] >> i) & 1) == 1)
                 {
-                    Inputs[i].Check_Input(threshold[i], delta[i]);
+                    (Inputs[i] as Input).Check_Input(threshold[i], delta[i]);
                 }
             }
 
         }
-        private const byte I2C_ADDRESS = 0x2C;
-        private const byte R_INPUT_STATUS = 0x03;
-        private const byte R_INPUT_1_DELTA = 0x10;
-        private const byte R_INPUT_1_THRESH = 0x30;
+        const byte R_INPUT_STATUS = 0x03;
+        const byte R_INPUT_1_DELTA = 0x10;
+        const byte R_INPUT_1_THRESH = 0x30;
+        const byte R_LED_BEHAVIOUR_1 = 0x81; // # For LEDs 1-4
+        const byte R_LED_BEHAVIOUR_2 = 0x82; // # For LEDs 5-8
+        const byte R_LED_LINKING     = 0x72;
+        const byte R_SAMPLING_CONFIG = 0x24; // # Default 0x00111001
+        const byte R_MAIN_CONTROL = 0x00;
+        const byte R_INTERRUPT_EN = 0x27;
+        const byte R_INPUT_ENABLE = 0x21;
+        const byte R_SENSITIVITY = 0x1F;
+
+        /*  # B7     = N/A
+            #   B6..B4 = Sensitivity
+            # B3..B0 = Base Shift
+            SENSITIVITY = {128: 0b000, 64:0b001, 32:0b010, 16:0b011, 8:0b100, 4:0b100, 2:0b110, 1:0b111    }
+            */
+
+        const byte R_GENERAL_CONFIG = 0x20;
+
+        /*
+        # B7 = Timeout
+        # B6 = Wake Config ( 1 = Wake pin asserted )
+        # B5 = Disable Digital Noise ( 1 = Noise threshold disabled )
+        # B4 = Disable Analog Noise ( 1 = Low frequency analog noise blocking disabled )
+        # B3 = Max Duration Recalibration ( 1 =  Enable recalibration if touch is held longer than max duration )
+        # B2..B0 = N/A
+        */
+
+        const byte R_CONFIGURATION2 = 0x44;
+        /*
+        # B7 = Linked LED Transition Controls ( 1 = LED trigger is !touch )
+        # B6 = Alert Polarity ( 1 = Active Low Open Drain, 0 = Active High Push Pull )
+        # B5 = Reduce Power ( 1 = Do not power down between poll )
+        # B4 = Link Polarity/Mirror bits ( 0 = Linked, 1 = Unlinked )
+        # B3 = Show RF Noise ( 1 = Noise status registers only show RF, 0 = Both RF and EMI shown )
+        # B2 = Disable RF Noise ( 1 = Disable RF noise filter )
+        # B1..B0 = N/A
+        */
+
+        const byte b0 = 1;
+        const byte b1 = 1 << 1;
+        const byte b2 = 1 << 2;
+        const byte b3 = 1 << 3;
+        const byte b4 = 1 << 4;
+        const byte b5 = 1 << 5;
+        const byte b6 = 1 << 6;
+        const byte b7 = 1 << 7;
 
         private I2cDevice Device;
 
@@ -129,7 +204,7 @@ namespace IotFrosting
         }
         #endregion
 
-        public class Input
+        public class Input: IInput
         {
             public bool State { get; private set; } = false;
 
@@ -137,7 +212,10 @@ namespace IotFrosting
             {
                 var oldstate = State;
 
-                int delta = ~delta_2c;
+                int delta = delta_2c;
+                if ((byte)(delta_2c & 0x80) == 0x80)
+                    delta = - (~delta_2c + 1);
+
                 if (delta > threshold)
                     State = true;
                 else

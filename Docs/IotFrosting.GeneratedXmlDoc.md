@@ -107,6 +107,16 @@
 
 
 ---
+#### Method CAP1XXX.#ctor(Windows.Devices.I2c.I2cDevice,System.Int32)
+
+ Constructor 
+
+|Name | Description |
+|-----|------|
+|alert_pin: |Which pin is the interrupt tied to|
+
+
+---
 ## Type Pimoroni.IAnalogInput
 
  Interface for an analog input with an auto light 
@@ -776,6 +786,27 @@
 
 
 ---
+## Type IInput
+
+ The most basic kind of input, which can be used for more complex types 
+
+
+
+---
+#### Property IInput.State
+
+ Whether the line is currently HIGH 
+
+
+
+---
+#### Event IInput.Updated
+
+ Raised when State changes 
+
+
+
+---
 ## Type IPin
 
  Minimum generic interface for all pins, input or output 
@@ -783,20 +814,6 @@
 
 
 > Useful for dependency injection 
-
-
-
----
-#### Property IPin.State
-
- Whether the line is currently HIGH 
-
-
-
----
-#### Event IPin.Updated
-
- Raised when State changes 
 
 
 

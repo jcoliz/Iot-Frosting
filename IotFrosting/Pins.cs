@@ -4,12 +4,9 @@ using Windows.Devices.Gpio;
 namespace IotFrosting
 {
     /// <summary>
-    /// Minimum generic interface for all pins, input or output
+    /// The most basic kind of input, which can be used for more complex types
     /// </summary>
-    /// <remarks>
-    /// Useful for dependency injection
-    /// </remarks>
-    public interface IPin: IDisposable
+    public interface IInput
     {
         /// <summary>
         /// Whether the line is currently HIGH
@@ -20,6 +17,16 @@ namespace IotFrosting
         /// Raised when State changes
         /// </summary>
         event EventHandler<EventArgs> Updated;
+    }
+
+    /// <summary>
+    /// Minimum generic interface for all pins, input or output
+    /// </summary>
+    /// <remarks>
+    /// Useful for dependency injection
+    /// </remarks>
+    public interface IPin: IInput, IDisposable
+    {
     }
 
     /// <summary>
