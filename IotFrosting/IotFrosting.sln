@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IotFrosting", "IotFrosting.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IotFrosting.Sample", "..\IotFrosting.Sample\IotFrosting.Sample.csproj", "{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IotFrosting.PianoHat.Sample", "..\IotFrosting.PianoHat.Sample\IotFrosting.PianoHat.Sample.csproj", "{C66A011D-6C7C-4D6F-9AED-F9354612768E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,26 @@ Global
 		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|x86.ActiveCfg = Release|x86
 		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|x86.Build.0 = Release|x86
 		{E8F30E00-AF81-4639-BFC5-BDD793DF21D2}.Release|x86.Deploy.0 = Release|x86
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Debug|ARM.ActiveCfg = Debug|ARM
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Debug|ARM.Build.0 = Debug|ARM
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Debug|ARM.Deploy.0 = Debug|ARM
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Debug|x64.ActiveCfg = Debug|x64
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Debug|x64.Build.0 = Debug|x64
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Debug|x64.Deploy.0 = Debug|x64
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Debug|x86.ActiveCfg = Debug|x86
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Debug|x86.Build.0 = Debug|x86
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Debug|x86.Deploy.0 = Debug|x86
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Release|Any CPU.ActiveCfg = Release|x86
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Release|ARM.ActiveCfg = Release|ARM
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Release|ARM.Build.0 = Release|ARM
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Release|ARM.Deploy.0 = Release|ARM
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Release|x64.ActiveCfg = Release|x64
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Release|x64.Build.0 = Release|x64
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Release|x64.Deploy.0 = Release|x64
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Release|x86.ActiveCfg = Release|x86
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Release|x86.Build.0 = Release|x86
+		{C66A011D-6C7C-4D6F-9AED-F9354612768E}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

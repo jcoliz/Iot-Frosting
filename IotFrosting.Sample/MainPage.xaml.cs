@@ -40,10 +40,6 @@ namespace IotFrosting.Sample
         {
             base.OnNavigatedTo(ea);
 
-            // Don't do any of this automation hat stuff right now.
-            // Testing piano hat!!
-            return;
-
             try
             {
                 Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
@@ -185,25 +181,6 @@ namespace IotFrosting.Sample
                 }
         }
 
-        async Task Scenario9()
-        {
-            try
-            {
-                var semaphore = new SemaphoreSlim(1);
-                await semaphore.WaitAsync();
-                using (var Cap1 = await CAP1XXX.Open(0x28, 4))
-                using (var Cap2 = await CAP1XXX.Open(0x2B, 27))
-                {
-                    // Right now, it waits forever. Just starting our testing!!
-                    await semaphore.WaitAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                TB.Text = ex.Message;
-            }
-        }
-
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
             var Button = sender as Button;
@@ -223,8 +200,6 @@ namespace IotFrosting.Sample
                     await Scenario7();
                 if (R8.IsChecked == true)
                     await Scenario8();
-                if (R9.IsChecked == true)
-                    await Scenario9();
             }
             catch (Exception ex)
             {

@@ -16,8 +16,15 @@ namespace IotFrosting
         /// <summary>
         /// Raised when State changes
         /// </summary>
-        event EventHandler<EventArgs> Updated;
+        event InputUpdateEventHandler Updated;
     }
+
+    /// <summary>
+    /// Delegate for use in IInput.Updated event
+    /// </summary>
+    /// <param name="sender">The input being update</param>
+    /// <param name="args">Empty ags for now, may be extended in the future.</param>
+    public delegate void InputUpdateEventHandler(IInput sender, EventArgs args);
 
     /// <summary>
     /// Minimum generic interface for all pins, input or output
@@ -67,7 +74,7 @@ namespace IotFrosting
         /// <summary>
         /// Raised when the pin changes state
         /// </summary>
-        public event EventHandler<EventArgs> Updated;
+        public event InputUpdateEventHandler Updated;
 
         /// <summary>
         /// Current state of the pin, true is High
@@ -135,7 +142,7 @@ namespace IotFrosting
         /// <summary>
         /// Raised when the value is updated
         /// </summary>
-        public event EventHandler<EventArgs> Updated;
+        public event InputUpdateEventHandler Updated;
 
         /// <summary>
         /// Current state of the pin, true is high

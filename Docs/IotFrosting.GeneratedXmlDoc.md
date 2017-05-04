@@ -807,6 +807,17 @@
 
 
 ---
+## Type InputUpdateEventHandler
+
+ Delegate for use in IInput.Updated event 
+
+|Name | Description |
+|-----|------|
+|sender: |The input being update|
+|args: |Empty ags for now, may be extended in the future.|
+
+
+---
 ## Type IPin
 
  Minimum generic interface for all pins, input or output 

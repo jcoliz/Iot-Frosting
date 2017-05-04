@@ -257,7 +257,7 @@ namespace IotFrosting
                 self.input_pressed[x] = False
                  */
             }
-            public event EventHandler<EventArgs> Updated;
+            public event InputUpdateEventHandler Updated;
         }
     }
 }
