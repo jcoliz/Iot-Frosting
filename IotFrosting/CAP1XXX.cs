@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.I2c;
 
@@ -9,6 +10,7 @@ namespace IotFrosting
 {
     /// <summary>
     /// https://github.com/pimoroni/cap1xxx
+    /// https://cdn-shop.adafruit.com/datasheets/CAP1188.pdf
     /// </summary>
     public class CAP1XXX: IDisposable
     {
@@ -59,7 +61,9 @@ namespace IotFrosting
             Alert.Updated += Alert_Updated;
         }
 
-        private void Alert_Updated(object sender, EventArgs e)
+        SemaphoreSlim Alert_Sem = new SemaphoreSlim(1);
+
+        private async void Alert_Updated(IInput sender, EventArgs e)
         {
             /*
                 def _handle_alert(self, pin=-1):
@@ -68,16 +72,19 @@ namespace IotFrosting
                         self._trigger_handler(x, inputs[x])
                     self.clear_interrupt()
             */
-            try
-            {
-                Check_Inputs();
-                Clear_Interrupt();
+            // Alert pin is active low
+            if (!sender.State)
+                try
+                {
+                    await Alert_Sem.WaitAsync();
+                    Check_Inputs();
+                    Clear_Interrupt();
+                    Alert_Sem.Release();
+                }
+                catch (Exception ex)
+                {
 
-            }
-            catch (Exception ex)
-            {
-
-            }
+                }
         }
 
         private void Clear_Interrupt()
@@ -103,26 +110,28 @@ namespace IotFrosting
                             # If repeat is disabled, and release detect is enabled
                             if _delta >= threshold[x]: # self._delta:
              */
-            Device.Write(new byte[] { R_INPUT_STATUS });
             byte[] touched = new byte[1];
-            Device.Read(touched);
+            Device.WriteRead(new byte[] { R_INPUT_STATUS },touched);
 
-            Device.Write(new byte[] { R_INPUT_1_THRESH });
             byte[] threshold = new byte[8];
-            Device.Read(threshold);
+            Device.WriteRead(new byte[] { R_INPUT_1_THRESH }, threshold);
 
-            Device.Write(new byte[] { R_INPUT_1_DELTA });
             byte[] delta = new byte[8];
-            Device.Read(delta);
+            Device.WriteRead(new byte[] { R_INPUT_1_DELTA }, delta);
 
             for (int i=0;i<8;i++)
             {
                 if (((touched[0] >> i) & 1) == 1)
                 {
-                    (Inputs[i] as Input).Check_Input(threshold[i], delta[i]);
+                    (Inputs[i] as Input).Check_Input(delta[i],threshold[i]);
                 }
             }
 
+            // Trigger events if needed
+            Task.Run(() => 
+            {
+                Inputs.ForEach(x => ((Input)x).DoUpdated());
+            });
         }
         const byte R_INPUT_STATUS = 0x03;
         const byte R_INPUT_1_DELTA = 0x10;
@@ -218,10 +227,10 @@ namespace IotFrosting
 
             public bool State { get; private set; } = false;
 
+            public bool OldState { get; set; } = false;
+
             public void Check_Input(byte delta_2c, byte threshold)
             {
-                var oldstate = State;
-
                 int delta = delta_2c;
                 if ((byte)(delta_2c & 0x80) == 0x80)
                     delta = - (~delta_2c + 1);
@@ -230,9 +239,6 @@ namespace IotFrosting
                     State = true;
                 else
                     State = false;
-
-                if (State != oldstate)
-                    Updated?.Invoke(this, new EventArgs());
 
                 // Set state
                 // Trigger updated if needed
@@ -267,6 +273,15 @@ namespace IotFrosting
                 self.input_pressed[x] = False
                  */
             }
+            public void DoUpdated()
+            {
+                if (State != OldState)
+                {
+                    OldState = State;
+                    Updated?.Invoke(this, new EventArgs());
+                }
+            }
+
             public event InputUpdateEventHandler Updated;
 
             public override string ToString()

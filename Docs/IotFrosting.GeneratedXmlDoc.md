@@ -102,7 +102,7 @@
 ---
 ## Type CAP1XXX
 
- https://github.com/pimoroni/cap1xxx 
+ https://github.com/pimoroni/cap1xxx https://cdn-shop.adafruit.com/datasheets/CAP1188.pdf 
 
 
 
