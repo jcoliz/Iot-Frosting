@@ -7,27 +7,46 @@
 
 
 ---
+#### Method ADS1015.Open
+
+ Open a connection to the device 
+
+
+
+> Use this instead of a constructor 
+
+**Returns**: Newly opened ADS1015
+
+
+
+---
 #### Method ADS1015.Read(System.Int32)
 
  Read the analog value on a given channel 
 
 |Name | Description |
 |-----|------|
-|channel: ||
-|programmable_gain: ||
-|samples_per_second: ||
-**Returns**: Value of input from 0.0 to 1.0
+|channel: |Which channel to read|
+**Returns**: Value of input from 0.0 (0V) to 1.0 (Max V)
 
 
 
 ---
-## Type ADS1015.PGAValues
+#### Field ADS1015.sem
 
- Acceptable voltage range values for the PGA 
+ Semaphore to protect against multiple concurrent all-channel reads 
 
 
 
-> In units of 1/1000V. E.g. "4096" is 4.096V 
+---
+#### Method ADS1015.ReadInto(System.Double[])
+
+ Read all channels into a single buffer 
+
+|Name | Description |
+|-----|------|
+|result: |Buffer of values|
+**Returns**: Awaitable task
 
 
 
@@ -35,13 +54,6 @@
 #### Property ADS1015.PGA
 
  Current voltage range value for the PGA 
-
-
-
----
-## Type ADS1015.SPSValues
-
- Acceptable values for samples per second 
 
 
 
@@ -66,6 +78,24 @@
 #### Method ADS1015.CalculateConfigValues
 
  Pre-calculate the correct CFG register values for each channel 
+
+
+
+---
+## Type ADS1015.PGAValues
+
+ Acceptable voltage range values for the PGA 
+
+
+
+> In units of 1/1000V. E.g. "4096" is 4.096V 
+
+
+
+---
+## Type ADS1015.SPSValues
+
+ Acceptable values for samples per second 
 
 
 

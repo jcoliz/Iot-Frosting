@@ -13,6 +13,13 @@ namespace IotFrosting
     /// </summary>
     class ADS1015 : IDisposable
     {
+        /// <summary>
+        /// Open a connection to the device
+        /// </summary>
+        /// <remarks>
+        /// Use this instead of a constructor
+        /// </remarks>
+        /// <returns>Newly opened ADS1015</returns>
         public static async Task<ADS1015> Open()
         {
             var i2cSettings = new I2cConnectionSettings(I2C_ADDRESS);
@@ -26,10 +33,8 @@ namespace IotFrosting
         /// <summary>
         /// Read the analog value on a given channel
         /// </summary>
-        /// <param name="channel"></param>
-        /// <param name="programmable_gain"></param>
-        /// <param name="samples_per_second"></param>
-        /// <returns>Value of input from 0.0 to 1.0</returns>
+        /// <param name="channel">Which channel to read</param>
+        /// <returns>Value of input from 0.0 (0V) to 1.0 (Max V)</returns>
         public async Task<double> Read(int channel = 0)
         {
             double result = 0.0;
@@ -76,8 +81,16 @@ namespace IotFrosting
             return result;
         }
 
+        /// <summary>
+        /// Semaphore to protect against multiple concurrent all-channel reads
+        /// </summary>
         SemaphoreSlim sem = new SemaphoreSlim(1);
 
+        /// <summary>
+        /// Read all channels into a single buffer
+        /// </summary>
+        /// <param name="result">Buffer of values</param>
+        /// <returns>Awaitable task</returns>
         public async Task ReadInto(double[] result)
         {
             if (sem.CurrentCount >= 0)
@@ -88,14 +101,6 @@ namespace IotFrosting
                 sem.Release();
             }
         }
-
-        /// <summary>
-        /// Acceptable voltage range values for the PGA
-        /// </summary>
-        /// <remarks>
-        /// In units of 1/1000V. E.g. "4096" is 4.096V
-        /// </remarks>
-        public enum PGAValues { PGA_0_256V = 256, PGA_0_512V = 512, PGA_1_024V = 1024, PGA_2_048V = 2048, PGA_4_096V = 4096, PGA_6_144V = 6144 };
 
         /// <summary>
         /// Current voltage range value for the PGA
@@ -113,11 +118,6 @@ namespace IotFrosting
             }
         }
         private PGAValues _PGA = PGAValues.PGA_4_096V;
-
-        /// <summary>
-        /// Acceptable values for samples per second
-        /// </summary>
-        public enum SPSValues { SPS_128 = 128, SPS_250 = 250, SPS_490 = 490, SPS_920 = 920, SPS_1600 = 1600, SPS_2400 = 2400, SPS_3300 = 3300 };
 
         /// <summary>
         /// Current value for how many samples per secound do we want
@@ -172,6 +172,19 @@ namespace IotFrosting
         const int NumberOfChannels = 4;
 
         UInt16[] ConfigValues = new UInt16[NumberOfChannels];
+
+        /// <summary>
+        /// Acceptable voltage range values for the PGA
+        /// </summary>
+        /// <remarks>
+        /// In units of 1/1000V. E.g. "4096" is 4.096V
+        /// </remarks>
+        public enum PGAValues { PGA_0_256V = 256, PGA_0_512V = 512, PGA_1_024V = 1024, PGA_2_048V = 2048, PGA_4_096V = 4096, PGA_6_144V = 6144 };
+
+        /// <summary>
+        /// Acceptable values for samples per second
+        /// </summary>
+        public enum SPSValues { SPS_128 = 128, SPS_250 = 250, SPS_490 = 490, SPS_920 = 920, SPS_1600 = 1600, SPS_2400 = 2400, SPS_3300 = 3300 };
 
         static readonly Dictionary<SPSValues, UInt16> SAMPLES_PER_SECOND_MAP = new Dictionary<SPSValues, ushort>()
             { { SPSValues.SPS_128, 0x0000 }, { SPSValues.SPS_250, 0x0020 }, { SPSValues.SPS_490, 0x0040 }, { SPSValues.SPS_920, 0x0060 }, { SPSValues.SPS_1600, 0x0080 }, { SPSValues.SPS_2400, 0x00A0 }, { SPSValues.SPS_3300, 0x00C0} };
