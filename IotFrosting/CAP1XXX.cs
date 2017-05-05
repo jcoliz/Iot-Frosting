@@ -287,6 +287,10 @@ namespace IotFrosting
         /// <summary>
         /// This is the cap1xxx-controlled auto light
         /// </summary>
+        /// <remarks>
+        /// This is only here in case you want to manually control one of the autolights.
+        /// Otherwise, the chip takes care of the auto light.
+        /// </remarks>
         public class Light : ILight
         {
             public bool State
