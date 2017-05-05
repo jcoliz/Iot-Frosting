@@ -26,6 +26,20 @@ namespace IotFrosting
 
         public List<IInput> Inputs;
 
+        public byte R_MainControl
+        {
+            get
+            {
+                var main = new byte[1];
+                Device.WriteRead(new byte[] { R_MAIN_CONTROL }, main);
+                return main[0];
+            }
+            set
+            {
+                Device.Write(new byte[] { R_MAIN_CONTROL, value });
+            }
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -58,6 +72,7 @@ namespace IotFrosting
             }
 
             var Alert = new InputPin(alert_pin,pulldown:false);
+            Alert.Pin.DebounceTimeout = TimeSpan.Zero;
             Alert.Updated += Alert_Updated;
         }
 
@@ -89,10 +104,7 @@ namespace IotFrosting
 
         private void Clear_Interrupt()
         {
-            var main = new byte[1];
-            Device.WriteRead(new byte[] { R_MAIN_CONTROL }, main);
-            main[0] &= 0xfe;
-            Device.Write(new byte[] { R_MAIN_CONTROL, main[0] });
+            R_MainControl &= 0xfe;
         }
         private void Check_Inputs()
         {

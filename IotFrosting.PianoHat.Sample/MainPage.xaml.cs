@@ -55,5 +55,13 @@ namespace IotFrosting.PianoHat.Sample
                 Messages.Insert(0, $"State:{sender.State} From:{sender}");
             });
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            TB.Text = Cap1.R_MainControl.ToString() + " / " + Cap2.R_MainControl.ToString();
+
+            Cap1.R_MainControl &= 0xfe;
+            Cap2.R_MainControl &= 0xfe;
+        }
     }
 }
