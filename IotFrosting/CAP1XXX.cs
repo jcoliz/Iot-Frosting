@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using IotFrosting.Pimoroni;
 using Windows.Devices.I2c;
 
 namespace IotFrosting
@@ -246,11 +247,18 @@ namespace IotFrosting
         }
         #endregion
 
-        public class Pad: IInput
+        public class Pad: IInput, Pimoroni.IAutoLight
         {
             public bool State { get; private set; } = false;
 
             private bool OldState { get; set; } = false;
+
+            // TODO: Toggle the correct bit in R_LED_LINKING
+            public bool AutoLight { get; set; } = true;
+
+            public ILight Light => _Light;
+
+            private Light _Light;
 
             public void Check_Input(byte delta_2c, byte threshold)
             {
@@ -276,5 +284,48 @@ namespace IotFrosting
             public event InputUpdateEventHandler Updated;
         }
 
+        public class Light : ILight
+        {
+            public bool State
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+
+                set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public double Value
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+
+                set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public double Brightness
+            {
+                get
+                {
+                    return State ? 1.0 : 0.0;
+                }
+
+                set
+                {
+                    State = !(value == 0.0);
+                }
+            }
+
+            public void Toggle() => State = !State;
+        }
     }
 }
