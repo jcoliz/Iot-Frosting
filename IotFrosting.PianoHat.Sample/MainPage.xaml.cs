@@ -35,13 +35,23 @@ namespace IotFrosting.PianoHat.Sample
             try
             {
                 Cap1 = await CAP1XXX.Open(0x28, 4);
-                Cap1.Inputs.ForEach(x => x.Updated += Pad_Updated);
+                //Cap1.Inputs.ForEach(x => x.Updated += Pad_Updated);
                 Cap2 = await CAP1XXX.Open(0x2B, 27);
-                Cap2.Inputs.ForEach(x => x.Updated += Pad_Updated);
+                //Cap2.Inputs.ForEach(x => x.Updated += Pad_Updated);
+
+                for (int i = 0; i < 8; i++)
+                {
+                    Cap1.Inputs[i].Id = NoteNames[i];
+                    Cap2.Inputs[i].Id = NoteNames[i + 8];
+                }
+
+                Notes.AddRange(Cap1.Inputs);
+                Notes.AddRange(Cap2.Inputs.Take(5));
 
                 Instrument.Updated += Instrument_Updated;
                 OctaveUp.Updated += OctaveUp_Updated;
                 OctaveDown.Updated += OctaveDown_Updated;
+                Notes.Updated += Notes_Updated;
             }
             catch (Exception ex)
             {
@@ -49,6 +59,14 @@ namespace IotFrosting.PianoHat.Sample
                 await dialog.ShowAsync();
                 Cap1?.Dispose();
                 Cap2?.Dispose();
+            }
+        }
+
+        private void Notes_Updated(IInput sender, EventArgs args)
+        {
+            if (sender.State)
+            {
+                AddMessage($"NOTE {sender}");
             }
         }
 
@@ -97,8 +115,12 @@ namespace IotFrosting.PianoHat.Sample
             Cap2.R_MainControl &= 0xfe;
         }
 
+        static readonly string[] NoteNames = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C2", "OctaveUp", "OctaveDown", "Instrument" };
+
         IInput Instrument => Cap2.Inputs[7];
         IInput OctaveUp => Cap2.Inputs[6];
         IInput OctaveDown => Cap2.Inputs[5];
+
+        MultiplexInput Notes = new MultiplexInput();
     }
 }

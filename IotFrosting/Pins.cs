@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Windows.Devices.Gpio;
 
 namespace IotFrosting
@@ -162,4 +163,29 @@ namespace IotFrosting
             Pin.Dispose();
         }
     }
+
+    public class MultiplexInput : IInput
+    {
+        public void AddRange(IEnumerable<IInput> inputs)
+        {
+            foreach(var i in inputs)
+            {
+                i.Updated += (s,a) => Updated?.Invoke(s,a);
+            }
+            Inputs.AddRange(inputs);
+        }
+
+        public bool State
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public event InputUpdateEventHandler Updated;
+
+        private List<IInput> Inputs = new List<IInput>();
+    }
+
 }

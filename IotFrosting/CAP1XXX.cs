@@ -24,7 +24,7 @@ namespace IotFrosting
             return result;
         }
 
-        public List<IInput> Inputs;
+        public List<Input> Inputs;
 
         public byte R_MainControl
         {
@@ -77,7 +77,7 @@ namespace IotFrosting
 
             // Property setup
 
-            Inputs = new List<IInput>();
+            Inputs = new List<Input>();
             for(int i = 0;i<8;i++)
             {
                 Inputs.Add(new Input() { Id = $"#{i} @{device.ConnectionSettings.SlaveAddress}" });
@@ -147,14 +147,14 @@ namespace IotFrosting
             {
                 if (((touched[0] >> i) & 1) == 1)
                 {
-                    (Inputs[i] as Input).Check_Input(delta[i],threshold[i]);
+                    Inputs[i].Check_Input(delta[i],threshold[i]);
                 }
             }
 
             // Trigger events if needed
             Task.Run(() => 
             {
-                Inputs.ForEach(x => ((Input)x).DoUpdated());
+                Inputs.ForEach(x => x.DoUpdated());
             });
         }
         const byte R_INPUT_STATUS = 0x03;
