@@ -4,8 +4,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.Core;
+using Windows.Media.Playback;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -20,6 +24,8 @@ namespace IotFrosting.PianoHat.Sample
     {
         CAP1XXX Cap1;
         CAP1XXX Cap2;
+        Dictionary<KeyNames, IMediaPlaybackSource> NoteFiles = new Dictionary<KeyNames, IMediaPlaybackSource>();
+        MediaPlayer Player = new MediaPlayer();
 
         public ObservableCollection<string> Messages { get; } = new ObservableCollection<string>();
 
@@ -46,10 +52,19 @@ namespace IotFrosting.PianoHat.Sample
                 Notes.AddRange(Cap1.Inputs);
                 Notes.AddRange(Cap2.Inputs.Take(5));
 
+                Player.AutoPlay = false;
+
                 Instrument.Updated += Instrument_Updated;
                 OctaveUp.Updated += OctaveUp_Updated;
                 OctaveDown.Updated += OctaveDown_Updated;
                 Notes.Updated += Notes_Updated;
+
+                for (int i = 0; i < 13; i++)
+                {
+                    var file = MediaSource.CreateFromUri(new Uri($"ms-appx:///Assets/Piano/{i+25}.wav"));
+                    NoteFiles[(KeyNames)i] = file;
+                }
+
             }
             catch (Exception ex)
             {
@@ -62,9 +77,20 @@ namespace IotFrosting.PianoHat.Sample
 
         private void Notes_Updated(Input sender, EventArgs args)
         {
-            if (sender.State)
+            try
             {
-                AddMessage($"NOTE {sender.Name}");
+                if (sender.State)
+                {
+                    var file = NoteFiles[sender.Name];
+                    Player.Source = file;
+                    Player.Play();
+
+                    AddMessage($"NOTE {sender.Name}");
+                }
+            }
+            catch (Exception ex)
+            {
+                AddMessage($"{ex.GetType().Name}: {ex.Message}");
             }
         }
 
@@ -112,8 +138,6 @@ namespace IotFrosting.PianoHat.Sample
             Cap1.R_MainControl &= 0xfe;
             Cap2.R_MainControl &= 0xfe;
         }
-
-        static readonly string[] NoteNames = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C2", "OctaveUp", "OctaveDown", "Instrument" };
 
         public enum KeyNames { C = 0, Csharp, D, Dsharp, E, F, Fsharp, G, Gsharp, A, Asharp, B, C2, OctaveUp, OctaveDown, Instrument };
 

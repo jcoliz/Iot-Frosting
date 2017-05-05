@@ -11,7 +11,7 @@
     <AssemblyName>IotFrosting.PianoHat.Sample</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -140,19 +140,45 @@
     <Content Include="Assets\Piano\39169__jobro__piano-ff-022.wav" />
     <Content Include="Assets\Piano\39170__jobro__piano-ff-023.wav" />
     <Content Include="Assets\Piano\39171__jobro__piano-ff-024.wav" />
-    <Content Include="Assets\Piano\39172__jobro__piano-ff-025.wav" />
-    <Content Include="Assets\Piano\39173__jobro__piano-ff-026.wav" />
-    <Content Include="Assets\Piano\39174__jobro__piano-ff-027.wav" />
-    <Content Include="Assets\Piano\39175__jobro__piano-ff-028.wav" />
-    <Content Include="Assets\Piano\39176__jobro__piano-ff-029.wav" />
-    <Content Include="Assets\Piano\39177__jobro__piano-ff-030.wav" />
-    <Content Include="Assets\Piano\39178__jobro__piano-ff-031.wav" />
-    <Content Include="Assets\Piano\39179__jobro__piano-ff-032.wav" />
-    <Content Include="Assets\Piano\39180__jobro__piano-ff-033.wav" />
-    <Content Include="Assets\Piano\39181__jobro__piano-ff-034.wav" />
-    <Content Include="Assets\Piano\39182__jobro__piano-ff-035.wav" />
-    <Content Include="Assets\Piano\39183__jobro__piano-ff-036.wav" />
-    <Content Include="Assets\Piano\39184__jobro__piano-ff-037.wav" />
+    <Content Include="Assets\Piano\25.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\26.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\27.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\28.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\29.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\30.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\31.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\32.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\33.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\34.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\35.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\36.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Piano\37.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Piano\39185__jobro__piano-ff-038.wav" />
     <Content Include="Assets\Piano\39186__jobro__piano-ff-039.wav" />
     <Content Include="Assets\Piano\39187__jobro__piano-ff-040.wav" />
