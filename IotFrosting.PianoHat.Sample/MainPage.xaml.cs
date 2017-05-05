@@ -38,6 +38,10 @@ namespace IotFrosting.PianoHat.Sample
                 Cap1.Inputs.ForEach(x => x.Updated += Pad_Updated);
                 Cap2 = await CAP1XXX.Open(0x2B, 27);
                 Cap2.Inputs.ForEach(x => x.Updated += Pad_Updated);
+
+                Instrument.Updated += Instrument_Updated;
+                OctaveUp.Updated += OctaveUp_Updated;
+                OctaveDown.Updated += OctaveDown_Updated;
             }
             catch (Exception ex)
             {
@@ -48,12 +52,41 @@ namespace IotFrosting.PianoHat.Sample
             }
         }
 
+        private void OctaveDown_Updated(IInput sender, EventArgs args)
+        {
+            if (sender.State)
+            {
+                AddMessage($"DOWN");
+            }
+        }
+
+        private void OctaveUp_Updated(IInput sender, EventArgs args)
+        {
+            if (sender.State)
+            {
+                AddMessage($"UP");
+            }
+        }
+
+        private void AddMessage(string text)
+        {
+            var background = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                Messages.Insert(0, text);
+            });
+        }
+
+        private void Instrument_Updated(IInput sender, EventArgs args)
+        {
+            if (sender.State)
+            {
+                AddMessage( $"INSTRUMENT" );
+            }
+        }
+
         private void Pad_Updated(IInput sender, EventArgs args)
         {
-            var background = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, ()=> 
-            {
-                Messages.Insert(0, $"State:{sender.State} From:{sender}");
-            });
+            AddMessage( $"State:{sender.State} From:{sender}" );
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -63,5 +96,9 @@ namespace IotFrosting.PianoHat.Sample
             Cap1.R_MainControl &= 0xfe;
             Cap2.R_MainControl &= 0xfe;
         }
+
+        IInput Instrument => Cap2.Inputs[7];
+        IInput OctaveUp => Cap2.Inputs[6];
+        IInput OctaveDown => Cap2.Inputs[5];
     }
 }
