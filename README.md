@@ -66,7 +66,7 @@ Hat.Notes.Updated += (s,e) =>
 You can also check the state of a particular note key, or attach to its Updated event directly:
 
 ```c#
-bool dsharp_pressed = Hat.Notes[PianoHat.KeynName.Dsharp].State;
+bool dsharp_pressed = Hat.Notes[PianoHat.KeyName.Dsharp].State;
 
 Hat.Notes[PianoHat.KeyName.A].Updated += (s,e) => Log("A " + s.State?"Pressed":"Released");
 ```
