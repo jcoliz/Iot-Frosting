@@ -80,7 +80,7 @@ namespace IotFrosting
             Inputs = new List<Input>();
             for(int i = 0;i<8;i++)
             {
-                Inputs.Add(new Input() { Id = $"#{i} @{device.ConnectionSettings.SlaveAddress}" });
+                Inputs.Add(new Input());
             }
 
             var Alert = new InputPin(alert_pin,pulldown:false);
@@ -248,11 +248,9 @@ namespace IotFrosting
 
         public class Input: IInput
         {
-            public string Id { get; set; }
-
             public bool State { get; private set; } = false;
 
-            public bool OldState { get; set; } = false;
+            private bool OldState { get; set; } = false;
 
             public void Check_Input(byte delta_2c, byte threshold)
             {
@@ -276,11 +274,6 @@ namespace IotFrosting
             }
 
             public event InputUpdateEventHandler Updated;
-
-            public override string ToString()
-            {
-                return Id;
-            }
         }
 
     }

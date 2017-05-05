@@ -35,14 +35,12 @@ namespace IotFrosting.PianoHat.Sample
             try
             {
                 Cap1 = await CAP1XXX.Open(0x28, 4);
-                //Cap1.Inputs.ForEach(x => x.Updated += Pad_Updated);
                 Cap2 = await CAP1XXX.Open(0x2B, 27);
-                //Cap2.Inputs.ForEach(x => x.Updated += Pad_Updated);
 
                 for (int i = 0; i < 8; i++)
                 {
-                    Cap1.Inputs[i].Id = NoteNames[i];
-                    Cap2.Inputs[i].Id = NoteNames[i + 8];
+                    Cap1.Inputs[i] = new Input() { Name = NoteNames[i] };
+                    Cap2.Inputs[i] = new Input() { Name = NoteNames[i+8] };
                 }
 
                 Notes.AddRange(Cap1.Inputs);
@@ -62,11 +60,11 @@ namespace IotFrosting.PianoHat.Sample
             }
         }
 
-        private void Notes_Updated(IInput sender, EventArgs args)
+        private void Notes_Updated(Input sender, EventArgs args)
         {
             if (sender.State)
             {
-                AddMessage($"NOTE {sender}");
+                AddMessage($"NOTE {sender.Name}");
             }
         }
 
@@ -122,5 +120,29 @@ namespace IotFrosting.PianoHat.Sample
         IInput OctaveDown => Cap2.Inputs[5];
 
         MultiplexInput Notes = new MultiplexInput();
+
+        public class Input: CAP1XXX.Input
+        {
+            public string Name { get; set; }
+            public override string ToString()
+            {
+                return Name;
+            }
+        }
+
+        public delegate void InputUpdateEventHandler(Input sender, EventArgs args);
+
+        public class MultiplexInput
+        {
+            public void AddRange(IEnumerable<IInput> inputs)
+            {
+                foreach (var i in inputs)
+                {
+                    i.Updated += (s, a) => Updated?.Invoke(s as Input, a);
+                }
+            }
+
+            public event InputUpdateEventHandler Updated;
+        }
     }
 }
