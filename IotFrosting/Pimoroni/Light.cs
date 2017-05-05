@@ -52,90 +52,6 @@ namespace IotFrosting.Pimoroni
     }
 
     /// <summary>
-    /// A light with PWM control, which is part of a bank of 18 lights.
-    /// Suitable for use with SN3218.
-    /// </summary>
-    public class Light: ILight
-    {
-        /// <summary>
-        /// Digital state, true if on, false if off
-        /// </summary>
-        public bool State
-        {
-            get
-            {
-                return !(0.0 == Value);
-            }
-            set
-            {
-                if (value)
-                    Value = Brightness;
-                else
-                    Value = 0.0;
-            }
-        }
-
-        /// <summary>
-        /// PWM brightness value (0.0-1.0)
-        /// </summary>
-        public double Value
-        {
-            get
-            {
-                return Values[Number];
-            }
-            set
-            {
-                Values[Number] = value;
-                if (value > 0.0)
-                    Brightness = value;
-
-                Updated?.Invoke(this, new EventArgs());
-            }
-        }
-
-        /// <summary>
-        /// How bright the light is when it's on
-        /// </summary>
-        public double Brightness { get; set; } = 1.0;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="number">Which light number on the SN3218 bank are we</param>
-        public Light(int number)
-        {
-            Number = number;
-            State = false;
-        }
-
-        /// <summary>
-        /// Raised when the value of the light changes
-        /// </summary>
-        public event EventHandler<EventArgs> Updated;
-
-        public void Toggle()
-        {
-            State = !State;
-        }
-
-        /// <summary>
-        /// Which light ## are we on the SM3218 bank?
-        /// </summary>
-        private int Number;
-
-        /// <summary>
-        /// All of the light values 
-        /// </summary>
-        public static double[] Values = new double[NumberOfLights];
-
-        /// <summary>
-        /// How many total lights are there in an SN3218 bank
-        /// </summary>
-        private const int NumberOfLights = 18;
-    }
-
-    /// <summary>
     /// A directly connected light (like an LED)
     /// </summary>
     /// <remarks>
@@ -211,10 +127,10 @@ namespace IotFrosting.Pimoroni
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="source">Pin to show status for</param>
+        /// <param name="source">Input to show status for</param>
         /// <param name="inverted">Whether we are inverted from the usual logic. True if we show false when source is true.</param>
         /// <param name="light">The particular light to control</param>
-        public SingleAutoLight(IPin source, bool inverted, ILight light)
+        public SingleAutoLight(IInput source, bool inverted, ILight light)
         {
             Light = light;
             Inverted = inverted;
@@ -258,7 +174,7 @@ namespace IotFrosting.Pimoroni
         /// <summary>
         /// Pin to show status for
         /// </summary>
-        private IPin Source;
+        private IInput Source;
     }
 
 }

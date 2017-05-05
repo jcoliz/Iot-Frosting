@@ -35,10 +35,10 @@ namespace IotFrosting.Pimoroni
         /// </summary>
         public List<IAnalogInput> Analog = new List<IAnalogInput>()
         {
-            new AnalogInput(0, 25.85, new Light(0)),
-            new AnalogInput(1, 25.85, new Light(1)),
-            new AnalogInput(2, 25.85, new Light(2)),
-            new AnalogInput(3, 3.3, null)
+            new ADS1015.Input(0, 25.85, new SN3218.Light(0)),
+            new ADS1015.Input(1, 25.85, new SN3218.Light(1)),
+            new ADS1015.Input(2, 25.85, new SN3218.Light(2)),
+            new ADS1015.Input(3, 3.3, null)
         };
 
         /// <summary>
@@ -46,9 +46,9 @@ namespace IotFrosting.Pimoroni
         /// </summary>
         public List<IDigitalInput> Input = new List<IDigitalInput>()
         {
-            new Input(26, new Light(14)),
-            new Input(20, new Light(13)),
-            new Input(21, new Light(12)),
+            new Input(26, new SN3218.Light(14)),
+            new Input(20, new SN3218.Light(13)),
+            new Input(21, new SN3218.Light(12)),
         };
 
         /// <summary>
@@ -56,9 +56,9 @@ namespace IotFrosting.Pimoroni
         /// </summary>
         public List<IDigitalOutput> Output = new List<IDigitalOutput>()
         {
-            new Output(5, new Light(3)),
-            new Output(12, new Light(4)),
-            new Output(6, new Light(5))
+            new Output(5, new SN3218.Light(3)),
+            new Output(12, new SN3218.Light(4)),
+            new Output(6, new SN3218.Light(5))
         };
 
         /// <summary>
@@ -66,9 +66,9 @@ namespace IotFrosting.Pimoroni
         /// </summary>
         public List<IRelay> Relay = new List<IRelay>()
         {
-            new Relay(13, new Light(6), new Light(7) ),
-            new Relay(19, new Light(8), new Light(9) ),
-            new Relay(16, new Light(10), new Light(11) )
+            new Relay(13, new SN3218.Light(6), new SN3218.Light(7) ),
+            new Relay(19, new SN3218.Light(8), new SN3218.Light(9) ),
+            new Relay(16, new SN3218.Light(10), new SN3218.Light(11) )
         };
 
         /// <summary>
@@ -86,9 +86,10 @@ namespace IotFrosting.Pimoroni
             {                
                 Analog.ForEach(x => x.Tick());
                 Input.ForEach(x => x.Tick());
-                LedController.Output(Pimoroni.Light.Values);
+                LedController.Output(SN3218.Light.Values);
             }
         }
+
         /// <summary>
         /// Called regularly from our own internal timer, less frequently
         /// </summary>
@@ -100,7 +101,7 @@ namespace IotFrosting.Pimoroni
         {
             if (!disposing)
             {
-                await AnalogController.ReadInto(Pimoroni.AnalogInput.Values);
+                await AnalogController.ReadInto(ADS1015.Input.Values);
             }
         }
 
@@ -136,9 +137,9 @@ namespace IotFrosting.Pimoroni
         /// </remarks>
         public class Lights
         {
-            public ILight Power = new Light(17);
-            public ILight Comms = new Light(16);
-            public ILight Warn = new Light(15);
+            public ILight Power = new SN3218.Light(17);
+            public ILight Comms = new SN3218.Light(16);
+            public ILight Warn = new SN3218.Light(15);
         }
     };
 }

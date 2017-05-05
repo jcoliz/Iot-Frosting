@@ -66,21 +66,20 @@ namespace IotFrosting
             Enable();
             EnableLeds();
 
-            const int num_leds = 18;
-            var values = new double[num_leds];
+            var values = new double[NumberOfLights];
 
             // All on
-            int i = num_leds;
+            int i = NumberOfLights;
             while(i-->0)
                 values[i] = 1.0;
             Output(values);
             await Task.Delay(500);
 
             // All off
-            Array.Clear(values,0,num_leds);
+            Array.Clear(values,0, NumberOfLights);
 
             // Cycle through
-            i = num_leds;
+            i = NumberOfLights;
             while (i-- > 0)
             {
                 values[i] = 1.0;
@@ -91,7 +90,7 @@ namespace IotFrosting
             }
 
             // All off
-            Array.Clear(values, 0, num_leds);
+            Array.Clear(values, 0, NumberOfLights);
             Output(values);
 
         }
@@ -110,10 +109,13 @@ namespace IotFrosting
         private const byte CMD_UPDATE = 0x16;
         private const byte CMD_RESET = 0x17;
 
+        /// <summary>
+        /// How many total lights are there in an SN3218 bank
+        /// </summary>
+        private const int NumberOfLights = 18;
+
         private I2cDevice Device;
-
-
-
+        
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
@@ -151,5 +153,83 @@ namespace IotFrosting
             // GC.SuppressFinalize(this);
         }
         #endregion
+
+        /// <summary>
+        /// A light with PWM control, which is part of a bank of 18 lights.
+        /// </summary>
+        public class Light : Pimoroni.ILight
+        {
+            /// <summary>
+            /// Digital state, true if on, false if off
+            /// </summary>
+            public bool State
+            {
+                get
+                {
+                    return !(0.0 == Value);
+                }
+                set
+                {
+                    if (value)
+                        Value = Brightness;
+                    else
+                        Value = 0.0;
+                }
+            }
+
+            /// <summary>
+            /// PWM brightness value (0.0-1.0)
+            /// </summary>
+            public double Value
+            {
+                get
+                {
+                    return Values[Number];
+                }
+                set
+                {
+                    Values[Number] = value;
+                    if (value > 0.0)
+                        Brightness = value;
+
+                    Updated?.Invoke(this, new EventArgs());
+                }
+            }
+
+            /// <summary>
+            /// How bright the light is when it's on
+            /// </summary>
+            public double Brightness { get; set; } = 1.0;
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="number">Which light number on the SN3218 bank are we</param>
+            public Light(int number)
+            {
+                Number = number;
+                State = false;
+            }
+
+            /// <summary>
+            /// Raised when the value of the light changes
+            /// </summary>
+            public event EventHandler<EventArgs> Updated;
+
+            public void Toggle()
+            {
+                State = !State;
+            }
+
+            /// <summary>
+            /// Which light ## are we on the SM3218 bank?
+            /// </summary>
+            private int Number;
+
+            /// <summary>
+            /// All of the light values 
+            /// </summary>
+            public static double[] Values = new double[NumberOfLights];
+        }
     }
 }
