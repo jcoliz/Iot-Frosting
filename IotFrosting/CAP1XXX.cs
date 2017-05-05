@@ -25,20 +25,51 @@ namespace IotFrosting
             return result;
         }
 
-        public List<Pad> Inputs;
+        /// <summary>
+        /// All the pads we control
+        /// </summary>
+        public List<Pad> Pads;
 
-        public byte R_MainControl
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="alert_pin">Which pin is the interrupt tied to</param>
+        protected CAP1XXX(I2cDevice device, int alert_pin)
         {
-            get
+            Device = device;
+
+            // Device setup
+            for(byte r = R_INPUT_1_THRESH; r < R_INPUT_1_THRESH + 8; ++r )
+                this[r] = b2 | b1;
+
+            this[R_LED_BEHAVIOUR_1] = 0;
+            this[R_LED_BEHAVIOUR_2] =  0;
+            this[R_LED_LINKING] = 0xff;
+            this[R_SAMPLING_CONFIG] = 0;
+            this[R_SENSITIVITY] = b6 | b5;
+            this[R_GENERAL_CONFIG] = b5 | b4 | b3;
+            this[R_CONFIGURATION2] = b6 | b5;
+            this[R_MTOUCH_CONFIG] = 0xff;
+            this[R_MAIN_CONTROL] &= 0xfe; // clear interrupt flag
+
+            // Property setup
+
+            Pads = new List<Pad>();
+            for(int i = 0;i<8;i++)
             {
-                return this[R_MAIN_CONTROL];
+                Pads.Add(new Pad());
             }
-            set
-            {
-                this[R_MAIN_CONTROL] = value;
-            }
+
+            var Alert = new InputPin(alert_pin,pulldown:false);
+            Alert.Pin.DebounceTimeout = TimeSpan.Zero;
+            Alert.Updated += Alert_Updated;
         }
 
+        /// <summary>
+        /// Quick access to single-byte registers
+        /// </summary>
+        /// <param name="register">Which register</param>
+        /// <returns>Current register value</returns>
         private byte this[byte register]
         {
             get
@@ -54,89 +85,47 @@ namespace IotFrosting
         }
 
         /// <summary>
-        /// Constructor
+        /// Controls access to any action coming off the alert pin
         /// </summary>
-        /// <param name="alert_pin">Which pin is the interrupt tied to</param>
-        protected CAP1XXX(I2cDevice device, int alert_pin)
-        {
-            Device = device;
-
-            // Device setup
-            for(byte r = R_INPUT_1_THRESH; r < R_INPUT_1_THRESH + 8; ++r )
-                this[r] = b2 | b1;
-
-            this[R_LED_BEHAVIOUR_1] = 0;
-            this[R_LED_BEHAVIOUR_2] =  0 ;
-            this[R_LED_LINKING] = 0xff;
-            this[R_SAMPLING_CONFIG] = 0;
-            this[R_SENSITIVITY] = b6 | b5;
-            this[R_GENERAL_CONFIG] = b5 | b4 | b3;
-            this[R_CONFIGURATION2] = b6 | b5;
-            this[R_MTOUCH_CONFIG] = 0xff;
-
-            Clear_Interrupt();
-
-            // Property setup
-
-            Inputs = new List<Pad>();
-            for(int i = 0;i<8;i++)
-            {
-                Inputs.Add(new Pad());
-            }
-
-            var Alert = new InputPin(alert_pin,pulldown:false);
-            Alert.Pin.DebounceTimeout = TimeSpan.Zero;
-            Alert.Updated += Alert_Updated;
-        }
-
         SemaphoreSlim Alert_Sem = new SemaphoreSlim(1);
 
+        /// <summary>
+        /// Catch interrupts on the 'alert' pin
+        /// </summary>
+        /// <remarks>
+        /// This is the primary driver of action on this class. The alert pin
+        /// interrupt tells us we have something to do
+        /// </remarks>
+        /// <param name="sender">Alert input pin</param>
+        /// <param name="e">Empty event args</param>
         private async void Alert_Updated(IInput sender, EventArgs e)
         {
-            /*
-                def _handle_alert(self, pin=-1):
-                    inputs = self.get_input_status()
-                    for x in range(self.number_of_inputs):
-                        self._trigger_handler(x, inputs[x])
-                    self.clear_interrupt()
-            */
             // Alert pin is active low
             if (!sender.State)
+            {
                 try
                 {
                     await Alert_Sem.WaitAsync();
                     Check_Inputs();
-                    Clear_Interrupt();
+                    this[R_MAIN_CONTROL] &= 0xfe; // clear interrupt flag
                     Alert_Sem.Release();
                 }
                 catch (Exception ex)
                 {
-
+                    // TODO: SHould have a way to push exceptions out
                 }
+            }
         }
 
-        private void Clear_Interrupt()
-        {
-            R_MainControl &= 0xfe;
-        }
+        /// <summary>
+        /// Update the Inputs in software to what's there on the hardware
+        /// </summary>
+        /// <remarks>
+        /// Not really sure why I have this as separate from Alert_Updated...
+        /// </remarks>
         private void Check_Inputs()
         {
-            /*
-                    touched = self._read_byte(R_INPUT_STATUS)
-                    threshold = self._read_block(R_INPUT_1_THRESH, self.number_of_inputs)
-                    delta = self._read_block(R_INPUT_1_DELTA, self.number_of_inputs)
-                    #status = ['none'] * 8
-                    for x in range(self.number_of_inputs):
-                        if (1 << x) & touched:
-                            status = 'none'
-                            _delta = self._get_twos_comp(delta[x]) 
-                            #threshold = self._read_byte(R_INPUT_1_THRESH + x)
-                            # We only ever want to detect PRESS events
-                            # If repeat is disabled, and release detect is enabled
-                            if _delta >= threshold[x]: # self._delta:
-             */
-            byte[] touched = new byte[1];
-            Device.WriteRead(new byte[] { R_INPUT_STATUS },touched);
+            byte touched = this[R_INPUT_STATUS];
 
             byte[] threshold = new byte[8];
             Device.WriteRead(new byte[] { R_INPUT_1_THRESH }, threshold);
@@ -146,18 +135,17 @@ namespace IotFrosting
 
             for (int i=0;i<8;i++)
             {
-                if (((touched[0] >> i) & 1) == 1)
+                if (((touched >> i) & b0) == b0)
                 {
-                    Inputs[i].Check_Input(delta[i],threshold[i]);
+                    Pads[i].Check_Input(delta[i],threshold[i]);
                 }
             }
 
             // Trigger events if needed
-            Task.Run(() => 
-            {
-                Inputs.ForEach(x => x.DoUpdated());
-            });
+            Task.Run(() => Pads.ForEach(x => x.DoUpdated()));
         }
+
+        #region Registers
         const byte R_INPUT_STATUS = 0x03;
         const byte R_INPUT_1_DELTA = 0x10;
         const byte R_INPUT_1_THRESH = 0x30;
@@ -168,9 +156,9 @@ namespace IotFrosting
         const byte R_MAIN_CONTROL = 0x00;
         const byte R_INTERRUPT_EN = 0x27;
         const byte R_INPUT_ENABLE = 0x21;
-        const byte R_SENSITIVITY = 0x1F;
         const byte R_MTOUCH_CONFIG = 0x2A;
 
+        const byte R_SENSITIVITY = 0x1F;
         /*  # B7     = N/A
             #   B6..B4 = Sensitivity
             # B3..B0 = Base Shift
@@ -178,7 +166,6 @@ namespace IotFrosting
             */
 
         const byte R_GENERAL_CONFIG = 0x20;
-
         /*
         # B7 = Timeout
         # B6 = Wake Config ( 1 = Wake pin asserted )
@@ -207,8 +194,14 @@ namespace IotFrosting
         const byte b5 = 1 << 5;
         const byte b6 = 1 << 6;
         const byte b7 = 1 << 7;
+        #endregion
 
+        #region Internal properties
+        /// <summary>
+        /// I2C Device we're attached to
+        /// </summary>
         private I2cDevice Device;
+        #endregion
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -247,31 +240,51 @@ namespace IotFrosting
         }
         #endregion
 
+        #region Member Classes
+        /// <summary>
+        /// A single capacitive touch pad
+        /// </summary>
         public class Pad: IInput, Pimoroni.IAutoLight
         {
+            /// <summary>
+            /// Whether we are currently being pressed
+            /// </summary>
             public bool State { get; private set; } = false;
 
-            private bool OldState { get; set; } = false;
-
+            /// <summary>
+            /// Whether the cap1xxx hardware automatically controls our light
+            /// </summary>
             // TODO: Toggle the correct bit in R_LED_LINKING
             public bool AutoLight { get; set; } = true;
 
+            /// <summary>
+            /// Direct manual access to the underlying light
+            /// </summary>
             public ILight Light => _Light;
 
-            private Light _Light = new CAP1XXX.Light();
-
+            /// <summary>
+            /// Update the state based on the known hardware state
+            /// </summary>
+            /// <param name="delta_2c">Current hardware delta value(2's complement)</param>
+            /// <param name="threshold">Current hardware threshold value</param>
+            /// <remarks>
+            /// Why not just move this out into the cap1xxx class??
+            /// </remarks>
             public void Check_Input(byte delta_2c, byte threshold)
             {
                 int delta = delta_2c;
-                if ((byte)(delta_2c & 0x80) == 0x80)
+                if ((byte)(delta_2c & b7) == b7)
                     delta = - (~delta_2c + 1);
 
                 if (delta > threshold)
                     State = true;
                 else
                     State = false;
-
             }
+
+            /// <summary>
+            /// Raise the Updated event if we have indeed been updated
+            /// </summary>
             public void DoUpdated()
             {
                 if (State != OldState)
@@ -281,7 +294,20 @@ namespace IotFrosting
                 }
             }
 
+            /// <summary>
+            /// Event raised when our state is updated
+            /// </summary>
             public event InputUpdateEventHandler Updated;
+
+            /// <summary>
+            /// Direct manual access to the underlying light
+            /// </summary>
+            private Light _Light = new CAP1XXX.Light();
+
+            /// <summary>
+            /// State last time we raised the updated event
+            /// </summary>
+            private bool OldState { get; set; } = false;
         }
 
         /// <summary>
@@ -293,19 +319,9 @@ namespace IotFrosting
         /// </remarks>
         public class Light : ILight
         {
-            public bool State
-            {
-                get
-                {
-                    throw new NotImplementedException();
-                }
-
-                set
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
+            /// <summary>
+            /// Current Analog light state
+            /// </summary>
             public double Value
             {
                 get
@@ -315,24 +331,37 @@ namespace IotFrosting
 
                 set
                 {
+                    // TODO: affect the LED
                     throw new NotImplementedException();
                 }
             }
 
-            public double Brightness
+            /// <summary>
+            /// Current binary light state
+            /// </summary>
+            public bool State
             {
                 get
                 {
-                    return State ? 1.0 : 0.0;
+                    return Value != 0.0;
                 }
 
                 set
                 {
-                    State = !(value == 0.0);
+                    Value = 1.0;
                 }
             }
 
+            /// <summary>
+            /// Ignored. Supplied for interface compliance
+            /// </summary>
+            public double Brightness { get; set; }
+
+            /// <summary>
+            /// Toggle the state
+            /// </summary>
             public void Toggle() => State = !State;
         }
+        #endregion
     }
 }

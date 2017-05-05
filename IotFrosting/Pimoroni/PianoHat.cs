@@ -30,8 +30,15 @@ namespace IotFrosting.Pimoroni
         /// <param name="args">Empty args, may be used for expansion</param>
         public delegate void KeyUpdateEventHandler(Key sender, EventArgs args);
 
+        /// <summary>
+        /// A combined set of keys, which shared a combined Updated event
+        /// </summary>
         public class KeySet
         {
+            /// <summary>
+            /// Add keys into the set
+            /// </summary>
+            /// <param name="keys">Keys to add</param>
             public void AddRange(IEnumerable<IInput> keys)
             {
                 foreach (var input in keys)
@@ -42,22 +49,37 @@ namespace IotFrosting.Pimoroni
                 }
             }
 
+            /// <summary>
+            /// Extract a key by name
+            /// </summary>
+            /// <param name="name">Name of a key</param>
+            /// <returns>Key with that name</returns>
             public Key this[KeyName name] => Keys[name];
 
+            /// <summary>
+            /// Raised every time any one of the keys are updated
+            /// </summary>
             public event KeyUpdateEventHandler Updated;
 
+            /// <summary>
+            /// Internal dictinoary of keys for fast lookup
+            /// </summary>
             private Dictionary<KeyName, Key> Keys = new Dictionary<PianoHat.KeyName, Key>();
         }
         #endregion
 
         #region Public properties
-        public IInput Instrument => Cap2.Inputs[7];
-        public IInput OctaveUp => Cap2.Inputs[6];
-        public IInput OctaveDown => Cap2.Inputs[5];
+        public IInput Instrument => Cap2.Pads[7];
+        public IInput OctaveUp => Cap2.Pads[6];
+        public IInput OctaveDown => Cap2.Pads[5];
         public KeySet Notes = new KeySet();
         #endregion
 
         #region Public methods
+        /// <summary>
+        /// Open a connection to the piano hat
+        /// </summary>
+        /// <returns>Piano Hat controller</returns>
         public static async Task<PianoHat> Open()
         {
             var result = new PianoHat();
@@ -66,12 +88,12 @@ namespace IotFrosting.Pimoroni
 
             for (int i = 0; i < 8; i++)
             {
-                result.Cap1.Inputs[i] = new Key() { Name = (KeyName)i };
-                result.Cap2.Inputs[i] = new Key() { Name = (KeyName)(i + 8) };
+                result.Cap1.Pads[i] = new Key() { Name = (KeyName)i };
+                result.Cap2.Pads[i] = new Key() { Name = (KeyName)(i + 8) };
             }
 
-            result.Notes.AddRange(result.Cap1.Inputs);
-            result.Notes.AddRange(result.Cap2.Inputs.Take(5));
+            result.Notes.AddRange(result.Cap1.Pads);
+            result.Notes.AddRange(result.Cap2.Pads.Take(5));
 
             return result;
         }
@@ -79,14 +101,23 @@ namespace IotFrosting.Pimoroni
 
         #region Internal methods
 
+        /// <summary>
+        /// Don't call consturctor directly, use PianoHat.Open()
+        /// </summary>
         protected PianoHat()
         {
-
         }
         #endregion
 
         #region Internal properties
+        /// <summary>
+        /// Left-side cap1xxx
+        /// </summary>
         CAP1XXX Cap1;
+
+        /// <summary>
+        /// Right-side cap1xxx
+        /// </summary>
         CAP1XXX Cap2;
         #endregion
 
