@@ -81,6 +81,9 @@ namespace IotFrosting.PianoHat.Sample
             {
                 if (sender.State)
                 {
+                    // Serious popping noises
+                    // Problem documented here: https://social.msdn.microsoft.com/Forums/en-US/7c312972-6a09-4acd-8a3f-c59485a81d74/clicking-sound-during-start-and-stop-of-audio-playback?forum=WindowsIoT
+                    // Solution here: http://ian.bebbs.co.uk/posts/CombiningUwpSpeechSynthesizerWithAudioGraph
                     var file = NoteFiles[sender.Name];
                     Player.Source = file;
                     Player.Play();
