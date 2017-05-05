@@ -71,6 +71,7 @@ namespace IotFrosting
             this[R_SENSITIVITY] = b6 | b5;
             this[R_GENERAL_CONFIG] = b5 | b4 | b3;
             this[R_CONFIGURATION2] = b6 | b5;
+            this[R_MTOUCH_CONFIG] = 0xff;
 
             Clear_Interrupt();
 
@@ -167,6 +168,7 @@ namespace IotFrosting
         const byte R_INTERRUPT_EN = 0x27;
         const byte R_INPUT_ENABLE = 0x21;
         const byte R_SENSITIVITY = 0x1F;
+        const byte R_MTOUCH_CONFIG = 0x2A;
 
         /*  # B7     = N/A
             #   B6..B4 = Sensitivity
