@@ -3,9 +3,84 @@
 C# library and examples for selected hardware components on Windows 10 IoT Core, including the Pimoroni Automation HAT.
 
 * [Pimoroni Automation Hat](https://shop.pimoroni.com/products/automation-hat) (Also at [Adafruit](https://www.adafruit.com/product/3289))
+* [Pimoroni Piano Hat](https://shop.pimoroni.com/products/piano-hat)
 * [DS3231 Real Time Clock](https://www.adafruit.com/product/3013)
 * SN3218 18-channel LED Driver ([DataSheet](http://www.si-en.com/uploadpdf/s2011517171720.pdf))
 * [ADS1015 12-bit 4-channel ADC](https://www.adafruit.com/product/1083) ([DataSheet](https://cdn-shop.adafruit.com/datasheets/ads1015.pdf))
+
+## Piano HAT
+
+Piano HAT is a tiny Pi piano with 16 touch-sensitive buttons. It features:
+
+* 16 Capacitive Touch Buttons
+* 13 Notes from C to C
+* Octave Up/Down
+* Instrument Select
+
+### Namespace
+
+At the top of your C# file, reference the namespace for the library, like so:
+
+```c#
+using IotFrosting.Pimoroni
+```
+
+### Open the device
+
+Before using the device, you'll need to open a connection to it, and wrap your code in a 'using', like so:
+
+```c#
+using (var Hat = await PianoHat.Open())
+{
+}
+```
+
+### Notes
+
+The hat raises an event when a note is pressed or released.
+
+```c#
+Hat.Notes.Updated += (s,e) => 
+{ 
+	if (s.State)
+	{
+		switch (s.Name)
+		{
+		case PianoHat.KeyNames.C:
+			Media.Play("C.WAV");
+			break;
+		case PianoHat.KeyNames.D:
+			Media.Play("D.WAV");
+			break;
+		}
+	}
+};
+```
+
+### Octave Up/Down
+
+The hat raises an event when the octave up or down keys is pressed or released.
+
+```c#
+Hat.OctaveUp.Updated += (s,e) => Log("Octave Up " + s.State?"Pressed":"Released");
+Hat.OctaveDown.Updated += (s,e) => Log("Octave Down " + s.State?"Pressed":"Released");
+```
+
+### Instrument Key
+
+The hat raises an event when the Instrument key is pressed or released.
+
+```c#
+Hat.Instrument.Updated += (s,e) => Log("Instrument " + s.State?"Pressed":"Released");
+```
+
+The names of the notes are: 
+
+### Documentation & Support
+
+* [Guides and tutorials](https://learn.pimoroni.com/piano-hat)
+* [GPIO Pinout](https://pinout.xyz/pinout/piano_hat)
+* [Get help](http://forums.pimoroni.com/c/support)
 
 ## Automation HAT
 
@@ -15,7 +90,7 @@ Automation HAT is a home monitoring and automation controller featuring relays, 
 
 * [Guides and tutorials](https://learn.pimoroni.com/automation-hat)
 * [GPIO Pinout](https://pinout.xyz/pinout/automation_hat)  
-* [Get help with the HAT](http://forums.pimoroni.com/c/support)
+* [Get help](http://forums.pimoroni.com/c/support)
 
 ### Namespace
 

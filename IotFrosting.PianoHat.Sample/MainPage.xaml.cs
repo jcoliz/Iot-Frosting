@@ -39,8 +39,8 @@ namespace IotFrosting.PianoHat.Sample
 
                 for (int i = 0; i < 8; i++)
                 {
-                    Cap1.Inputs[i] = new Input() { Name = NoteNames[i] };
-                    Cap2.Inputs[i] = new Input() { Name = NoteNames[i+8] };
+                    Cap1.Inputs[i] = new Input() { Name = (KeyNames)i };
+                    Cap2.Inputs[i] = new Input() { Name = (KeyNames)(i+8) };
                 }
 
                 Notes.AddRange(Cap1.Inputs);
@@ -115,6 +115,8 @@ namespace IotFrosting.PianoHat.Sample
 
         static readonly string[] NoteNames = { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C2", "OctaveUp", "OctaveDown", "Instrument" };
 
+        public enum KeyNames { C = 0, Csharp, D, Dsharp, E, F, Fsharp, G, Gsharp, A, Asharp, B, C2, OctaveUp, OctaveDown, Instrument };
+
         IInput Instrument => Cap2.Inputs[7];
         IInput OctaveUp => Cap2.Inputs[6];
         IInput OctaveDown => Cap2.Inputs[5];
@@ -123,11 +125,7 @@ namespace IotFrosting.PianoHat.Sample
 
         public class Input: CAP1XXX.Input
         {
-            public string Name { get; set; }
-            public override string ToString()
-            {
-                return Name;
-            }
+            public KeyNames Name { get; set; }
         }
 
         public delegate void InputUpdateEventHandler(Input sender, EventArgs args);
