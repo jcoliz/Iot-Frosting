@@ -30,13 +30,25 @@ namespace IotFrosting
         {
             get
             {
-                var main = new byte[1];
-                Device.WriteRead(new byte[] { R_MAIN_CONTROL }, main);
-                return main[0];
+                return this[R_MAIN_CONTROL];
             }
             set
             {
-                Device.Write(new byte[] { R_MAIN_CONTROL, value });
+                this[R_MAIN_CONTROL] = value;
+            }
+        }
+
+        private byte this[byte register]
+        {
+            get
+            {
+                var result = new byte[1];
+                Device.WriteRead(new byte[] { register }, result);
+                return result[0];
+            }
+            set
+            {
+                Device.Write(new byte[] { register, value });
             }
         }
 
@@ -49,17 +61,16 @@ namespace IotFrosting
             Device = device;
 
             // Device setup
+            for(byte r = R_INPUT_1_THRESH; r < R_INPUT_1_THRESH + 8; ++r )
+                this[r] = b2 | b1;
 
-            for (int i=0;i<8;i++)
-                Device.Write(new byte[] { (byte)(R_INPUT_1_THRESH + i), b2 | b1 });
-
-            Device.Write(new byte[] { R_LED_BEHAVIOUR_1, 0 });
-            Device.Write(new byte[] { R_LED_BEHAVIOUR_2, 0 });
-            Device.Write(new byte[] { R_LED_LINKING, 0xff });
-            Device.Write(new byte[] { R_SAMPLING_CONFIG, 0 });
-            Device.Write(new byte[] { R_SENSITIVITY, b6 | b5 });
-            Device.Write(new byte[] { R_GENERAL_CONFIG, b5 | b4 | b3 });
-            Device.Write(new byte[] { R_CONFIGURATION2, b6 | b5 });
+            this[R_LED_BEHAVIOUR_1] = 0;
+            this[R_LED_BEHAVIOUR_2] =  0 ;
+            this[R_LED_LINKING] = 0xff;
+            this[R_SAMPLING_CONFIG] = 0;
+            this[R_SENSITIVITY] = b6 | b5;
+            this[R_GENERAL_CONFIG] = b5 | b4 | b3;
+            this[R_CONFIGURATION2] = b6 | b5;
 
             Clear_Interrupt();
 
