@@ -17,6 +17,12 @@ Piano HAT is a tiny Pi piano with 16 touch-sensitive buttons. It features:
 * Octave Up/Down
 * Instrument Select
 
+### Documentation & Support
+
+* [Guides and tutorials](https://learn.pimoroni.com/piano-hat)
+* [GPIO Pinout](https://pinout.xyz/pinout/piano_hat)
+* [Get help](http://forums.pimoroni.com/c/support)
+
 ### Namespace
 
 At the top of your C# file, reference the namespace for the library, like so:
@@ -52,8 +58,8 @@ Hat.Notes.Updated += (s,e) =>
         case PianoHat.KeyNames.D:
             Media.Play("D.WAV");
             break;
-		}
-	}
+        }
+    }
 };
 ```
 
@@ -73,12 +79,6 @@ The hat raises an event when the Instrument key is pressed or released.
 ```c#
 Hat.Instrument.Updated += (s,e) => Log("Instrument " + s.State?"Pressed":"Released");
 ```
-
-### Documentation & Support
-
-* [Guides and tutorials](https://learn.pimoroni.com/piano-hat)
-* [GPIO Pinout](https://pinout.xyz/pinout/piano_hat)
-* [Get help](http://forums.pimoroni.com/c/support)
 
 ## Automation HAT
 
@@ -124,7 +124,7 @@ In this example, we toggle output 0 whenever a button connected to input 0 is pr
 ```c#
 Hat.Input[0].Updated += (s, a) =>
 {
-    if (Hat.Input[0].State)
+    if (s.State)
         Hat.Output[0].Toggle();
 };
 ```
