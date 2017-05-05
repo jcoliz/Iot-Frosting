@@ -22,9 +22,8 @@ namespace IotFrosting.PianoHat.Sample
 {
     public sealed partial class MainPage : Page
     {
-        CAP1XXX Cap1;
-        CAP1XXX Cap2;
-        Dictionary<KeyNames, IMediaPlaybackSource> NoteFiles = new Dictionary<KeyNames, IMediaPlaybackSource>();
+        Pimoroni.PianoHat Hat;
+        Dictionary<Pimoroni.PianoHat.KeyName, IMediaPlaybackSource> NoteFiles = new Dictionary<Pimoroni.PianoHat.KeyName, IMediaPlaybackSource>();
         MediaPlayer Player = new MediaPlayer();
 
         public ObservableCollection<string> Messages { get; } = new ObservableCollection<string>();
@@ -40,42 +39,32 @@ namespace IotFrosting.PianoHat.Sample
 
             try
             {
-                Cap1 = await CAP1XXX.Open(0x28, 4);
-                Cap2 = await CAP1XXX.Open(0x2B, 27);
+                Hat = await Pimoroni.PianoHat.Open();
 
-                for (int i = 0; i < 8; i++)
-                {
-                    Cap1.Inputs[i] = new Input() { Name = (KeyNames)i };
-                    Cap2.Inputs[i] = new Input() { Name = (KeyNames)(i+8) };
-                }
+                Hat.Instrument.Updated += Instrument_Updated;
+                Hat.OctaveUp.Updated += OctaveUp_Updated;
+                Hat.OctaveDown.Updated += OctaveDown_Updated;
+                Hat.Notes.Updated += Notes_Updated;
 
-                Notes.AddRange(Cap1.Inputs);
-                Notes.AddRange(Cap2.Inputs.Take(5));
-
-                Player.AutoPlay = false;
-
-                Instrument.Updated += Instrument_Updated;
-                OctaveUp.Updated += OctaveUp_Updated;
-                OctaveDown.Updated += OctaveDown_Updated;
-                Notes.Updated += Notes_Updated;
-
+                // Pre-load all the note sounds 
                 for (int i = 0; i < 13; i++)
                 {
                     var file = MediaSource.CreateFromUri(new Uri($"ms-appx:///Assets/Piano/{i+25}.wav"));
-                    NoteFiles[(KeyNames)i] = file;
+                    NoteFiles[(Pimoroni.PianoHat.KeyName)i] = file;
                 }
 
+                // Set up the player
+                Player.AutoPlay = false;
             }
             catch (Exception ex)
             {
                 var dialog = new Common.MessageDialog(ex.Message, ex.GetType().Name);
                 await dialog.ShowAsync();
-                Cap1?.Dispose();
-                Cap2?.Dispose();
+                Hat?.Dispose();
             }
         }
 
-        private void Notes_Updated(Input sender, EventArgs args)
+        private void Notes_Updated(Pimoroni.PianoHat.Key sender, EventArgs args)
         {
             try
             {
@@ -127,47 +116,6 @@ namespace IotFrosting.PianoHat.Sample
             {
                 AddMessage( $"INSTRUMENT" );
             }
-        }
-
-        private void Pad_Updated(IInput sender, EventArgs args)
-        {
-            AddMessage( $"State:{sender.State} From:{sender}" );
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            TB.Text = Cap1.R_MainControl.ToString() + " / " + Cap2.R_MainControl.ToString();
-
-            Cap1.R_MainControl &= 0xfe;
-            Cap2.R_MainControl &= 0xfe;
-        }
-
-        public enum KeyNames { C = 0, Csharp, D, Dsharp, E, F, Fsharp, G, Gsharp, A, Asharp, B, C2, OctaveUp, OctaveDown, Instrument };
-
-        IInput Instrument => Cap2.Inputs[7];
-        IInput OctaveUp => Cap2.Inputs[6];
-        IInput OctaveDown => Cap2.Inputs[5];
-
-        MultiplexInput Notes = new MultiplexInput();
-
-        public class Input: CAP1XXX.Input
-        {
-            public KeyNames Name { get; set; }
-        }
-
-        public delegate void InputUpdateEventHandler(Input sender, EventArgs args);
-
-        public class MultiplexInput
-        {
-            public void AddRange(IEnumerable<IInput> inputs)
-            {
-                foreach (var i in inputs)
-                {
-                    i.Updated += (s, a) => Updated?.Invoke(s as Input, a);
-                }
-            }
-
-            public event InputUpdateEventHandler Updated;
         }
     }
 }

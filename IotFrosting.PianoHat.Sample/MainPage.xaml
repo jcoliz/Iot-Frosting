@@ -7,14 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="20">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="230">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Button Content="Check Status" Click="Button_Click"/>
-        <TextBlock Grid.Row="1" x:Name="TB" Margin="10"/>
         <ListBox Grid.Row="2" ItemsSource="{x:Bind Messages}"/>
     </Grid>
 </Page>

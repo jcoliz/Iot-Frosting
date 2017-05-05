@@ -52,15 +52,23 @@ Hat.Notes.Updated += (s,e) =>
     {
         switch (s.Name)
         {
-        case PianoHat.KeyNames.C:
+        case PianoHat.KeyName.C:
             Media.Play("C.WAV");
             break;
-        case PianoHat.KeyNames.D:
+        case PianoHat.KeyName.D:
             Media.Play("D.WAV");
             break;
         }
     }
 };
+```
+
+You can also check the state of a particular note key, or attach to its Updated event directly:
+
+```c#
+bool dsharp_pressed = Hat.Notes[PianoHat.KeynName.Dsharp].State;
+
+Hat.Notes[PianoHat.KeyName.A].Updated += (s,e) => Log("A " + s.State?"Pressed":"Released");
 ```
 
 ### Octave Up/Down
@@ -79,6 +87,29 @@ The hat raises an event when the Instrument key is pressed or released.
 ```c#
 Hat.Instrument.Updated += (s,e) => Log("Instrument " + s.State?"Pressed":"Released");
 ```
+
+### Lights
+
+Piano HAT includes one light for each key. These are automatic by default, but you can switch each light to manual if you want. First turn off the automation:
+
+```c#
+Hat.Instrument.AutoLight = false;
+```
+
+Then toggle the light:
+
+```c#
+Hat.Instrument.Light.State = true;
+Hat.Instrument.Light.State = false;
+```
+
+The same applies for the light on a note key:
+
+```c#
+Hat.Notes[PianoHat.KeyName.A].Light.State = true;
+```
+
+NOTE: Manual control of the lights is not yet implemented. Currently the lights are locked to automatically turn on and off when the corresponding key is pressed and released.
 
 ## Automation HAT
 

@@ -24,7 +24,7 @@ namespace IotFrosting
             return result;
         }
 
-        public List<Input> Inputs;
+        public List<Pad> Inputs;
 
         public byte R_MainControl
         {
@@ -77,10 +77,10 @@ namespace IotFrosting
 
             // Property setup
 
-            Inputs = new List<Input>();
+            Inputs = new List<Pad>();
             for(int i = 0;i<8;i++)
             {
-                Inputs.Add(new Input());
+                Inputs.Add(new Pad());
             }
 
             var Alert = new InputPin(alert_pin,pulldown:false);
@@ -246,7 +246,7 @@ namespace IotFrosting
         }
         #endregion
 
-        public class Input: IInput
+        public class Pad: IInput
         {
             public bool State { get; private set; } = false;
 
