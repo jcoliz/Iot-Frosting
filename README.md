@@ -42,16 +42,16 @@ The hat raises an event when a note is pressed or released.
 ```c#
 Hat.Notes.Updated += (s,e) => 
 { 
-	if (s.State)
-	{
-		switch (s.Name)
-		{
-		case PianoHat.KeyNames.C:
-			Media.Play("C.WAV");
-			break;
-		case PianoHat.KeyNames.D:
-			Media.Play("D.WAV");
-			break;
+    if (s.State)
+    {
+        switch (s.Name)
+        {
+        case PianoHat.KeyNames.C:
+            Media.Play("C.WAV");
+            break;
+        case PianoHat.KeyNames.D:
+            Media.Play("D.WAV");
+            break;
 		}
 	}
 };
@@ -73,8 +73,6 @@ The hat raises an event when the Instrument key is pressed or released.
 ```c#
 Hat.Instrument.Updated += (s,e) => Log("Instrument " + s.State?"Pressed":"Released");
 ```
-
-The names of the notes are: 
 
 ### Documentation & Support
 
