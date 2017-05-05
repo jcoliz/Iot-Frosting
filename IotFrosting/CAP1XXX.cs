@@ -265,38 +265,6 @@ namespace IotFrosting
                 else
                     State = false;
 
-                // Set state
-                // Trigger updated if needed
-
-                /*
-                _delta = self._get_twos_comp(delta[x]) 
-                #threshold = self._read_byte(R_INPUT_1_THRESH + x)
-                # We only ever want to detect PRESS events
-                # If repeat is disabled, and release detect is enabled
-                if _delta >= threshold[x]: # self._delta:
-                    self.input_delta[x] = _delta
-                    #  Touch down event
-                    if self.input_status[x] in ['press','held']:
-                        if self.repeat_enabled & (1 << x):
-                            status = 'held'
-                    if self.input_status[x] in ['none','release']:
-                        if self.input_pressed[x]:
-                            status = 'none'
-                        else:
-                            status = 'press'
-                else:
-                    # Touch release event
-                    if self.release_enabled & (1 << x) and not self.input_status[x] == 'release':
-                        status = 'release'
-                    else:
-                        status = 'none'
-
-                self.input_status[x] = status
-                self.input_pressed[x] = status in ['press','held','none']
-            else:
-                self.input_status[x] = 'none'
-                self.input_pressed[x] = False
-                 */
             }
             public void DoUpdated()
             {
