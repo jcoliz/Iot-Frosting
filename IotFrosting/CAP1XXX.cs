@@ -258,7 +258,7 @@ namespace IotFrosting
 
             public ILight Light => _Light;
 
-            private Light _Light;
+            private Light _Light = new CAP1XXX.Light();
 
             public void Check_Input(byte delta_2c, byte threshold)
             {
@@ -284,6 +284,9 @@ namespace IotFrosting
             public event InputUpdateEventHandler Updated;
         }
 
+        /// <summary>
+        /// This is the cap1xxx-controlled auto light
+        /// </summary>
         public class Light : ILight
         {
             public bool State
