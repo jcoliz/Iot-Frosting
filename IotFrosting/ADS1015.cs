@@ -11,7 +11,7 @@ namespace IotFrosting
     /// <summary>
     /// https://cdn-shop.adafruit.com/datasheets/ads1015.pdf
     /// </summary>
-    class ADS1015 : IDisposable
+    class ADS1015 : IDisposable, ITick
     {
         /// <summary>
         /// Open a connection to the device
@@ -87,11 +87,19 @@ namespace IotFrosting
         SemaphoreSlim sem = new SemaphoreSlim(1);
 
         /// <summary>
+        /// Call regularly to update the software status based on the hardware
+        /// </summary>
+        public async void Tick()
+        {
+            await ReadInto(Input.Values);
+        }
+
+        /// <summary>
         /// Read all channels into a single buffer
         /// </summary>
         /// <param name="result">Buffer of values</param>
         /// <returns>Awaitable task</returns>
-        public async Task ReadInto(double[] result)
+        private async Task ReadInto(double[] result)
         {
             if (sem.CurrentCount >= 0)
             {

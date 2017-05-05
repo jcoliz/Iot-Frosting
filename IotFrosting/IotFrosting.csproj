@@ -111,7 +111,8 @@
   <ItemGroup>
     <Compile Include="ADS1015.cs" />
     <Compile Include="CAP1XXX.cs" />
-    <Compile Include="Pimoroni\Analog.cs" />
+    <Compile Include="ITick.cs" />
+    <Compile Include="Pimoroni\IAnalogInput.cs" />
     <Compile Include="Pimoroni\AutomationHat.cs" />
     <Compile Include="DS3231.cs" />
     <Compile Include="Pimoroni\Input.cs" />

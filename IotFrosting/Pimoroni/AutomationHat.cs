@@ -21,10 +21,9 @@ namespace IotFrosting.Pimoroni
             result.LedController.Enable();
             result.LedController.EnableLeds();
             result.Light.Power.State = true;
-
             result.AnalogController = await ADS1015.Open();
-
-            // Debugging, so no timer rightnow.
+            result.FastTicks.Add(result.LedController);
+            result.SlowTicks.Add(result.AnalogController);
             result.FastTimer = ThreadPoolTimer.CreatePeriodicTimer(x => result.FastTick(), TimeSpan.FromMilliseconds(20));
             result.SlowTimer = ThreadPoolTimer.CreatePeriodicTimer(x => result.SlowTick(), TimeSpan.FromMilliseconds(100));
             return result;
@@ -83,12 +82,11 @@ namespace IotFrosting.Pimoroni
         private void FastTick()
         {
             if (!disposing)
-            {                
-                Analog.ForEach(x => x.Tick());
-                Input.ForEach(x => x.Tick());
-                LedController.Output(SN3218.Light.Values);
+            {
+                FastTicks.ForEach(x => x.Tick());
             }
         }
+        private List<ITick> FastTicks = new List<ITick>();
 
         /// <summary>
         /// Called regularly from our own internal timer, less frequently
@@ -97,13 +95,14 @@ namespace IotFrosting.Pimoroni
         /// This is used for the ADC which takes some time, so we don't want the next
         /// interval coming along while we're still workign on the current one
         /// </remarks>
-        private async void SlowTick()
+        private void SlowTick()
         {
             if (!disposing)
             {
-                await AnalogController.ReadInto(ADS1015.Input.Values);
+                SlowTicks.ForEach(x => x.Tick());
             }
         }
+        private List<ITick> SlowTicks = new List<ITick>();
 
         private SN3218 LedController;
         private ADS1015 AnalogController;
@@ -115,6 +114,8 @@ namespace IotFrosting.Pimoroni
         /// </summary>
         protected AutomationHat()
         {
+            FastTicks.AddRange(Analog);
+            FastTicks.AddRange(Input);
         }
 
         private bool disposing = false;
@@ -122,6 +123,7 @@ namespace IotFrosting.Pimoroni
         {
             disposing = true;
             FastTimer.Cancel();
+            SlowTimer.Cancel();
             Relay.ForEach(x => x.Dispose());
             Input.ForEach(x => x.Dispose());
             Output.ForEach(x => x.Dispose());

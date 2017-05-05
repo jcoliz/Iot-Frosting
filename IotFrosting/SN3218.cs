@@ -17,7 +17,7 @@ namespace IotFrosting
     /// https://github.com/ms-iot/samples/blob/develop/I2cPortExpander/CS/MainPage.xaml.cs
     /// </remarks>
 
-    public class SN3218: IDisposable
+    public class SN3218: IDisposable, ITick
     {
         public static async Task<SN3218> Open()
         {
@@ -49,7 +49,15 @@ namespace IotFrosting
             Device.Write(new byte[] { CMD_UPDATE, 0xff });
         }
 
-        public void Output(IEnumerable<double> values)
+        /// <summary>
+        /// Call regularly to update the hardware from the software light values
+        /// </summary>
+        public void Tick()
+        {
+            Output(Light.Values);
+        }
+
+        private void Output(IEnumerable<double> values)
         {
             var output_buffer = new byte[19];
             output_buffer[0] = CMD_SET_PWM_VALUES;

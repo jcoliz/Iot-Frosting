@@ -3,12 +3,8 @@
     /// <summary>
     /// Interface for a digital input line with an autolight
     /// </summary>
-    public interface IDigitalInput : IPin, IAutoLight
+    public interface IDigitalInput : IPin, IAutoLight, ITick
     {
-        /// <summary>
-        /// Call regularly to update the autolight
-        /// </summary>
-        void Tick();
     }
 
     /// <summary>

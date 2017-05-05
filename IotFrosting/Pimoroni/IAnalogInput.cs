@@ -9,7 +9,7 @@ namespace IotFrosting.Pimoroni
     /// <summary>
     /// Interface for an analog input with an auto light
     /// </summary>
-    public interface IAnalogInput : IAutoLight
+    public interface IAnalogInput : IAutoLight, ITick
     {
         /// <summary>
         /// Current voltage on the input
