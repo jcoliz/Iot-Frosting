@@ -14,13 +14,9 @@ namespace IotFrosting.Pimoroni
         public class Pad : CAP1XXX.Pad, IAutoLight
         {
             /// <summary>
-            /// Id of the key, starting with 0
-            /// </summary>
-            public int Id { get; set; }
-
-            /// <summary>
             /// Constructor
             /// </summary>
+            /// <param name="original">The pad we're overriding</param>
             /// <param name="light">The light showing our state</param>
             public Pad(CAP1XXX.Pad original, ILight light): base(original)
             {

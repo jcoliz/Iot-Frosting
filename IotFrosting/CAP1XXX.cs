@@ -276,7 +276,7 @@ namespace IotFrosting
             }
 
             private CAP1XXX Parent;
-            private int Id;
+            public int Id { get; set; }
 
             /// <summary>
             /// Whether we are currently being pressed
