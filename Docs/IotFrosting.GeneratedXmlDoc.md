@@ -290,6 +290,20 @@
 
 
 ---
+#### Field CAP1XXX.Pad.Parent
+
+ The chip controlling us 
+
+
+
+---
+#### Property CAP1XXX.Pad.Id
+
+ Our ID within the physical bank of lights 
+
+
+
+---
 #### Property CAP1XXX.Pad.State
 
  Whether we are currently being pressed 
@@ -389,6 +403,10 @@
 
 
 
+> This is a digital light, so values are translated from/to digital 
+
+
+
 ---
 #### Property CAP1XXX.Light.State
 
@@ -425,16 +443,24 @@
 
 
 ---
+## Type Pimoroni.DrumHat
+
+ Controls a single Drum Hat 
+
+
+
+> https://shop.pimoroni.com/products/drum-hat https://github.com/pimoroni/drum-hat https://www.adafruit.com/product/3180 
+
+
+
+---
 ## Type Pimoroni.DrumHat.Pad
 
  One particular drum pad 
 
 
 
----
-#### Property Pimoroni.DrumHat.Pad.Id
-
- Id of the key, starting with 0 
+> Note that drum hat pads have to manage their own lights, because the lights on drum hat are mis-wired, so can't use the hardware auto lights :( 
 
 
 
@@ -445,6 +471,7 @@
 
 |Name | Description |
 |-----|------|
+|original: |The pad we're overriding|
 |light: |The light showing our state|
 
 
@@ -465,18 +492,18 @@
 ---
 ## Type Pimoroni.DrumHat.PadUpdateEventHandler
 
- Handler for Key.Updated events 
+ Handler for Pad.Updated events 
 
 |Name | Description |
 |-----|------|
-|sender: |The key which was updated|
+|sender: |The pad which was updated|
 |args: |Empty args, may be used for expansion|
 
 
 ---
 ## Type Pimoroni.DrumHat.PadSet
 
- A combined set of keys, which shared a combined Updated event 
+ A combined set of pads, which shared a combined Updated event 
 
 
 
@@ -526,6 +553,13 @@
 
 
 ---
+#### Field Pimoroni.DrumHat.Pads
+
+ All the pads available on the drum hat 
+
+
+
+---
 #### Method Pimoroni.DrumHat.#ctor
 
  Don't call consturctor directly, use PianoHat.Open() 
@@ -537,6 +571,16 @@
 
  Capacitive input controller 
 
+
+
+---
+#### Method Pimoroni.DrumHat.Dispose(System.Boolean)
+
+ Dispose 
+
+|Name | Description |
+|-----|------|
+|disposing: |Really dispose??|
 
 
 ---
@@ -971,6 +1015,17 @@
 
 
 ---
+## Type Pimoroni.PianoHat
+
+ Controls a single Piano Hat 
+
+
+
+> https://shop.pimoroni.com/products/piano-hat https://github.com/pimoroni/Piano-HAT https://www.adafruit.com/product/2695 
+
+
+
+---
 ## Type Pimoroni.PianoHat.KeyName
 
  All the valid key names on a PianoHat 
@@ -981,6 +1036,23 @@
 ## Type Pimoroni.PianoHat.Key
 
  One particular piano key 
+
+
+
+---
+#### Method Pimoroni.PianoHat.Key.#ctor(IotFrosting.CAP1XXX.Pad)
+
+ Constructor 
+
+|Name | Description |
+|-----|------|
+|original: |The pad on the controller we're overwriting|
+
+
+---
+#### Property Pimoroni.PianoHat.Key.Name
+
+ Name of the function found on this key 
 
 
 

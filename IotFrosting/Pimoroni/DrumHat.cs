@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace IotFrosting.Pimoroni
 {
+    /// <summary>
+    /// Controls a single Drum Hat
+    /// </summary>
+    /// <remarks>
+    /// https://shop.pimoroni.com/products/drum-hat
+    /// https://github.com/pimoroni/drum-hat
+    /// https://www.adafruit.com/product/3180
+    /// </remarks>
     public class DrumHat: IDisposable
     {
         /// <summary>
@@ -97,10 +105,11 @@ namespace IotFrosting.Pimoroni
             var result = new DrumHat();
             result.Cap = await CAP1XXX.Open(0x2C, 25);
 
+            // Replace the existing pad controllers with our own
             var lightmap = new int[] { 5,4,3,2,1,0,6,7 };
             for (int i = 0; i < 8; i++)
             {
-                result.Cap.Pads[i] = new Pad(result.Cap.Pads[i],result.Cap.Lights[lightmap[i]]) { Id = i };
+                result.Cap.Pads[i] = new Pad(result.Cap.Pads[i],result.Cap.Lights[lightmap[i]]);
             }
 
             result.Pads.AddRange(result.Cap.Pads);
@@ -137,6 +146,10 @@ namespace IotFrosting.Pimoroni
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        /// <param name="disposing">Really dispose??</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

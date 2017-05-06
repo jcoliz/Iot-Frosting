@@ -8,6 +8,13 @@ using Windows.Storage;
 
 namespace Common
 {
+    /// <summary>
+    /// Built-in media player has popping issues on RPi, so we use AudioGraph
+    /// </summary>
+    /// <remarks>
+    /// Problem: https://social.msdn.microsoft.com/Forums/en-US/7c312972-6a09-4acd-8a3f-c59485a81d74/clicking-sound-during-start-and-stop-of-audio-playback?forum=WindowsIoT
+    /// Solution: https://mtaulty.com/2017/01/15/windows-10-uwp-iot-core-speechsynthesizer-raspberry-pi-and-audio-popping/
+    /// </remarks>
     public class Player
     {
         private AudioGraph SoundGraph;

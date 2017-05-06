@@ -1,12 +1,96 @@
 ## Iot Frosting
 
-C# library and examples for selected hardware components on Windows 10 IoT Core, including the Pimoroni Automation HAT.
+C# library and examples for selected hardware components on Windows 10 IoT Core, including the Pimoroni Drum HAT, Piano HAT, and Automation HAT.
 
-* [Pimoroni Automation Hat](https://shop.pimoroni.com/products/automation-hat) (Also at [Adafruit](https://www.adafruit.com/product/3289))
-* [Pimoroni Piano Hat](https://shop.pimoroni.com/products/piano-hat)
-* [DS3231 Real Time Clock](https://www.adafruit.com/product/3013)
-* SN3218 18-channel LED Driver ([DataSheet](http://www.si-en.com/uploadpdf/s2011517171720.pdf))
-* [ADS1015 12-bit 4-channel ADC](https://www.adafruit.com/product/1083) ([DataSheet](https://cdn-shop.adafruit.com/datasheets/ads1015.pdf))
+* [Pimoroni Piano Hat](https://shop.pimoroni.com/products/piano-hat) ( [Adafruit](https://www.adafruit.com/product/2695))
+* [Pimoroni Drum Hat](https://shop.pimoroni.com/products/drum-hat) ([Adafruit](https://www.adafruit.com/product/3180))
+* [Pimoroni Automation Hat](https://shop.pimoroni.com/products/automation-hat) ([Adafruit](https://www.adafruit.com/product/3289))
+* [DS3231 Real Time Clock](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) ([Adafruit](https://www.adafruit.com/product/3013))
+* [SN3218 18-channel LED Driver](http://www.si-en.com/uploadpdf/s2011517171720.pdf)
+* [ADS1015 12-bit 4-channel ADC](https://cdn-shop.adafruit.com/datasheets/ads1015.pdf) ([Adafruit](https://www.adafruit.com/product/1083))
+
+## Drum HAT
+
+Drum HAT is a tiny 8-pad instrument for the Raspberry Pi featuring:
+
+* 8 Capacitive Touch Buttons
+* Finger-friendly drum pad layout
+* 8 under-mounted LEDs
+
+## Documentation & Support
+
+* [Guides and tutorials](https://learn.pimoroni.com/drum-hat)
+* [GPIO Pinout](https://pinout.xyz/pinout/drum_hat)
+* [Get help](http://forums.pimoroni.com/c/support)
+
+### Namespace
+
+At the top of your C# file, reference the namespace for the library, like so:
+
+```c#
+using IotFrosting.Pimoroni
+```
+
+### Open the device
+
+Before using the device, you'll need to open a connection to it, and wrap your code in a 'using', like so:
+
+```c#
+using (var Hat = await DrumHat.Open())
+{
+}
+```
+
+### Drum Pads
+
+The hat raises an event when a drum pad is pressed or released.
+
+```c#
+Hat.Pads.Updated += (s,e) => 
+{ 
+    if (s.State)
+    {
+        switch (s.Id)
+        {
+        case 0:
+            Media.Play("Whistle.WAV");
+            break;
+        case 1:
+            Media.Play("Hat.WAV");
+            break;
+        }
+    }
+};
+```
+
+You can also check the state of a particular pad, or attach to its Updated event directly:
+
+```c#
+bool bass_pressed = Hat.Pads[7].State;
+
+Hat.Notes[7].Updated += (s,e) => Log("Bass " + s.State?"Pressed":"Released");
+```
+
+### Lights
+
+Drum HAT includes one light for each pad. These are automatic by default, but you can switch each light to manual if you want. First turn off the automation:
+
+```c#
+Hat.Pads[0].AutoLight = false;
+```
+
+Or turn them all off at once:
+
+```c#
+Hat.Pads.ForEach(x=>x.AutoLight = false);
+```
+
+Then toggle the light:
+
+```c#
+Hat.Pads[0].Light.State = true;
+Hat.Pads[0].Light.State = false;
+```
 
 ## Piano HAT
 
@@ -108,8 +192,6 @@ The same applies for the light on a note key:
 ```c#
 Hat.Notes[PianoHat.KeyName.A].Light.State = true;
 ```
-
-NOTE: Manual control of the lights is not yet implemented. Currently the lights are locked to automatically turn on and off when the corresponding key is pressed and released.
 
 ## Automation HAT
 

@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace IotFrosting.Pimoroni
 {
-
+    /// <summary>
+    /// Controls a single Piano Hat
+    /// </summary>
+    /// <remarks>
+    /// https://shop.pimoroni.com/products/piano-hat
+    /// https://github.com/pimoroni/Piano-HAT
+    /// https://www.adafruit.com/product/2695
+    /// </remarks>
     public class PianoHat: IDisposable
     {
         #region Child classes
@@ -20,10 +27,17 @@ namespace IotFrosting.Pimoroni
         /// </summary>
         public class Key : CAP1XXX.Pad
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="original">The pad on the controller we're overwriting</param>
             public Key(CAP1XXX.Pad original): base(original)
             {
-
             }
+
+            /// <summary>
+            /// Name of the function found on this key
+            /// </summary>
             public KeyName Name { get; set; }
         }
 
@@ -104,7 +118,6 @@ namespace IotFrosting.Pimoroni
         #endregion
 
         #region Internal methods
-
         /// <summary>
         /// Don't call consturctor directly, use PianoHat.Open()
         /// </summary>
