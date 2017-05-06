@@ -2,7 +2,7 @@
 
 C# library and examples for selected hardware components on Windows 10 IoT Core, including the Pimoroni Drum HAT, Piano HAT, and Automation HAT.
 
-* [Pimoroni Piano Hat](https://shop.pimoroni.com/products/piano-hat) ( [Adafruit](https://www.adafruit.com/product/2695))
+* [Pimoroni Piano Hat](https://shop.pimoroni.com/products/piano-hat) ([Adafruit](https://www.adafruit.com/product/2695))
 * [Pimoroni Drum Hat](https://shop.pimoroni.com/products/drum-hat) ([Adafruit](https://www.adafruit.com/product/3180))
 * [Pimoroni Automation Hat](https://shop.pimoroni.com/products/automation-hat) ([Adafruit](https://www.adafruit.com/product/3289))
 * [DS3231 Real Time Clock](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) ([Adafruit](https://www.adafruit.com/product/3013))
@@ -28,7 +28,7 @@ Drum HAT is a tiny 8-pad instrument for the Raspberry Pi featuring:
 At the top of your C# file, reference the namespace for the library, like so:
 
 ```c#
-using IotFrosting.Pimoroni
+using IotFrosting.Pimoroni;
 ```
 
 ### Open the device
@@ -112,7 +112,7 @@ Piano HAT is a tiny Pi piano with 16 touch-sensitive buttons. It features:
 At the top of your C# file, reference the namespace for the library, like so:
 
 ```c#
-using IotFrosting.Pimoroni
+using IotFrosting.Pimoroni;
 ```
 
 ### Open the device
@@ -208,7 +208,7 @@ Automation HAT is a home monitoring and automation controller featuring relays, 
 At the top of your C# file, reference the namespace for the library, like so:
 
 ```c#
-using IotFrosting.Pimoroni
+using IotFrosting.Pimoroni;
 ```
 
 ### Open the device
@@ -308,7 +308,7 @@ Hat.Relay[0].State = false;
 Toggle it from its previous state:
 
 ```c#
-Hat.Relay[0].Toggle()
+Hat.Relay[0].Toggle();
 ```
 
 Or write a specific value:
@@ -358,7 +358,7 @@ Hat.Analog[0].Light.State = true;
 At the top of your C# file, reference the namespace for the library, like so:
 
 ```c#
-using IotFrosting
+using IotFrosting;
 ```
 
 ### Open the device
