@@ -312,13 +312,6 @@ Toggle it from its previous state:
 Hat.Relay[0].Toggle();
 ```
 
-Or write a specific value:
-
-```c#
-Hat.Relay[0].State = true;
-Hat.Relay[0].State = false;
-```
-
 Relays have two lights associated with them, one showing the relay is connecting the NC circuit, and another showing it's connecting the NO circuit.
 
 You can take control of these lights independently, and turn them on and off at will.
