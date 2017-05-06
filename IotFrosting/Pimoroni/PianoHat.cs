@@ -20,7 +20,7 @@ namespace IotFrosting.Pimoroni
         /// </summary>
         public class Key : CAP1XXX.Pad
         {
-            public Key(CAP1XXX.Light light): base(light)
+            public Key(CAP1XXX.Pad original): base(original)
             {
 
             }
@@ -92,8 +92,8 @@ namespace IotFrosting.Pimoroni
 
             for (int i = 0; i < 8; i++)
             {
-                result.Cap1.Pads[i] = new Key(result.Cap1.Lights[i]) { Name = (KeyName)i };
-                result.Cap2.Pads[i] = new Key(result.Cap2.Lights[i]) { Name = (KeyName)(i + 8) };
+                result.Cap1.Pads[i] = new Key(result.Cap1.Pads[i]) { Name = (KeyName)i };
+                result.Cap2.Pads[i] = new Key(result.Cap2.Pads[i]) { Name = (KeyName)(i + 8) };
             }
 
             result.Notes.AddRange(result.Cap1.Pads);

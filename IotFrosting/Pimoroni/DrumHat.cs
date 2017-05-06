@@ -22,7 +22,7 @@ namespace IotFrosting.Pimoroni
             /// Constructor
             /// </summary>
             /// <param name="light">The light showing our state</param>
-            public Pad(CAP1XXX.Light original, ILight light): base(original)
+            public Pad(CAP1XXX.Pad original, ILight light): base(original)
             {
                 // Drum hat is wired poorly. The LED's don't match up with the pads, so we
                 // can't let the cap controller manage the lights. WE have to do it!! :(
@@ -99,7 +99,7 @@ namespace IotFrosting.Pimoroni
 
             for (int i = 0; i < 8; i++)
             {
-                result.Cap.Pads[i] = new Pad(result.Cap.Lights[i],result.Cap.Lights[lightmap[i]]) { Id = i };
+                result.Cap.Pads[i] = new Pad(result.Cap.Pads[i],result.Cap.Lights[lightmap[i]]) { Id = i };
             }
 
             result.Pads.AddRange(result.Cap.Pads);

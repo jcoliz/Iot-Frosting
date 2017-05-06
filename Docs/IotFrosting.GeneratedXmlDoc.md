@@ -269,13 +269,24 @@
 
 
 ---
-#### Method CAP1XXX.Pad.#ctor(IotFrosting.CAP1XXX.Light)
+#### Method CAP1XXX.Pad.#ctor(IotFrosting.CAP1XXX.Pad)
 
- Constructor 
+ External constructor 
 
 |Name | Description |
 |-----|------|
-|light: |Cap1xxx-controlled light assigned to us in hardware|
+|copy: |The existing pad we're overriding|
+
+
+---
+#### Method CAP1XXX.Pad.#ctor(IotFrosting.CAP1XXX,System.Int32)
+
+ Internal Constructor 
+
+|Name | Description |
+|-----|------|
+|parent: |Capacitive controller who controls us|
+|id: |Which light are we, starting at 0|
 
 
 ---
@@ -329,7 +340,7 @@
 
 
 ---
-#### Field CAP1XXX.Pad._Light
+#### Property CAP1XXX.Pad._Light
 
  Direct manual access to the underlying light 
 
@@ -428,7 +439,7 @@
 
 
 ---
-#### Method Pimoroni.DrumHat.Pad.#ctor(IotFrosting.CAP1XXX.Light,IotFrosting.Pimoroni.ILight)
+#### Method Pimoroni.DrumHat.Pad.#ctor(IotFrosting.CAP1XXX.Pad,IotFrosting.Pimoroni.ILight)
 
  Constructor 
 

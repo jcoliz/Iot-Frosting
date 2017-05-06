@@ -63,9 +63,8 @@ namespace IotFrosting
             Lights = new List<Light>();
             for (int i = 0;i<8;i++)
             {
-                var light = new Light(this, i);
-                Lights.Add(light);
-                Pads.Add(new Pad(light));
+                Lights.Add(new Light(this, i));
+                Pads.Add(new Pad(this, i));
             }
 
             var Alert = new InputPin(alert_pin,pulldown:false);
@@ -256,13 +255,28 @@ namespace IotFrosting
         public class Pad: IInput, Pimoroni.IAutoLight
         {
             /// <summary>
-            /// Constructor
+            /// External constructor
             /// </summary>
-            /// <param name="light">Cap1xxx-controlled light assigned to us in hardware</param>
-            public Pad(Light light)
+            /// <param name="copy">The existing pad we're overriding</param>
+            public Pad(Pad copy)
             {
-                _Light = light;
+                Parent = copy.Parent;
+                Id = copy.Id;
             }
+
+            /// <summary>
+            /// Internal Constructor
+            /// </summary>
+            /// <param name="parent">Capacitive controller who controls us</param>
+            /// <param name="id">Which light are we, starting at 0</param>
+            public Pad(CAP1XXX parent, int id)
+            {
+                Parent = parent;
+                Id = id;
+            }
+
+            private CAP1XXX Parent;
+            private int Id;
 
             /// <summary>
             /// Whether we are currently being pressed
@@ -329,7 +343,7 @@ namespace IotFrosting
             /// <summary>
             /// Direct manual access to the underlying light
             /// </summary>
-            private Light _Light;
+            private Light _Light => Parent.Lights[Id];
 
             /// <summary>
             /// State last time we raised the updated event
