@@ -8,6 +8,7 @@ C# library and examples for selected hardware components on Windows 10 IoT Core,
 * [DS3231 Real Time Clock](https://datasheets.maximintegrated.com/en/ds/DS3231.pdf) ([Adafruit](https://www.adafruit.com/product/3013))
 * [SN3218 18-channel LED Driver](http://www.si-en.com/uploadpdf/s2011517171720.pdf)
 * [ADS1015 12-bit 4-channel ADC](https://cdn-shop.adafruit.com/datasheets/ads1015.pdf) ([Adafruit](https://www.adafruit.com/product/1083))
+* [CAP1188 Capacitive Touch Sensor](https://cdn-shop.adafruit.com/datasheets/CAP1188.pdf)
 
 ## Drum HAT
 
