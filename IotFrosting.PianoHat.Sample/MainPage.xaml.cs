@@ -7,6 +7,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Media.Audio;
 using Windows.Media.Core;
 using Windows.Media.Playback;
 using Windows.Storage;
@@ -23,8 +24,9 @@ namespace IotFrosting.PianoHat.Sample
     public sealed partial class MainPage : Page
     {
         Pimoroni.PianoHat Hat;
-        Dictionary<Pimoroni.PianoHat.KeyName, IMediaPlaybackSource> NoteFiles = new Dictionary<Pimoroni.PianoHat.KeyName, IMediaPlaybackSource>();
-        MediaPlayer Player = new MediaPlayer();
+        Dictionary<Pimoroni.PianoHat.KeyName, AudioFileInputNode> NoteFiles = new Dictionary<Pimoroni.PianoHat.KeyName, AudioFileInputNode>();
+        IAudioNode SoundOutputNode;
+        AudioGraph SoundGraph;
 
         public ObservableCollection<string> Messages { get; } = new ObservableCollection<string>();
 
@@ -46,15 +48,22 @@ namespace IotFrosting.PianoHat.Sample
                 Hat.OctaveDown.Updated += OctaveDown_Updated;
                 Hat.Notes.Updated += Notes_Updated;
 
+                // Set up the player
+                var graphresult = await AudioGraph.CreateAsync(new AudioGraphSettings(Windows.Media.Render.AudioRenderCategory.Media));
+                SoundGraph = graphresult.Graph;
+                var outputresult = await SoundGraph.CreateDeviceOutputNodeAsync();
+                SoundGraph.Start();
+                SoundOutputNode = outputresult.DeviceOutputNode;
+
                 // Pre-load all the note sounds 
                 for (int i = 0; i < 13; i++)
                 {
-                    var file = MediaSource.CreateFromUri(new Uri($"ms-appx:///Assets/Piano/{i+25}.wav"));
-                    NoteFiles[(Pimoroni.PianoHat.KeyName)i] = file;
+                    var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Piano/{i+25}.wav"));
+                    var inputresult = await SoundGraph.CreateFileInputNodeAsync(file);
+                    var node = inputresult.FileInputNode;
+                    NoteFiles[(Pimoroni.PianoHat.KeyName)i] = node;
                 }
 
-                // Set up the player
-                Player.AutoPlay = false;
             }
             catch (Exception ex)
             {
@@ -64,7 +73,7 @@ namespace IotFrosting.PianoHat.Sample
             }
         }
 
-        private void Notes_Updated(Pimoroni.PianoHat.Key sender, EventArgs args)
+        private async void Notes_Updated(Pimoroni.PianoHat.Key sender, EventArgs args)
         {
             try
             {
@@ -73,10 +82,12 @@ namespace IotFrosting.PianoHat.Sample
                     // Serious popping noises
                     // Problem documented here: https://social.msdn.microsoft.com/Forums/en-US/7c312972-6a09-4acd-8a3f-c59485a81d74/clicking-sound-during-start-and-stop-of-audio-playback?forum=WindowsIoT
                     // Solution here: http://ian.bebbs.co.uk/posts/CombiningUwpSpeechSynthesizerWithAudioGraph
-                    var file = NoteFiles[sender.Name];
-                    Player.Source = file;
-                    Player.Play();
-
+                    //Player.Source = file;
+                    //Player.Play();
+                    var node = NoteFiles[sender.Name];
+                    if (node.OutgoingConnections.FirstOrDefault() == null)
+                        node.AddOutgoingConnection(SoundOutputNode);
+                    node.Seek(TimeSpan.Zero);
                     AddMessage($"NOTE {sender.Name}");
                 }
             }
