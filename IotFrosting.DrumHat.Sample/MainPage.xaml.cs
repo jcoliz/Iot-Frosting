@@ -26,9 +26,7 @@ namespace IotFrosting.DrumHat.Sample
     public sealed partial class MainPage : Page
     {
         Pimoroni.DrumHat Hat;
-        private AudioGraph SoundGraph;
-        private AudioDeviceOutputNode SoundOutputNode;
-        private List<AudioFileInputNode> NoteFiles = new List<AudioFileInputNode>(); 
+        Common.Player Player;
 
         public MainPage()
         {
@@ -41,24 +39,14 @@ namespace IotFrosting.DrumHat.Sample
 
             try
             {
-                var Hat = await Pimoroni.DrumHat.Open();
-                Hat.Pads.Updated += (s, _) => { if (s.State) Play(s.Id); };
+                Hat = await Pimoroni.DrumHat.Open();
+                Hat.Pads.Updated += (s, _) => { if (s.State) Player.Play(s.Id); };
 
-                // Set up the player
-                var graphresult = await AudioGraph.CreateAsync(new AudioGraphSettings(Windows.Media.Render.AudioRenderCategory.Media));
-                SoundGraph = graphresult.Graph;
-                var outputresult = await SoundGraph.CreateDeviceOutputNodeAsync();
-                SoundGraph.Start();
-                SoundOutputNode = outputresult.DeviceOutputNode;
-
-                // Pre-load all the note sounds 
-                var files = new string[] { "000_base","001_cowbell","002_clash","003_whistle","004_rim","005_hat","006_snare","007_clap" };
-                for (int i = 0; i < 8; i++)
+                Player = await Common.Player.Open();
+                foreach (var file in new string[] { "000_base", "001_cowbell", "002_clash", "003_whistle", "004_rim", "005_hat", "006_snare", "007_clap" } )
                 {
-                    var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Drums2/{files[i]}.wav"));
-                    var inputresult = await SoundGraph.CreateFileInputNodeAsync(file);
-                    var node = inputresult.FileInputNode;
-                    NoteFiles.Add(node);
+                    var sf = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Drums2/{file}.wav"));
+                    Player.AddToCache(sf);
                 }
 
             }
@@ -69,14 +57,5 @@ namespace IotFrosting.DrumHat.Sample
                 Hat?.Dispose();
             }
         }
-
-        private void Play(int i)
-        {
-            var node = NoteFiles[i];
-            if (node.OutgoingConnections.FirstOrDefault() == null)
-                node.AddOutgoingConnection(SoundOutputNode);
-            node.Seek(TimeSpan.Zero);
-        }
-
     }
 }
