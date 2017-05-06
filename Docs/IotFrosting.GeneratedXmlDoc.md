@@ -39,6 +39,13 @@
 
 
 ---
+#### Method ADS1015.Tick
+
+ Call regularly to update the software status based on the hardware 
+
+
+
+---
 #### Method ADS1015.ReadInto(System.Double[])
 
  Read all channels into a single buffer 
@@ -100,9 +107,88 @@
 
 
 ---
+#### Property ADS1015.Input.Voltage
+
+ Current voltage on the input 
+
+
+
+---
+#### Property ADS1015.Input.AutoLight
+
+ Whether the autolight should in fact be updated with our state 
+
+
+
+---
+#### Property ADS1015.Input.Light
+
+ The light which shows our state automatically 
+
+
+
+---
+#### Method ADS1015.Input.Tick
+
+ Call regularly to update the status of the auto light. The auto light will be set to PWM brightness corresponding to the analog input level. 
+
+
+
+> Recommend calling on your timer tick 
+
+
+
+---
+#### Method ADS1015.Input.#ctor(System.Int32,System.Double,IotFrosting.Pimoroni.ILight)
+
+ Constructor 
+
+|Name | Description |
+|-----|------|
+|channel: |Which ADC channel (0-4) is the input connected to |
+|maxvoltage: |The voltage which would drive a 1.0 reading on the underlying ADC|
+|light: |The light which will show status|
+
+
+---
+#### Field ADS1015.Input.Channel
+
+ Which ADC channel (0-4) is the input connected to 
+
+
+
+---
+#### Field ADS1015.Input.MaxVoltage
+
+ The voltage which would drive a 1.0 reading on the underlying ADC 
+
+
+
+---
+#### Field ADS1015.Input.Values
+
+ All of the analog input values 
+
+
+
+---
+#### Field ADS1015.Input.NumberOfAnalogInputs
+
+ How many total lights are there in an ADS1015 bank 
+
+
+
+---
 ## Type CAP1XXX
 
  https://github.com/pimoroni/cap1xxx https://cdn-shop.adafruit.com/datasheets/CAP1188.pdf 
+
+
+
+---
+#### Field CAP1XXX.Pads
+
+ All the pads we control 
 
 
 
@@ -114,6 +200,182 @@
 |Name | Description |
 |-----|------|
 |alert_pin: |Which pin is the interrupt tied to|
+
+
+---
+#### Property CAP1XXX.Item(System.Byte)
+
+ Quick access to single-byte registers 
+
+|Name | Description |
+|-----|------|
+|register: |Which register|
+**Returns**: Current register value
+
+
+
+---
+#### Field CAP1XXX.Alert_Sem
+
+ Controls access to any action coming off the alert pin 
+
+
+
+---
+#### Method CAP1XXX.Alert_Updated(IotFrosting.IInput,System.EventArgs)
+
+ Catch interrupts on the 'alert' pin 
+
+
+
+> This is the primary driver of action on this class. The alert pin interrupt tells us we have something to do 
+
+|Name | Description |
+|-----|------|
+|sender: |Alert input pin|
+|e: |Empty event args|
+
+
+---
+#### Method CAP1XXX.Check_Inputs
+
+ Update the Inputs in software to what's there on the hardware 
+
+
+
+> Not really sure why I have this as separate from Alert_Updated... 
+
+
+
+---
+#### Field CAP1XXX.Device
+
+ I2C Device we're attached to 
+
+
+
+---
+## Type CAP1XXX.Pad
+
+ A single capacitive touch pad 
+
+
+
+---
+#### Property CAP1XXX.Pad.State
+
+ Whether we are currently being pressed 
+
+
+
+---
+#### Property CAP1XXX.Pad.AutoLight
+
+ Whether the cap1xxx hardware automatically controls our light 
+
+
+
+---
+#### Property CAP1XXX.Pad.Light
+
+ Direct manual access to the underlying light 
+
+
+
+---
+#### Method CAP1XXX.Pad.Check_Input(System.Byte,System.Byte)
+
+ Update the state based on the known hardware state 
+
+|Name | Description |
+|-----|------|
+|delta_2c: |Current hardware delta value(2's complement)|
+|threshold: |Current hardware threshold value|
+
+
+> Why not just move this out into the cap1xxx class?? 
+
+
+
+---
+#### Method CAP1XXX.Pad.DoUpdated
+
+ Raise the Updated event if we have indeed been updated 
+
+
+
+---
+#### Event CAP1XXX.Pad.Updated
+
+ Event raised when our state is updated 
+
+
+
+---
+#### Field CAP1XXX.Pad._Light
+
+ Direct manual access to the underlying light 
+
+
+
+---
+#### Property CAP1XXX.Pad.OldState
+
+ State last time we raised the updated event 
+
+
+
+---
+## Type CAP1XXX.Light
+
+ This is the cap1xxx-controlled auto light 
+
+
+
+> This is only here in case you want to manually control one of the autolights. Otherwise, the chip takes care of the auto light. 
+
+
+
+---
+#### Property CAP1XXX.Light.Value
+
+ Current Analog light state 
+
+
+
+---
+#### Property CAP1XXX.Light.State
+
+ Current binary light state 
+
+
+
+---
+#### Property CAP1XXX.Light.Brightness
+
+ Ignored. Supplied for interface compliance 
+
+
+
+---
+#### Method CAP1XXX.Light.Toggle
+
+ Toggle the state 
+
+
+
+---
+## Type ITick
+
+ An object which needs to be updated regularly 
+
+
+
+---
+#### Method ITick.Tick
+
+ Call regularly to update the status of this thing 
+
 
 
 ---
@@ -134,78 +396,6 @@
 #### Method Pimoroni.IAnalogInput.Tick
 
  Call regularly to update the autolight 
-
-
-
----
-#### Property Pimoroni.AnalogInput.Voltage
-
- Current voltage on the input 
-
-
-
----
-#### Property Pimoroni.AnalogInput.AutoLight
-
- Whether the autolight should in fact be updated with our state 
-
-
-
----
-#### Property Pimoroni.AnalogInput.Light
-
- The light which shows our state automatically 
-
-
-
----
-#### Method Pimoroni.AnalogInput.Tick
-
- Call regularly to update the status of the auto light. The auto light will be set to PWM brightness corresponding to the analog input level. 
-
-
-
-> Recommend calling on your timer tick 
-
-
-
----
-#### Method Pimoroni.AnalogInput.#ctor(System.Int32,System.Double,IotFrosting.Pimoroni.ILight)
-
- Constructor 
-
-|Name | Description |
-|-----|------|
-|channel: |Which ADC channel (0-4) is the input connected to |
-|maxvoltage: |The voltage which would drive a 1.0 reading on the underlying ADC|
-|light: |The light which will show status|
-
-
----
-#### Field Pimoroni.AnalogInput.Channel
-
- Which ADC channel (0-4) is the input connected to 
-
-
-
----
-#### Field Pimoroni.AnalogInput.MaxVoltage
-
- The voltage which would drive a 1.0 reading on the underlying ADC 
-
-
-
----
-#### Field Pimoroni.AnalogInput.Values
-
- All of the analog input values 
-
-
-
----
-#### Field Pimoroni.AnalogInput.NumberOfAnalogInputs
-
- How many total lights are there in an ADS1015 bank 
 
 
 
@@ -300,13 +490,6 @@
 ## Type Pimoroni.IDigitalInput
 
  Interface for a digital input line with an autolight 
-
-
-
----
-#### Method Pimoroni.IDigitalInput.Tick
-
- Call regularly to update the autolight 
 
 
 
@@ -426,72 +609,6 @@
 
 
 ---
-## Type Pimoroni.Light
-
- A light with PWM control, which is part of a bank of 18 lights. Suitable for use with SN3218. 
-
-
-
----
-#### Property Pimoroni.Light.State
-
- Digital state, true if on, false if off 
-
-
-
----
-#### Property Pimoroni.Light.Value
-
- PWM brightness value (0.0-1.0) 
-
-
-
----
-#### Property Pimoroni.Light.Brightness
-
- How bright the light is when it's on 
-
-
-
----
-#### Method Pimoroni.Light.#ctor(System.Int32)
-
- Constructor 
-
-|Name | Description |
-|-----|------|
-|number: |Which light number on the SN3218 bank are we|
-
-
----
-#### Event Pimoroni.Light.Updated
-
- Raised when the value of the light changes 
-
-
-
----
-#### Field Pimoroni.Light.Number
-
- Which light ## are we on the SM3218 bank? 
-
-
-
----
-#### Field Pimoroni.Light.Values
-
- All of the light values 
-
-
-
----
-#### Field Pimoroni.Light.NumberOfLights
-
- How many total lights are there in an SN3218 bank 
-
-
-
----
 ## Type Pimoroni.DirectLight
 
  A directly connected light (like an LED) 
@@ -553,13 +670,13 @@
 
 
 ---
-#### Method Pimoroni.SingleAutoLight.#ctor(IotFrosting.IPin,System.Boolean,IotFrosting.Pimoroni.ILight)
+#### Method Pimoroni.SingleAutoLight.#ctor(IotFrosting.IInput,System.Boolean,IotFrosting.Pimoroni.ILight)
 
  Constructor 
 
 |Name | Description |
 |-----|------|
-|source: |Pin to show status for|
+|source: |Input to show status for|
 |inverted: |Whether we are inverted from the usual logic. True if we show false when source is true.|
 |light: |The particular light to control|
 
@@ -689,6 +806,104 @@
 #### Field Pimoroni.Pad.Number
 
  Which input ## are we on the Cap1xxx bank? 
+
+
+
+---
+## Type Pimoroni.PianoHat.KeyName
+
+ All the valid key names on a PianoHat 
+
+
+
+---
+## Type Pimoroni.PianoHat.Key
+
+ One particular piano key 
+
+
+
+---
+## Type Pimoroni.PianoHat.KeyUpdateEventHandler
+
+ Handler for Key.Updated events 
+
+|Name | Description |
+|-----|------|
+|sender: |The key which was updated|
+|args: |Empty args, may be used for expansion|
+
+
+---
+## Type Pimoroni.PianoHat.KeySet
+
+ A combined set of keys, which shared a combined Updated event 
+
+
+
+---
+#### Method Pimoroni.PianoHat.KeySet.AddRange(System.Collections.Generic.IEnumerable{IotFrosting.IInput})
+
+ Add keys into the set 
+
+|Name | Description |
+|-----|------|
+|keys: |Keys to add|
+
+
+---
+#### Property Pimoroni.PianoHat.KeySet.Item(IotFrosting.Pimoroni.PianoHat.KeyName)
+
+ Extract a key by name 
+
+|Name | Description |
+|-----|------|
+|name: |Name of a key|
+**Returns**: Key with that name
+
+
+
+---
+#### Event Pimoroni.PianoHat.KeySet.Updated
+
+ Raised every time any one of the keys are updated 
+
+
+
+---
+#### Field Pimoroni.PianoHat.KeySet.Keys
+
+ Internal dictinoary of keys for fast lookup 
+
+
+
+---
+#### Method Pimoroni.PianoHat.Open
+
+ Open a connection to the piano hat 
+
+**Returns**: Piano Hat controller
+
+
+
+---
+#### Method Pimoroni.PianoHat.#ctor
+
+ Don't call consturctor directly, use PianoHat.Open() 
+
+
+
+---
+#### Field Pimoroni.PianoHat.Cap1
+
+ Left-side cap1xxx 
+
+
+
+---
+#### Field Pimoroni.PianoHat.Cap2
+
+ Right-side cap1xxx 
 
 
 
@@ -963,9 +1178,82 @@
 
 
 ---
+#### Method SN3218.Tick
+
+ Call regularly to update the hardware from the software light values 
+
+
+
+---
 #### Method SN3218.#ctor
 
  Do not construct directly. Use Open() 
+
+
+
+---
+#### Field SN3218.NumberOfLights
+
+ How many total lights are there in an SN3218 bank 
+
+
+
+---
+## Type SN3218.Light
+
+ A light with PWM control, which is part of a bank of 18 lights. 
+
+
+
+---
+#### Property SN3218.Light.State
+
+ Digital state, true if on, false if off 
+
+
+
+---
+#### Property SN3218.Light.Value
+
+ PWM brightness value (0.0-1.0) 
+
+
+
+---
+#### Property SN3218.Light.Brightness
+
+ How bright the light is when it's on 
+
+
+
+---
+#### Method SN3218.Light.#ctor(System.Int32)
+
+ Constructor 
+
+|Name | Description |
+|-----|------|
+|number: |Which light number on the SN3218 bank are we|
+
+
+---
+#### Event SN3218.Light.Updated
+
+ Raised when the value of the light changes 
+
+
+
+---
+#### Field SN3218.Light.Number
+
+ Which light ## are we on the SM3218 bank? 
+
+
+
+---
+#### Field SN3218.Light.Values
+
+ All of the light values 
 
 
 
