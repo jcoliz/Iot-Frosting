@@ -275,7 +275,14 @@ namespace IotFrosting
                 Id = id;
             }
 
+            /// <summary>
+            /// The chip controlling us
+            /// </summary>
             private CAP1XXX Parent;
+
+            /// <summary>
+            /// Our ID within the physical bank of lights
+            /// </summary>
             public int Id { get; set; }
 
             /// <summary>
@@ -395,6 +402,9 @@ namespace IotFrosting
             /// <summary>
             /// Current Analog light state
             /// </summary>
+            /// <remarks>
+            /// This is a digital light, so values are translated from/to digital
+            /// </remarks>
             public double Value
             {
                 get

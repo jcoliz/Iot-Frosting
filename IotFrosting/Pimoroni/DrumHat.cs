@@ -11,6 +11,11 @@ namespace IotFrosting.Pimoroni
         /// <summary>
         /// One particular drum pad
         /// </summary>
+        /// <remarks>
+        /// Note that drum hat pads have to manage their own lights, because the
+        /// lights on drum hat are mis-wired, so can't use the hardware auto
+        /// lights :(
+        /// </remarks>
         public class Pad : CAP1XXX.Pad, IAutoLight
         {
             /// <summary>
@@ -37,15 +42,16 @@ namespace IotFrosting.Pimoroni
             /// </summary>
             public new ILight Light { get; private set; }
         }
+
         /// <summary>
-        /// Handler for Key.Updated events
+        /// Handler for Pad.Updated events
         /// </summary>
-        /// <param name="sender">The key which was updated</param>
+        /// <param name="sender">The pad which was updated</param>
         /// <param name="args">Empty args, may be used for expansion</param>
         public delegate void PadUpdateEventHandler(Pad sender, EventArgs args);
 
         /// <summary>
-        /// A combined set of keys, which shared a combined Updated event
+        /// A combined set of pads, which shared a combined Updated event
         /// </summary>
         public class PadSet
         {
@@ -92,7 +98,6 @@ namespace IotFrosting.Pimoroni
             result.Cap = await CAP1XXX.Open(0x2C, 25);
 
             var lightmap = new int[] { 5,4,3,2,1,0,6,7 };
-
             for (int i = 0; i < 8; i++)
             {
                 result.Cap.Pads[i] = new Pad(result.Cap.Pads[i],result.Cap.Lights[lightmap[i]]) { Id = i };
@@ -105,6 +110,9 @@ namespace IotFrosting.Pimoroni
         #endregion
 
         #region Public properties
+        /// <summary>
+        /// All the pads available on the drum hat
+        /// </summary>
         public PadSet Pads = new PadSet();
         #endregion
 
