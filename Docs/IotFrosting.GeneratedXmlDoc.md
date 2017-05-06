@@ -379,6 +379,97 @@
 
 
 ---
+## Type Pimoroni.DrumHat.Pad
+
+ One particular drum pad 
+
+
+
+---
+#### Property Pimoroni.DrumHat.Pad.Id
+
+ Id of the key, starting with 0 
+
+
+
+---
+## Type Pimoroni.DrumHat.PadUpdateEventHandler
+
+ Handler for Key.Updated events 
+
+|Name | Description |
+|-----|------|
+|sender: |The key which was updated|
+|args: |Empty args, may be used for expansion|
+
+
+---
+## Type Pimoroni.DrumHat.PadSet
+
+ A combined set of keys, which shared a combined Updated event 
+
+
+
+---
+#### Method Pimoroni.DrumHat.PadSet.AddRange(System.Collections.Generic.IEnumerable{IotFrosting.IInput})
+
+ Add keys into the set 
+
+|Name | Description |
+|-----|------|
+|keys: |Keys to add|
+
+
+---
+#### Property Pimoroni.DrumHat.PadSet.Item(System.Int32)
+
+ Extract a key by name 
+
+|Name | Description |
+|-----|------|
+|name: |Name of a key|
+**Returns**: Key with that name
+
+
+
+---
+#### Event Pimoroni.DrumHat.PadSet.Updated
+
+ Raised every time any one of the keys are updated 
+
+
+
+---
+#### Field Pimoroni.DrumHat.PadSet.Pads
+
+ Internal dictinoary of keys for fast lookup 
+
+
+
+---
+#### Method Pimoroni.DrumHat.Open
+
+ Open a connection to the piano hat 
+
+**Returns**: Piano Hat controller
+
+
+
+---
+#### Method Pimoroni.DrumHat.#ctor
+
+ Don't call consturctor directly, use PianoHat.Open() 
+
+
+
+---
+#### Field Pimoroni.DrumHat.Cap
+
+ Capacitive input controller 
+
+
+
+---
 ## Type Pimoroni.IAnalogInput
 
  Interface for an analog input with an auto light 

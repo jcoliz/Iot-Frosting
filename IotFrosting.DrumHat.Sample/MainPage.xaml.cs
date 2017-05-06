@@ -25,7 +25,7 @@ namespace IotFrosting.DrumHat.Sample
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        CAP1XXX Cap;
+        Pimoroni.DrumHat Hat;
         private AudioGraph SoundGraph;
         private AudioDeviceOutputNode SoundOutputNode;
         private List<AudioFileInputNode> NoteFiles = new List<AudioFileInputNode>(); 
@@ -41,16 +41,8 @@ namespace IotFrosting.DrumHat.Sample
 
             try
             {
-                Cap = await CAP1XXX.Open(0x2c, 25);
-
-                Cap.Pads[0].Updated += (s, _) => { if (s.State) Play(0); };
-                Cap.Pads[1].Updated += (s, _) => { if (s.State) Play(1); };
-                Cap.Pads[2].Updated += (s, _) => { if (s.State) Play(2); };
-                Cap.Pads[3].Updated += (s, _) => { if (s.State) Play(3); };
-                Cap.Pads[4].Updated += (s, _) => { if (s.State) Play(4); };
-                Cap.Pads[5].Updated += (s, _) => { if (s.State) Play(5); };
-                Cap.Pads[6].Updated += (s, _) => { if (s.State) Play(6); };
-                Cap.Pads[7].Updated += (s, _) => { if (s.State) Play(7); };
+                var Hat = await Pimoroni.DrumHat.Open();
+                Hat.Pads.Updated += (s, _) => { if (s.State) Play(s.Id); };
 
                 // Set up the player
                 var graphresult = await AudioGraph.CreateAsync(new AudioGraphSettings(Windows.Media.Render.AudioRenderCategory.Media));
@@ -59,9 +51,8 @@ namespace IotFrosting.DrumHat.Sample
                 SoundGraph.Start();
                 SoundOutputNode = outputresult.DeviceOutputNode;
 
-                var files = new string[] { "000_base","001_cowbell","002_clash","003_whistle","004_rim","005_hat","006_snare","007_clap" };
-
                 // Pre-load all the note sounds 
+                var files = new string[] { "000_base","001_cowbell","002_clash","003_whistle","004_rim","005_hat","006_snare","007_clap" };
                 for (int i = 0; i < 8; i++)
                 {
                     var file = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Drums2/{files[i]}.wav"));
@@ -75,7 +66,7 @@ namespace IotFrosting.DrumHat.Sample
             {
                 var dialog = new Common.MessageDialog(ex.Message, ex.GetType().Name);
                 await dialog.ShowAsync();
-                Cap?.Dispose();
+                Hat?.Dispose();
             }
         }
 
