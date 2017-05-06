@@ -11,12 +11,35 @@ namespace IotFrosting.Pimoroni
         /// <summary>
         /// One particular drum pad
         /// </summary>
-        public class Pad : CAP1XXX.Pad
+        public class Pad : CAP1XXX.Pad, IAutoLight
         {
             /// <summary>
             /// Id of the key, starting with 0
             /// </summary>
             public int Id { get; set; }
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="light">The light showing our state</param>
+            public Pad(CAP1XXX.Light original, ILight light): base(original)
+            {
+                // Drum hat is wired poorly. The LED's don't match up with the pads, so we
+                // can't let the cap controller manage the lights. WE have to do it!! :(
+                Light = light;
+                base.AutoLight = false;
+                base.Updated += (s, _) => { if (AutoLight) Light.State = s.State; };
+            }
+
+            /// <summary>
+            /// Whether the light is managed automatically
+            /// </summary>
+            public new bool AutoLight { get; set; } = true;
+
+            /// <summary>
+            /// The light showing our state
+            /// </summary>
+            public new ILight Light { get; private set; }
         }
         /// <summary>
         /// Handler for Key.Updated events
@@ -47,8 +70,8 @@ namespace IotFrosting.Pimoroni
             /// <summary>
             /// Extract a key by name
             /// </summary>
-            /// <param name="name">Name of a key</param>
-            /// <returns>Key with that name</returns>
+            /// <param name="id">Identifier for this pad</param>
+            /// <returns>Pad with that id</returns>
             public Pad this[int id] => Pads[id];
 
             /// <summary>
@@ -72,9 +95,11 @@ namespace IotFrosting.Pimoroni
             var result = new DrumHat();
             result.Cap = await CAP1XXX.Open(0x2C, 25);
 
+            var lightmap = new int[] { 5,4,3,2,1,0,6,7 };
+
             for (int i = 0; i < 8; i++)
             {
-                result.Cap.Pads[i] = new Pad() { Id = i };
+                result.Cap.Pads[i] = new Pad(result.Cap.Lights[i],result.Cap.Lights[lightmap[i]]) { Id = i };
             }
 
             result.Pads.AddRange(result.Cap.Pads);

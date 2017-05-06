@@ -193,6 +193,13 @@
 
 
 ---
+#### Field CAP1XXX.Lights
+
+ Direct access to control the lights 
+
+
+
+---
 #### Method CAP1XXX.#ctor(Windows.Devices.I2c.I2cDevice,System.Int32)
 
  Constructor 
@@ -259,6 +266,16 @@
 
  A single capacitive touch pad 
 
+
+
+---
+#### Method CAP1XXX.Pad.#ctor(IotFrosting.CAP1XXX.Light)
+
+ Constructor 
+
+|Name | Description |
+|-----|------|
+|light: |Cap1xxx-controlled light assigned to us in hardware|
 
 
 ---
@@ -337,6 +354,24 @@
 
 
 ---
+#### Method CAP1XXX.Light.#ctor(IotFrosting.CAP1XXX,System.Int32)
+
+ Constructor 
+
+|Name | Description |
+|-----|------|
+|parent: |Capacitive controller who controls us|
+|id: |Which light are we, starting at 0|
+
+
+---
+#### Property CAP1XXX.Light.AutoLight
+
+ Whether we are automatically tied our corresponding pad 
+
+
+
+---
 #### Property CAP1XXX.Light.Value
 
  Current Analog light state 
@@ -393,6 +428,30 @@
 
 
 ---
+#### Method Pimoroni.DrumHat.Pad.#ctor(IotFrosting.CAP1XXX.Light,IotFrosting.Pimoroni.ILight)
+
+ Constructor 
+
+|Name | Description |
+|-----|------|
+|light: |The light showing our state|
+
+
+---
+#### Property Pimoroni.DrumHat.Pad.AutoLight
+
+ Whether the light is managed automatically 
+
+
+
+---
+#### Property Pimoroni.DrumHat.Pad.Light
+
+ The light showing our state 
+
+
+
+---
 ## Type Pimoroni.DrumHat.PadUpdateEventHandler
 
  Handler for Key.Updated events 
@@ -427,8 +486,8 @@
 
 |Name | Description |
 |-----|------|
-|name: |Name of a key|
-**Returns**: Key with that name
+|id: |Identifier for this pad|
+**Returns**: Pad with that id
 
 
 

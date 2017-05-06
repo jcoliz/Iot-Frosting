@@ -31,6 +31,11 @@ namespace IotFrosting
         public List<Pad> Pads;
 
         /// <summary>
+        /// Direct access to control the lights
+        /// </summary>
+        public List<Light> Lights;
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="alert_pin">Which pin is the interrupt tied to</param>
@@ -55,9 +60,12 @@ namespace IotFrosting
             // Property setup
 
             Pads = new List<Pad>();
-            for(int i = 0;i<8;i++)
+            Lights = new List<Light>();
+            for (int i = 0;i<8;i++)
             {
-                Pads.Add(new Pad());
+                var light = new Light(this, i);
+                Lights.Add(light);
+                Pads.Add(new Pad(light));
             }
 
             var Alert = new InputPin(alert_pin,pulldown:false);
@@ -152,6 +160,7 @@ namespace IotFrosting
         const byte R_LED_BEHAVIOUR_1 = 0x81; // # For LEDs 1-4
         const byte R_LED_BEHAVIOUR_2 = 0x82; // # For LEDs 5-8
         const byte R_LED_LINKING     = 0x72;
+        const byte R_LED_OUTPUT_CON = 0x74;
         const byte R_SAMPLING_CONFIG = 0x24; // # Default 0x00111001
         const byte R_MAIN_CONTROL = 0x00;
         const byte R_INTERRUPT_EN = 0x27;
@@ -247,6 +256,15 @@ namespace IotFrosting
         public class Pad: IInput, Pimoroni.IAutoLight
         {
             /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="light">Cap1xxx-controlled light assigned to us in hardware</param>
+            public Pad(Light light)
+            {
+                _Light = light;
+            }
+
+            /// <summary>
             /// Whether we are currently being pressed
             /// </summary>
             public bool State { get; private set; } = false;
@@ -254,8 +272,17 @@ namespace IotFrosting
             /// <summary>
             /// Whether the cap1xxx hardware automatically controls our light
             /// </summary>
-            // TODO: Toggle the correct bit in R_LED_LINKING
-            public bool AutoLight { get; set; } = true;
+            public bool AutoLight
+            {
+                get
+                {
+                    return _Light.AutoLight;
+                }
+                set
+                {
+                    _Light.AutoLight = value;
+                }
+            }
 
             /// <summary>
             /// Direct manual access to the underlying light
@@ -302,7 +329,7 @@ namespace IotFrosting
             /// <summary>
             /// Direct manual access to the underlying light
             /// </summary>
-            private Light _Light = new CAP1XXX.Light();
+            private Light _Light;
 
             /// <summary>
             /// State last time we raised the updated event
@@ -320,19 +347,50 @@ namespace IotFrosting
         public class Light : ILight
         {
             /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="parent">Capacitive controller who controls us</param>
+            /// <param name="id">Which light are we, starting at 0</param>
+            public Light(CAP1XXX parent, int id)
+            {
+                Parent = parent;
+                Bit = 1 << id;
+            }
+
+            private CAP1XXX Parent;
+            private int Bit;
+
+            /// <summary>
+            /// Whether we are automatically tied our corresponding pad
+            /// </summary>
+            public bool AutoLight
+            {
+                get
+                {
+                    return (Parent[CAP1XXX.R_LED_LINKING] & Bit) == Bit;
+                }
+                set
+                {
+                    var r = Parent[CAP1XXX.R_LED_LINKING] & ~Bit;
+                    if (value)
+                        r |= Bit;
+                    Parent[CAP1XXX.R_LED_LINKING] = (byte)r;
+                }
+            }
+
+            /// <summary>
             /// Current Analog light state
             /// </summary>
             public double Value
             {
                 get
                 {
-                    throw new NotImplementedException();
+                    return State ? 1.0 : 0.0;
                 }
 
                 set
                 {
-                    // TODO: affect the LED
-                    throw new NotImplementedException();
+                    State = value != 0.0;
                 }
             }
 
@@ -343,12 +401,15 @@ namespace IotFrosting
             {
                 get
                 {
-                    return Value != 0.0;
+                    return (Parent[CAP1XXX.R_LED_OUTPUT_CON] & Bit) == Bit;
                 }
 
                 set
                 {
-                    Value = 1.0;
+                    var r = Parent[CAP1XXX.R_LED_OUTPUT_CON] & ~Bit;
+                    if (value)
+                        r |= Bit;
+                    Parent[CAP1XXX.R_LED_OUTPUT_CON] = (byte)r;
                 }
             }
 
