@@ -26,16 +26,24 @@ namespace IotFrosting.PianoOrDrumHat.Background.Sample
             Deferral = taskInstance.GetDeferral();
 
             // 1. Load up all media assets
-            Player = await Common.Player.Open();
-            foreach (var file in new string[] { "000_base", "001_cowbell", "002_clash", "003_whistle", "004_rim", "005_hat", "006_snare", "007_clap" })
+            try
             {
-                var sf = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Drums2/{file}.wav"));
-                await Player.AddToCache(sf);
+                Player = await Common.Player.Open();
+                foreach (var file in new string[] { "000_base", "001_cowbell", "002_clash", "003_whistle", "004_rim", "005_hat", "006_snare", "007_clap" })
+                {
+                    var sf = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Samples/Drums/{file}.wav"));
+                    await Player.AddToCache(sf);
+                }
+                for (int i = 0; i < 13; i++)
+                {
+                    var sf = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Samples/Piano/{i + 25}.wav"));
+                    await Player.AddToCache(sf);
+                }
+
             }
-            for (int i = 0; i < 13; i++)
+            catch (Exception ex)
             {
-                var sf = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Piano/{i + 25}.wav"));
-                await Player.AddToCache(sf);
+                // This is a problem :(
             }
 
             // 2. Try to start the drum hat. OK to fail if not connected
