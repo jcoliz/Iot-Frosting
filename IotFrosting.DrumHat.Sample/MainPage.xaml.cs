@@ -43,7 +43,6 @@ namespace IotFrosting.DrumHat.Sample
                     var sf = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///Assets/Drums2/{file}.wav"));
                     Player.AddToCache(sf);
                 }
-
             }
             catch (Exception ex)
             {
