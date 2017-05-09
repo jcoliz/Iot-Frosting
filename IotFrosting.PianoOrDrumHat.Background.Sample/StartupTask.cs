@@ -17,6 +17,11 @@ namespace IotFrosting.PianoOrDrumHat.Background.Sample
         Pimoroni.PianoHat Piano;
         Common.Player Player;
 
+        // false: Piano, true: Drums
+        bool Instrument = false;
+
+        int[] PianoDrumMap = new int[] { 0, -1, 1, -1, 2, 3, -1, 4, -1, 5, -1, 6, 7 };
+
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
             // If you start any asynchronous methods here, prevent the task
@@ -61,7 +66,22 @@ namespace IotFrosting.PianoOrDrumHat.Background.Sample
             try
             {
                 Piano = await Pimoroni.PianoHat.Open();
-                Piano.Notes.Updated += (s, _) => { if (s.State) Player.Play(8 + (int)s.Name); };
+                Piano.Notes.Updated += (s, _) => 
+                {
+                    if (s.State)
+                    {
+                        if (Instrument)
+                        {
+                            int drum = PianoDrumMap[(int)s.Name];
+                            if (drum != -1)
+                                Player.Play(drum);
+                        }
+                        else
+                            Player.Play(8 + (int)s.Name);
+                    }
+
+                };
+                Piano.Instrument.Updated += (s, _) => { if (s.State) Instrument = !Instrument; };
             }
             catch (Exception)
             {
