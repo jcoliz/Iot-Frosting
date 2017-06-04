@@ -69,7 +69,7 @@ You can also check the state of a particular pad, or attach to its Updated event
 ```c#
 bool bass_pressed = Hat.Pads[7].State;
 
-Hat.Notes[7].Updated += (s,e) => Log("Bass " + s.State?"Pressed":"Released");
+Hat.Pads[7].Updated += (s,e) => Log("Bass " + s.State?"Pressed":"Released");
 ```
 
 ### Lights
