@@ -18,7 +18,7 @@ Drum HAT is a tiny 8-pad instrument for the Raspberry Pi featuring:
 * Finger-friendly drum pad layout
 * 8 under-mounted LEDs
 
-## Documentation & Support
+### Documentation & Support
 
 * [Guides and tutorials](https://learn.pimoroni.com/drum-hat)
 * [GPIO Pinout](https://pinout.xyz/pinout/drum_hat)
