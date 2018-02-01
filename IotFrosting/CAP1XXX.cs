@@ -117,7 +117,7 @@ namespace IotFrosting
                     this[R_MAIN_CONTROL] &= 0xfe; // clear interrupt flag
                     Alert_Sem.Release();
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     // TODO: SHould have a way to push exceptions out
                 }

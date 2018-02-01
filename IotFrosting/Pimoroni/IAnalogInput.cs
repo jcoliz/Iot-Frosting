@@ -19,6 +19,6 @@ namespace IotFrosting.Pimoroni
         /// <summary>
         /// Call regularly to update the autolight
         /// </summary>
-        void Tick();
+        new void Tick();
     };
 }
