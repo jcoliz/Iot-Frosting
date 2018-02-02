@@ -10,6 +10,122 @@ C# library and examples for selected hardware components on Windows 10 IoT Core,
 * [ADS1015 12-bit 4-channel ADC](https://cdn-shop.adafruit.com/datasheets/ads1015.pdf) ([Adafruit](https://www.adafruit.com/product/1083))
 * [CAP1188 Capacitive Touch Sensor](https://cdn-shop.adafruit.com/datasheets/CAP1188.pdf)
 
+## Rainbow HAT
+
+### Namespace
+
+At the top of your C# file, reference the namespace for the library, like so:
+
+```c#
+using IotFrosting.Pimoroni;
+```
+
+### Open the device
+
+Before using the device, you'll need to open a connection to it, and wrap your code in a 'using', like so:
+
+```c#
+using (var Hat = await RainbowHat.Open())
+{
+}
+```
+
+### Rainbow LEDs
+
+The rainbow arc consists of 7 APA102 RGB pixels numbered 0 to 6 from right to left.
+
+You can set the color of a particular LED:
+
+```c#
+Hat.RainbowLed[0] = Colors.BlueViolet;
+```
+
+### Alphanumeric Display
+
+The alphanumeric display consists of 4 14-segment star displays with decimal points, numbered from 0 to 3 right to left.
+
+You can set the character of a particular digit.
+
+```c#
+Hat.AlphaDisplay[0] = 'A';
+```
+
+You can set a string on the entire display. Note that you can include periods as well.
+
+```c#
+Hat.AlphaDisplay = "3.141";
+```
+
+You can set a longer on the entire display, which will scroll. Optionally, you can control the speed it scrolls at by setting the scroll delay. This is the timespan between each movement.
+
+```c#
+Hat.AlphaDisplay = "Hello, world!";
+Hat.AlphaDisplay.ScrollDelay = TimeSpan.FromSeconds(2);
+```
+
+You can turn a digit off
+
+```c#
+Hat.AlphaDisplay[0].Clear();
+```
+
+You can turn the whole display off
+
+```c#
+Hat.AlphaDisplay.Clear();
+```
+
+You can take control of the individual segments
+
+```c#
+Hat.AlphaDisplay[0].Segment[12] = true; // Turn segment 12 on
+```
+
+### Temperature & Pressure
+
+You can read the temperature and pressure directly out of these properties:
+
+```c#
+float temp = Hat.Temperature;
+float pressure = Hat.Pressure;
+```
+
+### Touch Pads
+
+The three touch pads, labelled A B and C are available as items 0 through 3 of the Inputs
+
+```c#
+bool pressed = Hat.Pad[0];
+```
+
+Rainbow HAT includes one light for each pad. These are automatic by default, but you can switch each light to manual if you want. First turn off the automation:
+
+```c#
+Hat.Pads[0].AutoLight = false;
+```
+
+Or turn them all off at once:
+
+```c#
+Hat.Pads.ForEach(x=>x.AutoLight = false);
+```
+
+Then toggle the light:
+
+```c#
+Hat.Pads[0].Light.State = true;
+Hat.Pads[0].Light.State = false;
+```
+
+### Piezo Transducer
+
+The piezo transducer is a PWM output pin, and can be operated like any PWM output pin
+
+```c#
+GPIO.Pin pin = Hat.Piezo;
+pin.Value = 128;
+```
+
 ## Drum HAT
 
 Drum HAT is a tiny 8-pad instrument for the Raspberry Pi featuring:
