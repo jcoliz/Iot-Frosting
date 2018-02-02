@@ -1141,6 +1141,50 @@
 
 
 ---
+## Type Pimoroni.RainbowHat
+
+ Pimoroni Rainbow Hat 
+
+
+
+> https://github.com/androidthings/contrib-drivers/tree/master/rainbowhat https://github.com/pimoroni/rainbow-hat 
+
+
+
+---
+#### Property Pimoroni.RainbowHat.ColorLed.Color
+
+ Current color of this light 
+
+
+
+---
+#### Method Pimoroni.RainbowHat.Open
+
+ Open a connection to the piano hat 
+
+**Returns**: Piano Hat controller
+
+
+
+---
+#### Method Pimoroni.RainbowHat.#ctor
+
+ Don't call consturctor directly, use PianoHat.Open() 
+
+
+
+---
+#### Method Pimoroni.RainbowHat.Dispose(System.Boolean)
+
+ Dispose 
+
+|Name | Description |
+|-----|------|
+|disposing: |Really dispose??|
+
+
+---
 ## Type Pimoroni.IRelay
 
  Interface for a relay with two autolights 

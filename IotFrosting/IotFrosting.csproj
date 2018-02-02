@@ -121,6 +121,7 @@
     <Compile Include="Pimoroni\Output.cs" />
     <Compile Include="Pimoroni\Pad.cs" />
     <Compile Include="Pimoroni\PianoHat.cs" />
+    <Compile Include="Pimoroni\RainbowHat.cs" />
     <Compile Include="Pins.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Pimoroni\Relay.cs" />
