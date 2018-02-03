@@ -453,6 +453,50 @@
 
 
 ---
+## Type HT16K33
+
+
+
+
+
+> Ported from https://github.com/pimoroni/rainbow-hat/blob/master/library/rainbowhat/HT16K33.py Datasheet https://cdn-shop.adafruit.com/datasheets/ht16K33v110.pdf 
+
+
+
+---
+#### Property HT16K33.Item(System.Int32)
+
+ Whether this particular LED is lit 
+
+|Name | Description |
+|-----|------|
+|index: |which led|
+**Returns**: true if it's lit
+
+
+
+---
+#### Method HT16K33.Write
+
+ Write the accumulated bit values to the chip 
+
+
+
+---
+#### Field HT16K33.Device
+
+ I2C Device we're attached to 
+
+
+
+---
+#### Field HT16K33.Buffer
+
+ Buffer of x16's LEDs, plus a '0x00' command byte in front 
+
+
+
+---
 ## Type ITick
 
  An object which needs to be updated regularly 

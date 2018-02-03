@@ -112,6 +112,7 @@
     <Compile Include="ADS1015.cs" />
     <Compile Include="APA102.cs" />
     <Compile Include="CAP1XXX.cs" />
+    <Compile Include="HT16K33.cs" />
     <Compile Include="ITick.cs" />
     <Compile Include="Pimoroni\DrumHat.cs" />
     <Compile Include="Pimoroni\IAnalogInput.cs" />

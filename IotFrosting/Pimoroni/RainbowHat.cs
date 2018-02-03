@@ -66,6 +66,8 @@ namespace IotFrosting.Pimoroni
             result.RainbowLed = await APA102.Open(0, 7);
             result.Pads = new List<IDigitalInput>() { new Input(21, new DirectLight(6)), new Input(20, new DirectLight(19)), new Input(16, new DirectLight(26)) };
 
+            result.AlphaDisplay = await HT16K33.Open();
+
             return result;
         }
         #endregion
@@ -74,7 +76,9 @@ namespace IotFrosting.Pimoroni
 
         public APA102 RainbowLed;
 
-        AlphaDisplayController AlphaDisplay;
+        public HT16K33 AlphaDisplay;
+
+        //AlphaDisplayController AlphaDisplay;
 
         float Temperature { get; }
 
