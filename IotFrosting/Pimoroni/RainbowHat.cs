@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.System.Threading;
 using Windows.UI;
 
 namespace IotFrosting.Pimoroni
@@ -38,7 +39,19 @@ namespace IotFrosting.Pimoroni
 
             result.Display = await AlphaDisplay.Open();
 
+            result.SlowTicks.Add(result.Display);
+            result.SlowTimer = ThreadPoolTimer.CreatePeriodicTimer(result.SlowTick, TimeSpan.FromMilliseconds(100));
+
             return result;
+        }
+
+        private void SlowTick(ThreadPoolTimer timer)
+        {
+            //TODO: promote disposing status out
+            //if (!disposing)
+            {
+                SlowTicks?.ForEach(x => x.Tick());
+            }
         }
         #endregion
 
@@ -57,6 +70,9 @@ namespace IotFrosting.Pimoroni
         float Piezo { get; set; }
 
         #endregion
+
+        private ThreadPoolTimer SlowTimer;
+        private List<ITick> SlowTicks = new List<ITick>();
 
         #region Internal methods
 
@@ -82,8 +98,7 @@ namespace IotFrosting.Pimoroni
             {
                 if (disposing)
                 {
-                    RainbowLed?.Dispose();
-                    
+                    RainbowLed?.Dispose();                    
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

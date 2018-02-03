@@ -7,7 +7,7 @@ using Windows.Devices.I2c;
 
 namespace IotFrosting.Pimoroni
 {
-    public class AlphaDisplay : HT16K33
+    public class AlphaDisplay : HT16K33, ITick
     {
         public static async Task<AlphaDisplay> Open(int i2c_address = DEFAULT_ADDRESS)
         {
