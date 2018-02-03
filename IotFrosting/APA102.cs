@@ -18,6 +18,37 @@ namespace IotFrosting
     /// </remarks>
     public class APA102: IDisposable
     {
+        public class ColorDeepCopy
+        {
+            public ColorDeepCopy()
+            {
+
+            }
+
+            public ColorDeepCopy(Color c)
+            {
+                Color = c;
+            }
+
+            public Color Color
+            {
+                get
+                {
+                    return _Color;
+                }
+                set
+                {
+                    _Color = Color.FromArgb(value.A, value.R, value.G, value.B);
+                }
+            }
+            private Color _Color = Colors.Black;
+
+            public static implicit operator ColorDeepCopy(Color c)
+            {
+                return new ColorDeepCopy(c);
+            }
+        }
+
         public static async Task<APA102> Open(int chipSelectLine, int numPixels)
         {
             var spi0Aqs = SpiDevice.GetDeviceSelector("SPI0");
@@ -40,7 +71,7 @@ namespace IotFrosting
             Buffer = new byte[4 * numPixels + 8];
         }
 
-        public List<Color> Pixels { get; private set; } = new List<Color>();
+        public List<ColorDeepCopy> Pixels { get; private set; } = new List<ColorDeepCopy>();
 
         public void Clear() => Pixels.ForEach(x=>x = Colors.Black);
 
@@ -59,10 +90,10 @@ namespace IotFrosting
 
             foreach(var pixel in Pixels)
             {
-                Buffer[index++] = (byte)((byte)(pixel.A >> 3) | 0b1110000);
-                Buffer[index++] = pixel.B;
-                Buffer[index++] = pixel.G;
-                Buffer[index++] = pixel.R;
+                Buffer[index++] = (byte)((byte)(pixel.Color.A >> 3) | 0b11100000);
+                Buffer[index++] = pixel.Color.B;
+                Buffer[index++] = pixel.Color.G;
+                Buffer[index++] = pixel.Color.R;
             }
 
             // End frame

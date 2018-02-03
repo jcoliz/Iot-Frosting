@@ -32,13 +32,21 @@ namespace IotFrosting.RainbowHat.Sample
             {
                 using (Hat = await Pimoroni.RainbowHat.Open())
                 {
-                    Hat.RainbowLed.Pixels[0] = Colors.Red;
-                    Hat.RainbowLed.Pixels[1] = Colors.Red;
-                    Hat.RainbowLed.Pixels[2] = Colors.Red;
-                    Hat.RainbowLed.Pixels[3] = Colors.Red;
-                    Hat.RainbowLed.Pixels[4] = Colors.Red;
-                    Hat.RainbowLed.Pixels[5] = Colors.Red;
-                    Hat.RainbowLed.Pixels[6] = Colors.Red;
+                    var color = Colors.Red;
+                    color.A = 36;
+                    Hat.RainbowLed.Pixels[0] = color;
+                    color.A += 36;
+                    Hat.RainbowLed.Pixels[1] = color;
+                    color.A += 36;
+                    Hat.RainbowLed.Pixels[2] = color;
+                    color.A += 36;
+                    Hat.RainbowLed.Pixels[3] = color;
+                    color.A += 36;
+                    Hat.RainbowLed.Pixels[4] = color;
+                    color.A += 36;
+                    Hat.RainbowLed.Pixels[5] = color;
+                    color.A += 36;
+                    Hat.RainbowLed.Pixels[6] = color;
                     Hat.RainbowLed.Show();
                 }
 
