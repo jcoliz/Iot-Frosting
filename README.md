@@ -37,7 +37,7 @@ The rainbow arc consists of 7 APA102 RGB pixels numbered 0 to 6 from right to le
 You can set the color of a particular LED:
 
 ```c#
-Hat.RainbowLed[0] = Colors.BlueViolet;
+Hat.RainbowLed[0].Color = Colors.BlueViolet;
 ```
 
 ### Alphanumeric Display
@@ -47,19 +47,19 @@ The alphanumeric display consists of 4 14-segment star displays with decimal poi
 You can set the character of a particular digit.
 
 ```c#
-Hat.AlphaDisplay[0] = 'A';
+Hat.AlphaDisplay[0].Character = 'A';
 ```
 
 You can set a string on the entire display. Note that you can include periods as well.
 
 ```c#
-Hat.AlphaDisplay = "3.141";
+Hat.AlphaDisplay.Message = "3.141";
 ```
 
 You can set a longer on the entire display, which will scroll. Optionally, you can control the speed it scrolls at by setting the scroll delay. This is the timespan between each movement.
 
 ```c#
-Hat.AlphaDisplay = "Hello, world!";
+Hat.AlphaDisplay.Message = "Hello, world!";
 Hat.AlphaDisplay.ScrollDelay = TimeSpan.FromSeconds(2);
 ```
 
@@ -119,11 +119,10 @@ Hat.Pads[0].Light.State = false;
 
 ### Piezo Transducer
 
-The piezo transducer is a PWM output pin, and can be operated like any PWM output pin
+The piezo transducer accepts a volue value from 0 to 1.
 
 ```c#
-GPIO.Pin pin = Hat.Piezo;
-pin.Value = 128;
+Hat.Piezo = 0.5;
 ```
 
 ## Drum HAT
