@@ -476,7 +476,7 @@
 
 
 ---
-#### Method HT16K33.Write
+#### Method HT16K33.Show
 
  Write the accumulated bit values to the chip 
 
@@ -507,6 +507,60 @@
 #### Method ITick.Tick
 
  Call regularly to update the status of this thing 
+
+
+
+---
+#### Method Pimoroni.AlphaDisplay.SetCharacter(System.Char,System.Int32,System.Boolean)
+
+ Set only a single character 
+
+|Name | Description |
+|-----|------|
+|c: |What character to set|
+|position: |Which display position, 0-3|
+
+
+---
+#### Property Pimoroni.AlphaDisplay.Message
+
+ Message string to show on the display. Will scroll if length > 4 
+
+
+
+---
+#### Property Pimoroni.AlphaDisplay.ScrollDelay
+
+ Delay between scrolling movements, when the display is scrolling 
+
+
+
+---
+#### Property Pimoroni.AlphaDisplay.NextScrollAt
+
+ Exact moment when we will next update the display 
+
+
+
+---
+#### Method Pimoroni.AlphaDisplay.Tick
+
+ Update the scroll display 
+
+
+
+> Call at least as frequently as the ScrollDelay 
+
+
+
+---
+#### Method Pimoroni.AlphaDisplay.ShowMessage
+
+ Extract the next 4 chars of message, and send them to the display 
+
+
+
+> Padded by spaces at the end 
 
 
 

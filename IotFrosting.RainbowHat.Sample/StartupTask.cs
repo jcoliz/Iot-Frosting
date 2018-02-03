@@ -50,10 +50,7 @@ namespace IotFrosting.RainbowHat.Sample
                 Hat.AlphaDisplay.Write();
                 */
 
-                Hat.AlphaDigits[0].Character = 'H';
-                Hat.AlphaDigits[1].Character = 'E';
-                Hat.AlphaDigits[2].Character = 'L';
-                Hat.AlphaDigits[3].Character = 'P';
+                Hat.Display.Message = "Hi!!";
 
                 /*
                 var color = Colors.Red;

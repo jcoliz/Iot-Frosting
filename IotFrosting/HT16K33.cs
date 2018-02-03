@@ -18,12 +18,19 @@ namespace IotFrosting
     {
         public static async Task<HT16K33> Open(int i2c_address = DEFAULT_ADDRESS)
         {
-            var i2cSettings = new I2cConnectionSettings(i2c_address);
-            var controller = await I2cController.GetDefaultAsync();
-            var device = controller.GetDevice(i2cSettings);
+            var device = await GetDevice(i2c_address);
             var result = new HT16K33(device);
 
             return result;
+        }
+
+        protected static async Task<I2cDevice> GetDevice(int i2c_address)
+        {
+            var i2cSettings = new I2cConnectionSettings(i2c_address);
+            var controller = await I2cController.GetDefaultAsync();
+            var device = controller.GetDevice(i2cSettings);
+
+            return device;
         }
 
         public int BlinkSpeed
@@ -119,7 +126,7 @@ namespace IotFrosting
         /// <summary>
         /// Write the accumulated bit values to the chip
         /// </summary>
-        public void Write()
+        public void Show()
         {
             Device.Write(Buffer);
         }
@@ -134,7 +141,7 @@ namespace IotFrosting
         }
 
         #region Device Constants
-        private const byte DEFAULT_ADDRESS = 0x70;
+        protected const byte DEFAULT_ADDRESS = 0x70;
         private const byte HT16K33_BLINK_CMD = 0x80;
         private const byte HT16K33_BLINK_DISPLAYON = 0x01;
         private const byte HT16K33_BLINK_OFF = 0x00;

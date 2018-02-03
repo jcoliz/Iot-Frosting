@@ -24,52 +24,6 @@ namespace IotFrosting.Pimoroni
             public Color Color { get; set; }
         }
 
-        public class AlphaDisplayDigit
-        {
-            private HT16K33 Controller;
-            private int WordIndex;
-
-            public AlphaDisplayDigit(HT16K33 controller, int wordindex)
-            {
-                Controller = controller;
-                WordIndex = wordindex;
-            }
-
-            public void Clear()
-            {
-                Character = ' ';
-            }
-
-            public char Character
-            {
-                get
-                {
-                    return _Character;
-                }
-                set
-                {
-                    _Character = value;
-                    Controller.SetWordAt(WordIndex,Digits.Values[value]);
-                    Controller.Write();
-                }
-            }
-            private char _Character = ' ';
-        }
-
-        public class AlphaDisplayController
-        {
-            public AlphaDisplayDigit this[int index]
-            {
-                get
-                {
-                    return new AlphaDisplayDigit(null, index * 2);
-                }
-            }
-
-            public string Message { get; set; }
-
-            //public void Clear() => Digits.ForEach(ClearDigit);
-        }
 
         #region Public methods
         /// <summary>
@@ -82,9 +36,7 @@ namespace IotFrosting.Pimoroni
             result.RainbowLed = await APA102.Open(0, 7);
             result.Pads = new List<IDigitalInput>() { new Input(21, new DirectLight(6)), new Input(20, new DirectLight(19)), new Input(16, new DirectLight(26)) };
 
-            result.AlphaDisplay = await HT16K33.Open();
-
-            result.AlphaDigits = new List<AlphaDisplayDigit>() { new AlphaDisplayDigit(result.AlphaDisplay,0), new AlphaDisplayDigit(result.AlphaDisplay, 2), new AlphaDisplayDigit(result.AlphaDisplay, 4), new AlphaDisplayDigit(result.AlphaDisplay, 6) };
+            result.Display = await AlphaDisplay.Open();
 
             return result;
         }
@@ -94,11 +46,7 @@ namespace IotFrosting.Pimoroni
 
         public APA102 RainbowLed;
 
-        private HT16K33 AlphaDisplay;
-
-        public List<AlphaDisplayDigit> AlphaDigits;
-
-        //AlphaDisplayController AlphaDisplay;
+        public AlphaDisplay Display;
 
         float Temperature { get; }
 
