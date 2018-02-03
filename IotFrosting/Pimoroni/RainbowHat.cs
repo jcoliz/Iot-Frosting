@@ -26,14 +26,34 @@ namespace IotFrosting.Pimoroni
 
         public class AlphaDisplayDigit
         {
-            public IOutputPin[] Segment;
+            private HT16K33 Controller;
+            private int WordIndex;
+
+            public AlphaDisplayDigit(HT16K33 controller, int wordindex)
+            {
+                Controller = controller;
+                WordIndex = wordindex;
+            }
 
             public void Clear()
             {
-
+                Character = ' ';
             }
 
-            public char Character { get; set; }
+            public char Character
+            {
+                get
+                {
+                    return _Character;
+                }
+                set
+                {
+                    _Character = value;
+                    Controller.SetWordAt(WordIndex,Digits.Values[value]);
+                    Controller.Write();
+                }
+            }
+            private char _Character = ' ';
         }
 
         public class AlphaDisplayController
@@ -68,6 +88,8 @@ namespace IotFrosting.Pimoroni
 
             result.AlphaDisplay = await HT16K33.Open();
 
+            result.AlphaDigits = new List<AlphaDisplayDigit>() { new AlphaDisplayDigit(result.AlphaDisplay,0), new AlphaDisplayDigit(result.AlphaDisplay, 2), new AlphaDisplayDigit(result.AlphaDisplay, 4), new AlphaDisplayDigit(result.AlphaDisplay, 6) };
+
             return result;
         }
         #endregion
@@ -76,7 +98,9 @@ namespace IotFrosting.Pimoroni
 
         public APA102 RainbowLed;
 
-        public HT16K33 AlphaDisplay;
+        private HT16K33 AlphaDisplay;
+
+        public List<AlphaDisplayDigit> AlphaDigits;
 
         //AlphaDisplayController AlphaDisplay;
 

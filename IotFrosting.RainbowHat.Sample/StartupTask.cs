@@ -37,6 +37,7 @@ namespace IotFrosting.RainbowHat.Sample
                 Hat.Pads[1].Updated += StartupTask_Updated_2;
                 Hat.Pads[2].Updated += StartupTask_Updated_4;
 
+                /*
                 const UInt16 H = 0b0000000011110110;
                 const UInt16 E = 0b0000000011111001;
                 const UInt16 L = 0b0000000000111000;
@@ -47,6 +48,12 @@ namespace IotFrosting.RainbowHat.Sample
                 Hat.AlphaDisplay.SetWordAt(4, L);
                 Hat.AlphaDisplay.SetWordAt(6, O);
                 Hat.AlphaDisplay.Write();
+                */
+
+                Hat.AlphaDigits[0].Character = 'H';
+                Hat.AlphaDigits[1].Character = 'E';
+                Hat.AlphaDigits[2].Character = 'L';
+                Hat.AlphaDigits[3].Character = 'P';
 
                 /*
                 var color = Colors.Red;

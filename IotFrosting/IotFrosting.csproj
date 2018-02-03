@@ -114,6 +114,7 @@
     <Compile Include="CAP1XXX.cs" />
     <Compile Include="HT16K33.cs" />
     <Compile Include="ITick.cs" />
+    <Compile Include="Pimoroni\Digits.cs" />
     <Compile Include="Pimoroni\DrumHat.cs" />
     <Compile Include="Pimoroni\IAnalogInput.cs" />
     <Compile Include="Pimoroni\AutomationHat.cs" />
