@@ -22,6 +22,11 @@
         {
             Light = light;
             pressedhigh = pulldown;
+            base.Updated += (s, a) =>
+            {
+                if (AutoLight)
+                    Light.State = (s.State == pressedhigh);
+            };
         }
 
         /// <summary>
