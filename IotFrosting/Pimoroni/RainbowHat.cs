@@ -62,17 +62,13 @@ namespace IotFrosting.Pimoroni
             {
                 get
                 {
-                    return Digits[index];
+                    return new AlphaDisplayDigit(null, index * 2);
                 }
             }
 
             public string Message { get; set; }
 
-            public void Clear() => Digits.ForEach(ClearDigit);
-
-            private List<AlphaDisplayDigit> Digits;
-
-            private void ClearDigit(AlphaDisplayDigit d) => d.Clear();
+            //public void Clear() => Digits.ForEach(ClearDigit);
         }
 
         #region Public methods
