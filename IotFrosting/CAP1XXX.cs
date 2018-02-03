@@ -15,6 +15,12 @@ namespace IotFrosting
     /// </summary>
     public class CAP1XXX: IDisposable
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="i2c_address">I2C address of the chip</param>
+        /// <param name="alert_pin">Which pin does the alert come in on</param>
+        /// <returns></returns>
         public static async Task<CAP1XXX> Open(int i2c_address,int alert_pin)
         {
             var i2cSettings = new I2cConnectionSettings(i2c_address);

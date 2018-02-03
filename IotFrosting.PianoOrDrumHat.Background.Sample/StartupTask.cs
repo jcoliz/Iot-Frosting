@@ -46,7 +46,7 @@ namespace IotFrosting.PianoOrDrumHat.Background.Sample
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // This is a problem :(
             }

@@ -63,6 +63,7 @@ namespace IotFrosting.Pimoroni
         public static async Task<RainbowHat> Open()
         {
             var result = new RainbowHat();
+            result.RainbowLed = await APA102.Open(0, 7);
 
             return result;
         }
@@ -70,7 +71,7 @@ namespace IotFrosting.Pimoroni
 
         #region Public Properties
 
-        ColorLed[] RainbowLed;
+        public APA102 RainbowLed;
 
         AlphaDisplayController AlphaDisplay;
 
@@ -108,7 +109,7 @@ namespace IotFrosting.Pimoroni
             {
                 if (disposing)
                 {
-                    // TODO: dispose managed state (managed objects).
+                    RainbowLed?.Dispose();
                     
                 }
 

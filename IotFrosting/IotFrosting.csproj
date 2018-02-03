@@ -110,6 +110,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ADS1015.cs" />
+    <Compile Include="APA102.cs" />
     <Compile Include="CAP1XXX.cs" />
     <Compile Include="ITick.cs" />
     <Compile Include="Pimoroni\DrumHat.cs" />

@@ -179,9 +179,33 @@
 
 
 ---
+## Type APA102
+
+ Library to control APA102 LED lights 
+
+
+
+> https://cdn-shop.adafruit.com/datasheets/APA102.pdf 
+
+
+
+---
 ## Type CAP1XXX
 
  https://github.com/pimoroni/cap1xxx https://cdn-shop.adafruit.com/datasheets/CAP1188.pdf 
+
+
+
+---
+#### Method CAP1XXX.Open(System.Int32,System.Int32)
+
+ Constructor 
+
+|Name | Description |
+|-----|------|
+|i2c_address: |I2C address of the chip|
+|alert_pin: |Which pin does the alert come in on|
+**Returns**: 
 
 
 
