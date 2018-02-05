@@ -24,11 +24,20 @@ namespace IotFrosting.Pimoroni
         /// <summary>
         /// Set only a single character
         /// </summary>
-        /// <param name="c">What character to set</param>
+        /// <param name="c">What character to set. If negative, will also include the decimal</param>
         /// <param name="position">Which display position, 0-3</param>
-        public void SetCharacter(char c, int position, bool show = true)
+        public void SetCharacter(int c, int position, bool show = true)
         {
-            base.SetWordAt(position * 2, Digits.Values[c]);
+            if (c >= 0)
+            {
+                base.SetWordAt(position * 2, Digits.Values[(char)c]);
+            }
+            else
+            {
+                char v = (char)-c;
+                base.SetWordAt(position * 2, (UInt16)(Digits.Values[v] | 0b100000000000000));
+            }
+
             if (show)
                 base.Show();
         }
@@ -40,13 +49,30 @@ namespace IotFrosting.Pimoroni
         {
             get
             {
-                return _Message;
+                return new string( _Message.Select(x => (char)x).ToArray() );
             }
             set
             {
-                _Message = value;
+                // Alpha display has a wierd property. Periods are not displayed as a separate
+                // char. They are merged into the char before them. To represent that here, we will
+                // use NEGATIVE char values to indicate that it also has a '.' in it.
 
-                IsScrolling = (_Message?.Length > 4);
+                var builder = new Stack<int>();
+
+                foreach (char c in value)
+                {
+                    if (c == '.' && builder.FirstOrDefault() != 0)
+                    {
+                        var old = builder.Pop();
+                        builder.Push(-old);
+                    }
+                    else
+                        builder.Push(c);
+                }
+
+                _Message = builder.Reverse().AsEnumerable<int>();
+                
+                IsScrolling = (_Message?.Count() > 4);
                 ScrollIndex = 0;
                 if (IsScrolling)
                     NextScrollAt = DateTimeOffset.Now + ScrollDelay;
@@ -54,7 +80,7 @@ namespace IotFrosting.Pimoroni
                 ShowMessage();
             }
         }
-        private string _Message;
+        private IEnumerable<int> _Message;
 
         /// <summary>
         /// Delay between scrolling movements, when the display is scrolling
@@ -101,9 +127,9 @@ namespace IotFrosting.Pimoroni
             int loopindex = 4;
             while (loopindex-- > 0)
             {
-                char output = ' ';
+                int output = ' ';
                 if (Message?.Length > messageindex)
-                    output = Message[messageindex++];
+                    output = _Message.Skip(messageindex++).First();
 
                 SetCharacter(output, characterindex++,false);
             }

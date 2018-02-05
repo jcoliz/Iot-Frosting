@@ -511,13 +511,13 @@
 
 
 ---
-#### Method Pimoroni.AlphaDisplay.SetCharacter(System.Char,System.Int32,System.Boolean)
+#### Method Pimoroni.AlphaDisplay.SetCharacter(System.Int32,System.Int32,System.Boolean)
 
  Set only a single character 
 
 |Name | Description |
 |-----|------|
-|c: |What character to set|
+|c: |What character to set. If negative, will also include the decimal|
 |position: |Which display position, 0-3|
 
 
