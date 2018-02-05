@@ -128,6 +128,10 @@ Hat.Pads[0].Light.State = false;
 
 ### Piezo Transducer
 
+The piezo transucer (i.e. buzzer) requires configuring your device to use a special driver. Please follow these directions to prepare your device, before this will work.
+
+https://docs.microsoft.com/en-us/windows/iot-core/develop-your-app/lightningsetup
+
 The piezo transducer accepts a volue value from 0 to 1.
 
 ```c#
