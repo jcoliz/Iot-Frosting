@@ -37,7 +37,13 @@ The rainbow arc consists of 7 APA102 RGB pixels numbered 0 to 6 from right to le
 You can set the color of a particular LED:
 
 ```c#
-Hat.RainbowLed[0].Color = Colors.BlueViolet;
+Hat.RainbowLed.Pixels[0] = Colors.BlueViolet;
+```
+
+When you have set the LED's how you want them, call 'Show' to update the LEDs to their intended values.
+
+```c#
+Hat.RainbowLed.Show();
 ```
 
 ### Alphanumeric Display
@@ -47,7 +53,10 @@ The alphanumeric display consists of 4 14-segment star displays with decimal poi
 You can set the character of a particular digit.
 
 ```c#
-Hat.AlphaDisplay[0].Character = 'A';
+Hat.AlphaDisplay.SetCharacter('H',0);
+Hat.AlphaDisplay.SetCharacter('E',1);
+Hat.AlphaDisplay.SetCharacter('L',2);
+Hat.AlphaDisplay.SetCharacter('O',3);
 ```
 
 You can set a string on the entire display. Note that you can include periods as well.
@@ -63,10 +72,10 @@ Hat.AlphaDisplay.Message = "Hello, world!";
 Hat.AlphaDisplay.ScrollDelay = TimeSpan.FromSeconds(2);
 ```
 
-You can turn a digit off
+You can turn a digit off by setting the character to a space
 
 ```c#
-Hat.AlphaDisplay[0].Clear();
+Hat.AlphaDisplay.SetCharacter(' ',0);
 ```
 
 You can turn the whole display off
@@ -75,10 +84,10 @@ You can turn the whole display off
 Hat.AlphaDisplay.Clear();
 ```
 
-You can take control of the individual segments
+You can take control of the individual segments. There are 16 segments for each of the 4 digits, for 48 total.
 
 ```c#
-Hat.AlphaDisplay[0].Segment[12] = true; // Turn segment 12 on
+Hat.AlphaDisplay[12] = true; // Turn segment 12 on
 ```
 
 ### Temperature & Pressure
@@ -95,7 +104,7 @@ float pressure = Hat.Pressure;
 The three touch pads, labelled A B and C are available as items 0 through 3 of the Inputs
 
 ```c#
-bool pressed = Hat.Pad[0];
+bool pressed = Hat.Pads[0];
 ```
 
 Rainbow HAT includes one light for each pad. These are automatic by default, but you can switch each light to manual if you want. First turn off the automation:
@@ -118,6 +127,10 @@ Hat.Pads[0].Light.State = false;
 ```
 
 ### Piezo Transducer
+
+The piezo transucer (i.e. buzzer) requires configuring your device to use a special driver. Please follow these directions to prepare your device, before this will work.
+
+https://docs.microsoft.com/en-us/windows/iot-core/develop-your-app/lightningsetup
 
 The piezo transducer accepts a volue value from 0 to 1.
 
