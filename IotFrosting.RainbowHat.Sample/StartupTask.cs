@@ -49,8 +49,8 @@ namespace IotFrosting.RainbowHat.Sample
                 Hat.AlphaDisplay.SetWordAt(6, O);
                 Hat.AlphaDisplay.Write();
                 */
-                Hat.Display.ScrollDelay = TimeSpan.FromSeconds(5);
-                Hat.Display.Message = "Hi!!";
+                Hat.Display.ScrollDelay = TimeSpan.FromSeconds(1);
+                Hat.Display.Message = "Hello, world";
 
                 /*
                 var color = Colors.Red;
