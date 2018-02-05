@@ -102,7 +102,7 @@ namespace IotFrosting.Pimoroni
             while (loopindex-- > 0)
             {
                 char output = ' ';
-                if (Message?.Length < messageindex)
+                if (Message?.Length > messageindex)
                     output = Message[messageindex++];
 
                 SetCharacter(output, characterindex++,false);

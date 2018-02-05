@@ -49,7 +49,7 @@ namespace IotFrosting.RainbowHat.Sample
                 Hat.AlphaDisplay.SetWordAt(6, O);
                 Hat.AlphaDisplay.Write();
                 */
-
+                Hat.Display.ScrollDelay = TimeSpan.FromSeconds(5);
                 Hat.Display.Message = "Hi!!";
 
                 /*
