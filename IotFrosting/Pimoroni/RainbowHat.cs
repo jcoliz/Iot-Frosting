@@ -42,6 +42,8 @@ namespace IotFrosting.Pimoroni
             result.SlowTicks.Add(result.Display);
             result.SlowTimer = ThreadPoolTimer.CreatePeriodicTimer(result.SlowTick, TimeSpan.FromMilliseconds(100));
 
+            result.Buzzer = await Buzzer.Open(13);
+
             return result;
         }
 
@@ -60,6 +62,8 @@ namespace IotFrosting.Pimoroni
         public APA102 RainbowLed;
 
         public AlphaDisplay Display;
+
+        public Buzzer Buzzer;
 
         float Temperature { get; }
 
@@ -98,7 +102,12 @@ namespace IotFrosting.Pimoroni
             {
                 if (disposing)
                 {
-                    RainbowLed?.Dispose();                    
+                    RainbowLed?.Dispose();
+                    RainbowLed = null;
+                    Buzzer?.Dispose();
+                    Buzzer = null;
+                    Display?.Dispose();
+                    Display = null;
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

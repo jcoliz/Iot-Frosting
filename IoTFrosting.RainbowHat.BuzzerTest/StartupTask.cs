@@ -26,26 +26,25 @@ namespace IoTFrosting.RainbowHat.BuzzerTest
             //
             Deferral = taskInstance.GetDeferral();
 
+            double[] notes = { 440.0, 493.883, 523.251, 587.330, 659.255, 698.456, 783.991, 880 };
+
             try
             {
                 if (Microsoft.IoT.Lightning.Providers.LightningProvider.IsLightningEnabled)
                 {
                     var pwmControllers = await PwmController.GetControllersAsync(LightningPwmProvider.GetPwmProvider());
                     var pwmController = pwmControllers[1]; // use the on-device controller
-                    pwmController.SetDesiredFrequency(50); // try to match 50Hz
 
                     var pin = pwmController.OpenPin(13);
-                    pin.Controller.SetDesiredFrequency(440); // A4, 69
-                    pin.SetActiveDutyCyclePercentage(.5);
+                    pin.SetActiveDutyCyclePercentage(0.5);
 
-
-                    var loop = 10;
-                    while(loop-- > 0)
+                    foreach(var freq in notes)
                     {
+                        pin.Controller.SetDesiredFrequency(freq);
                         pin.Start();
-                        await Task.Delay(TimeSpan.FromSeconds(2));
+                        await Task.Delay(TimeSpan.FromSeconds(1));
                         pin.Stop();
-                        await Task.Delay(TimeSpan.FromSeconds(2));
+                        await Task.Delay(TimeSpan.FromSeconds(1));
                     }
                 }
             }

@@ -51,16 +51,45 @@ namespace IotFrosting.RainbowHat.Sample
         {
             Hat.RainbowLed.Pixels[0] = sender.State ? Colors.Black : Colors.Green;
             Hat.RainbowLed.Show();
+
+            if (sender.State)
+            {
+                Hat.Buzzer.Stop();
+            }
+            else
+            {
+                Hat.Buzzer.Start(440.0);
+            }
         }
         private void StartupTask_Updated_2(IInput sender, EventArgs args)
         {
             Hat.RainbowLed.Pixels[2] = sender.State ? Colors.Black : Colors.Green;
             Hat.RainbowLed.Show();
+
+            if (sender.State)
+            {
+                Hat.Buzzer.Stop();
+            }
+            else
+            {
+                Hat.Buzzer.Start(493.883);
+            }
+
         }
         private void StartupTask_Updated_4(IInput sender, EventArgs args)
         {
             Hat.RainbowLed.Pixels[4] = sender.State ? Colors.Black : Colors.Green;
             Hat.RainbowLed.Show();
+
+            if (sender.State)
+            {
+                Hat.Buzzer.Stop();
+            }
+            else
+            {
+                Hat.Buzzer.Start(523.251);
+            }
+
         }
     }
 }
