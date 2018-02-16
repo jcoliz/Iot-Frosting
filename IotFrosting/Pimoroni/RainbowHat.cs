@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.IoT.Lightning.Providers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices;
 using Windows.System.Threading;
 using Windows.UI;
 
@@ -33,6 +35,7 @@ namespace IotFrosting.Pimoroni
         /// <returns>Piano Hat controller</returns>
         public static async Task<RainbowHat> Open()
         {
+
             var result = new RainbowHat();
             result.RainbowLed = await APA102.Open(0, 7);
             result.Pads = new List<IDigitalInput>() { new Input(21, new DirectLight(6)), new Input(20, new DirectLight(19)), new Input(16, new DirectLight(26)) };

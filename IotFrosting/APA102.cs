@@ -51,11 +51,12 @@ namespace IotFrosting
 
         public static async Task<APA102> Open(int chipSelectLine, int numPixels)
         {
-            // :(:( I am losing SPI bus from the device now! So this fails!
-            var spi0Aqs = SpiDevice.GetDeviceSelector("SPI0");
-            var devicesInfo = await DeviceInformation.FindAllAsync(spi0Aqs);
+            var controller = await SpiController.GetDefaultAsync();
+            if (null == controller)
+                throw new PlatformNotSupportedException("No SPI controller found");
             var settings = new SpiConnectionSettings(chipSelectLine);
-            var spiDev = await SpiDevice.FromIdAsync(devicesInfo[0].Id, settings);
+            var spiDev = controller.GetDevice(settings);
+
             var result = new APA102(spiDev,numPixels);
 
             return result;

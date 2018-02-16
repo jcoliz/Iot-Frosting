@@ -8,6 +8,9 @@ using Windows.Foundation;
 using IotFrosting.Pimoroni;
 using System.Threading.Tasks;
 using Windows.UI;
+using Windows.Devices;
+using Microsoft.IoT.Lightning.Providers;
+using System.Diagnostics;
 
 // The Background Application template is documented at http://go.microsoft.com/fwlink/?LinkID=533884&clcid=0x409
 
@@ -30,6 +33,12 @@ namespace IotFrosting.RainbowHat.Sample
 
             try
             {
+                // https://docs.microsoft.com/en-us/windows/iot-core/develop-your-app/lightningproviders
+                if (LightningProvider.IsLightningEnabled)
+                {
+                    LowLevelDevicesController.DefaultProvider = LightningProvider.GetAggregateProvider();
+                }
+
                 Hat = await Pimoroni.RainbowHat.Open();
                 Hat.RainbowLed.Clear();
                 Hat.RainbowLed.Show();
@@ -39,11 +48,10 @@ namespace IotFrosting.RainbowHat.Sample
 
                 Hat.Display.ScrollDelay = TimeSpan.FromSeconds(1);
                 Hat.Display.Message = "1.234"; // "HELLO, WORLD";
-
             }
             catch (Exception ex)
             {
-
+                Debug.WriteLine($"{ex.GetType().Name}: {ex.Message}");
             }
         }
 
