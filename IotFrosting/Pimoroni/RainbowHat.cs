@@ -1,5 +1,4 @@
-﻿using Microsoft.IoT.Lightning.Providers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,8 +44,6 @@ namespace IotFrosting.Pimoroni
             result.SlowTicks.Add(result.Display);
             result.SlowTimer = ThreadPoolTimer.CreatePeriodicTimer(result.SlowTick, TimeSpan.FromMilliseconds(100));
 
-            result.Buzzer = await Buzzer.Open(13);
-
             return result;
         }
 
@@ -65,8 +62,6 @@ namespace IotFrosting.Pimoroni
         public APA102 RainbowLed;
 
         public AlphaDisplay Display;
-
-        public Buzzer Buzzer;
 
         float Temperature { get; }
 
@@ -107,8 +102,6 @@ namespace IotFrosting.Pimoroni
                 {
                     RainbowLed?.Dispose();
                     RainbowLed = null;
-                    Buzzer?.Dispose();
-                    Buzzer = null;
                     Display?.Dispose();
                     Display = null;
                 }

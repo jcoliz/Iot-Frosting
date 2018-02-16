@@ -115,7 +115,6 @@
     <Compile Include="HT16K33.cs" />
     <Compile Include="ITick.cs" />
     <Compile Include="Pimoroni\AlphaDisplay.cs" />
-    <Compile Include="Pimoroni\Buzzer.cs" />
     <Compile Include="Pimoroni\Digits.cs" />
     <Compile Include="Pimoroni\DrumHat.cs" />
     <Compile Include="Pimoroni\IAnalogInput.cs" />

@@ -30,22 +30,18 @@ namespace IoTFrosting.RainbowHat.BuzzerTest
 
             try
             {
-                if (Microsoft.IoT.Lightning.Providers.LightningProvider.IsLightningEnabled)
+                var pwmController = await PwmController.GetDefaultAsync();
+
+                var pin = pwmController.OpenPin(13);
+                pin.SetActiveDutyCyclePercentage(0.5);
+
+                foreach(var freq in notes)
                 {
-                    var pwmControllers = await PwmController.GetControllersAsync(LightningPwmProvider.GetPwmProvider());
-                    var pwmController = pwmControllers[1]; // use the on-device controller
-
-                    var pin = pwmController.OpenPin(13);
-                    pin.SetActiveDutyCyclePercentage(0.5);
-
-                    foreach(var freq in notes)
-                    {
-                        pin.Controller.SetDesiredFrequency(freq);
-                        pin.Start();
-                        await Task.Delay(TimeSpan.FromSeconds(1));
-                        pin.Stop();
-                        await Task.Delay(TimeSpan.FromSeconds(1));
-                    }
+                    pin.Controller.SetDesiredFrequency(freq);
+                    pin.Start();
+                    await Task.Delay(TimeSpan.FromSeconds(1));
+                    pin.Stop();
+                    await Task.Delay(TimeSpan.FromSeconds(1));
                 }
             }
             catch (Exception ex)

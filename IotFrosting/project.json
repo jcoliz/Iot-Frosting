@@ -1,6 +1,5 @@
 ﻿{
   "dependencies": {
-    "Microsoft.IoT.Lightning": "1.1.0",
     "Microsoft.NETCore.UniversalWindowsPlatform": "6.0.6",
     "PxtlCa.XmlCommentMarkDownGenerator": "0.2.6270.2853"
   },
