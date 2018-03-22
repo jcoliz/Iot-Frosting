@@ -15,6 +15,8 @@ namespace IotFrosting.Pimoroni
     /// <remarks>
     /// https://github.com/androidthings/contrib-drivers/tree/master/rainbowhat
     /// https://github.com/pimoroni/rainbow-hat
+    /// https://shop.pimoroni.com/products/rainbow-hat-for-android-things
+    /// https://www.adafruit.com/product/3354
     /// </remarks>
     public class RainbowHat: IDisposable
     {
@@ -63,9 +65,29 @@ namespace IotFrosting.Pimoroni
 
         public AlphaDisplay Display;
 
-        float Temperature { get; }
+        float Temperature
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
 
-        float Pressure { get; }
+        float Pressure
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         public List<IDigitalInput> Pads;
 

@@ -8,7 +8,7 @@ using Windows.Devices.I2c;
 namespace IotFrosting
 {
     /// <summary>
-    /// 
+    /// Holtek HT16K33: RAM Mapping 16*8 LED Controller Driver
     /// </summary>
     /// <remarks>
     /// Ported from https://github.com/pimoroni/rainbow-hat/blob/master/library/rainbowhat/HT16K33.py

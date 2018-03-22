@@ -455,7 +455,7 @@
 ---
 ## Type HT16K33
 
-
+ Holtek HT16K33: RAM Mapping 16*8 LED Controller Driver 
 
 
 
@@ -1269,7 +1269,7 @@
 
 
 
-> https://github.com/androidthings/contrib-drivers/tree/master/rainbowhat https://github.com/pimoroni/rainbow-hat 
+> https://github.com/androidthings/contrib-drivers/tree/master/rainbowhat https://github.com/pimoroni/rainbow-hat https://shop.pimoroni.com/products/rainbow-hat-for-android-things https://www.adafruit.com/product/3354 
 
 
 

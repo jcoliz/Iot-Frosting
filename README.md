@@ -2,6 +2,7 @@
 
 C# library and examples for selected hardware components on Windows 10 IoT Core, including the Pimoroni Drum HAT, Piano HAT, and Automation HAT.
 
+* [Pimoroni Rainbow Hat](https://shop.pimoroni.com/products/rainbow-hat-for-android-things) ([Adafruit](https://www.adafruit.com/product/3354))
 * [Pimoroni Piano Hat](https://shop.pimoroni.com/products/piano-hat) ([Adafruit](https://www.adafruit.com/product/2695))
 * [Pimoroni Drum Hat](https://shop.pimoroni.com/products/drum-hat) ([Adafruit](https://www.adafruit.com/product/3180))
 * [Pimoroni Automation Hat](https://shop.pimoroni.com/products/automation-hat) ([Adafruit](https://www.adafruit.com/product/3289))
@@ -9,6 +10,7 @@ C# library and examples for selected hardware components on Windows 10 IoT Core,
 * [SN3218 18-channel LED Driver](http://www.si-en.com/uploadpdf/s2011517171720.pdf)
 * [ADS1015 12-bit 4-channel ADC](https://cdn-shop.adafruit.com/datasheets/ads1015.pdf) ([Adafruit](https://www.adafruit.com/product/1083))
 * [CAP1188 Capacitive Touch Sensor](https://cdn-shop.adafruit.com/datasheets/CAP1188.pdf)
+* [HT16K33 LED Controller Driver](https://cdn-shop.adafruit.com/datasheets/ht16K33v110.pdf) ([Adafruit](https://www.adafruit.com/product/1427))
 
 ## Rainbow HAT
 
@@ -46,6 +48,12 @@ When you have set the LED's how you want them, call 'Show' to update the LEDs to
 Hat.RainbowLed.Show();
 ```
 
+To turn them all off at once, you can clear them.
+
+```c#
+Hat.RainbowLed.Clear();
+```
+
 ### Alphanumeric Display
 
 The alphanumeric display consists of 4 14-segment star displays with decimal points, numbered from 0 to 3 right to left.
@@ -53,55 +61,46 @@ The alphanumeric display consists of 4 14-segment star displays with decimal poi
 You can set the character of a particular digit.
 
 ```c#
-Hat.AlphaDisplay.SetCharacter('H',0);
-Hat.AlphaDisplay.SetCharacter('E',1);
-Hat.AlphaDisplay.SetCharacter('L',2);
-Hat.AlphaDisplay.SetCharacter('O',3);
+Hat.Display.SetCharacter('H',0);
+Hat.Display.SetCharacter('E',1);
+Hat.Display.SetCharacter('L',2);
+Hat.Display.SetCharacter('O',3);
 ```
 
 You can set a string on the entire display. Note that you can include periods as well.
 
 ```c#
-Hat.AlphaDisplay.Message = "3.141";
+Hat.Display.Message = "3.141";
 ```
 
 You can set a longer on the entire display, which will scroll. Optionally, you can control the speed it scrolls at by setting the scroll delay. This is the timespan between each movement.
 
 ```c#
-Hat.AlphaDisplay.Message = "Hello, world!";
-Hat.AlphaDisplay.ScrollDelay = TimeSpan.FromSeconds(2);
+Hat.Display.Message = "Hello, world!";
+Hat.Display.ScrollDelay = TimeSpan.FromSeconds(2);
 ```
 
 You can turn a digit off by setting the character to a space
 
 ```c#
-Hat.AlphaDisplay.SetCharacter(' ',0);
+Hat.Display.SetCharacter(' ',0);
 ```
 
 You can turn the whole display off
 
 ```c#
-Hat.AlphaDisplay.Clear();
+Hat.Display.Clear();
 ```
 
 You can take control of the individual segments. There are 16 segments for each of the 4 digits, for 48 total.
 
 ```c#
-Hat.AlphaDisplay[12] = true; // Turn segment 12 on
-```
-
-### Temperature & Pressure
-
-You can read the temperature and pressure directly out of these properties:
-
-```c#
-float temp = Hat.Temperature;
-float pressure = Hat.Pressure;
+Hat.Display[12] = true; // Turn segment 12 on
 ```
 
 ### Touch Pads
 
-The three touch pads, labelled A B and C are available as items 0 through 3 of the Inputs
+The three touch pads, labelled A B and C are available as items 0 through 2 of the Pads list
 
 ```c#
 bool pressed = Hat.Pads[0];
@@ -126,17 +125,20 @@ Hat.Pads[0].Light.State = true;
 Hat.Pads[0].Light.State = false;
 ```
 
-### Piezo Transducer
+### Temperature & Pressure
 
-The piezo transucer (i.e. buzzer) requires configuring your device to use a special driver. Please follow these directions to prepare your device, before this will work.
+NOTE: Temperature & pressure are not implemented yet
 
-https://docs.microsoft.com/en-us/windows/iot-core/develop-your-app/lightningsetup
-
-The piezo transducer accepts a volue value from 0 to 1.
+You can read the temperature and pressure directly out of these properties:
 
 ```c#
-Hat.Piezo = 0.5;
+float temp = Hat.Temperature;
+float pressure = Hat.Pressure;
 ```
+
+### Piezo Transducer
+
+Unfortunately, the piezo transucer (i.e. buzzer) does not work well on Windows IoT Core, so is not implemented in this library.
 
 ## Drum HAT
 
