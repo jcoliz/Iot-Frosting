@@ -14,6 +14,21 @@ C# library and examples for selected hardware components on Windows 10 IoT Core,
 
 ## Rainbow HAT
 
+Rainbow HAT has a buffet of sensors, inputs and displays. Use it as a weather station, a clock, a timer or stopwatch, a mood light, or endless other things.
+
+* Seven APA102 multicolour LEDs
+* Four 14-segment alphanumeric displays (green LEDs)
+* HT16K33 display driver chip
+* Three capacitive touch buttons
+* Atmel QT1070 capacitive touch driver chip
+* Blue, green and red LEDs
+* BMP280 temperature and pressure sensor
+* Piezo buzzer
+* Beakout pins for servo, I2C, SPI, and UART (all 3v3)
+* Rainbow HAT pinout
+
+The board is designed specifically to show off the wide range of protocols available on the Raspberry Pi, including SPI (the APA102 LEDs), I2C (the BMP280 sensor and 14-segment displays), GPIO (the capacitive touch buttons and LEDs), and PWM (the piezo buzzer).
+
 ### Namespace
 
 At the top of your C# file, reference the namespace for the library, like so:
