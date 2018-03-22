@@ -9,6 +9,7 @@ using Windows.Devices.Gpio;
 using Microsoft.IoT.Lightning.Providers;
 using Windows.Devices.Pwm;
 using System.Threading.Tasks;
+using Windows.Devices;
 
 // https://docs.microsoft.com/en-us/windows/iot-core/develop-your-app/lightningsetup
 
@@ -30,7 +31,17 @@ namespace IoTFrosting.RainbowHat.BuzzerTest
 
             try
             {
-                var pwmController = await PwmController.GetDefaultAsync();
+
+                if (LightningProvider.IsLightningEnabled)
+                {
+                    LowLevelDevicesController.DefaultProvider = LightningProvider.GetAggregateProvider();
+                }
+                else
+                {
+                    throw new PlatformNotSupportedException("Lightning controller required for this sample.");
+                }
+
+                var pwmController = (await PwmController.GetControllersAsync(LightningPwmProvider.GetPwmProvider()))[0];
 
                 var pin = pwmController.OpenPin(13);
                 pin.SetActiveDutyCyclePercentage(0.5);
